@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.federico.aldia.Activities.data.Periodo;
+import com.example.federico.aldia.data.Periodo;
 import com.example.federico.aldia.Adapters.PeriodoAdapter;
 import com.example.federico.aldia.R;
 

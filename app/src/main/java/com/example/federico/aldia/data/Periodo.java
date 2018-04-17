@@ -1,4 +1,4 @@
-package com.example.federico.aldia.Activities.data;
+package com.example.federico.aldia.data;
 
 /**
  * Created by Federico on 16/04/2018.

@@ -101,18 +101,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_mi_perfil) {
-            // Handle the camera action
+
+            Intent pasarAMiPerfil = new Intent(MainActivity.this, MiPerfilActivity.class);
+
+            startActivity(pasarAMiPerfil);
+
+
+
         } else if (id == R.id.nav_historial) {
 
             Intent pasarAHistorial = new Intent(MainActivity.this, HistorialActivity.class);
 
             startActivity(pasarAHistorial);
 
-        } else if (id == R.id.nav_slideshow) {
+        }  else if (id == R.id.nav_liquidaciones) {
 
-        } else if (id == R.id.nav_manage) {
+        Intent pasarALiquidaciones = new Intent(MainActivity.this, LiquidacionesActivity.class);
 
-        }  else if (id == R.id.nav_cerrar_sesion) {
+        startActivity(pasarALiquidaciones);
+
+        }    else if (id == R.id.nav_cerrar_sesion) {
 
             Intent pasarASignIn = new Intent(MainActivity.this, SignIn.class);
             startActivity(pasarASignIn);

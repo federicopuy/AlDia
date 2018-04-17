@@ -8,4 +8,6 @@
     <string name="nav_drawer_cerrar_sesion">Cerrar Sesión</string>
     <string name="nav_drawer_mi_perfil">Mi Perfil</string>
     <string name="nav_drawer_historial">Historial</string>
+    <string name="nav_drawer_sesion">Sesión</string>
+    <string name="nav_drawer_liquidaciones">Liquidaciones</string>
 </resources>

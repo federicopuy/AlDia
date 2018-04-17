@@ -22,7 +22,9 @@
         <activity android:name=".Activities.SignIn" />
         <activity android:name=".Activities.Ingreso" />
         <activity android:name=".Activities.Egreso" />
-        <activity android:name=".Activities.HistorialActivity"></activity>
+        <activity android:name=".Activities.HistorialActivity" />
+        <activity android:name=".Activities.LiquidacionesActivity" />
+        <activity android:name=".Activities.MiPerfilActivity"></activity>
     </application>
 
 </manifest>

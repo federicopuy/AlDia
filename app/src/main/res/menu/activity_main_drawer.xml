@@ -12,17 +12,15 @@
             android:id="@+id/nav_historial"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/nav_drawer_historial" />
+
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_liquidaciones"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/nav_drawer_liquidaciones" />
+
     </group>
 
-    <item android:title="Sesión">
+    <item android:title="@string/nav_drawer_sesion">
         <menu>
             <item
                 android:id="@+id/nav_cerrar_sesion"
