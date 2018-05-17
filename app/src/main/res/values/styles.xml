@@ -25,20 +25,20 @@
 
     <style name="textViewsPeriodo" parent="TextAppearance.AppCompat">
 
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
-    <item name="android:layout_marginBottom">@dimen/lista_periodos_margin</item>
-    <item name="android:layout_marginStart">@dimen/lista_periodos_margin</item>
-    <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
-    <item name="android:textSize">18dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
+        <item name="android:layout_marginBottom">@dimen/lista_periodos_margin</item>
+        <item name="android:layout_marginStart">@dimen/lista_periodos_margin</item>
+        <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
+        <item name="android:textSize">18dp</item>
     </style>
 
     <style name="textViewsMiPerfilText" parent="TextAppearance.AppCompat">
 
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:textSize">16dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
 
     </style>
@@ -49,6 +49,18 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">26dp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 

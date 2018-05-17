@@ -1,4 +1,4 @@
-package com.example.federico.aldia.Activities;
+package com.example.federico.aldia.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

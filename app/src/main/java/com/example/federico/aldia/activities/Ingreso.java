@@ -1,4 +1,4 @@
-package com.example.federico.aldia.Activities;
+package com.example.federico.aldia.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,24 +11,29 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SignIn extends AppCompatActivity {
+public class Ingreso extends AppCompatActivity {
 
-    @BindView(R.id.btIniciarSesion)
-    Button btIniciarSesion;
+
+
+    @BindView(R.id.btAceptar)
+    Button btAceptar;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_ingreso);
         ButterKnife.bind(this);
     }
 
-@OnClick(R.id.btIniciarSesion)
-    public void iniciarSesion(){
+    @OnClick (R.id.btAceptar)
+    public void pasarAEgreso(){
 
-    Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
-    startActivity(pasarAMainActivity);
+        Intent pasarAEgreso = new Intent(Ingreso.this, Egreso.class);
+        startActivity(pasarAEgreso);
 
-}
+    }
+
 
 }

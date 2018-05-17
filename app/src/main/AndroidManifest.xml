@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.federico.aldia">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.camera2" />
+    <uses-feature android:name="android.hardware.camera2.autofocus" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,8 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
+
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,12 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SignIn" />
-        <activity android:name=".Activities.Ingreso" />
-        <activity android:name=".Activities.Egreso" />
-        <activity android:name=".Activities.HistorialActivity" />
-        <activity android:name=".Activities.LiquidacionesActivity" />
-        <activity android:name=".Activities.MiPerfilActivity"></activity>
+        <activity android:name=".activities.SignIn" />
+        <activity android:name=".activities.Ingreso" />
+        <activity android:name=".activities.Egreso" />
+        <activity android:name=".activities.HistorialActivity" />
+        <activity android:name=".activities.LiquidacionesActivity" />
+        <activity android:name=".activities.MiPerfilActivity" />
+        <activity android:name=".activities.CamaraActivity"></activity>
     </application>
 
 </manifest>

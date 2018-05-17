@@ -10,4 +10,8 @@
     <string name="nav_drawer_historial">Historial</string>
     <string name="nav_drawer_sesion">Sesión</string>
     <string name="nav_drawer_liquidaciones">Liquidaciones</string>
+
+    <string name="title_activity_camara">CamaraActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

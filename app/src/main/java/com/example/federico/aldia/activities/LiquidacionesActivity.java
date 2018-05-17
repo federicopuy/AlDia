@@ -1,4 +1,4 @@
-package com.example.federico.aldia.Activities;
+package com.example.federico.aldia.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.example.federico.aldia.Adapters.LiquidacionAdapter;
+import com.example.federico.aldia.adapters.LiquidacionAdapter;
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.data.Liquidacion;
 
