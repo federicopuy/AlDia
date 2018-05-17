@@ -11,6 +11,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.data.Comercio;
+import com.example.federico.aldia.data.Constantes;
+import com.example.federico.aldia.data.TokenRetro;
+import com.example.federico.aldia.network.APIInterface;
+import com.example.federico.aldia.network.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,7 +30,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignIn extends AppCompatActivity implements
         View.OnClickListener{
@@ -40,6 +57,7 @@ public class SignIn extends AppCompatActivity implements
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
     SharedPreferences prefs;
+    APIInterface mService;
 
 
     String tokenFirebase = "";
@@ -189,11 +207,11 @@ public class SignIn extends AppCompatActivity implements
 
                                 Log.d(TAG, "Token Firebase " + tokenFirebase);
 
-                           //     prefs.edit().putString(Constantes.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
+                                prefs.edit().putString(Constantes.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
 
-                                if(tokenFirebase !=""){
+                                if(!tokenFirebase.equals("")){
 
-                                //    servicioEnviarToken();
+                                    servicioEnviarToken(tokenFirebase);
 
                                 }
 
@@ -208,6 +226,155 @@ public class SignIn extends AppCompatActivity implements
            // mStatusTextView.setText(R.string.signed_out);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         }
+
+    }
+
+    private void servicioEnviarToken(String tokenFirebase) {
+
+         mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+
+        TokenRetro tokenRetro = new TokenRetro(tokenFirebase);
+
+        Call<String> authenticationCall = mService.loginUser(tokenRetro);
+
+        authenticationCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                Log.i(TAG, "Login User OK");
+
+                if (response.isSuccessful()) {
+
+                    String tokenJWT = "";
+
+                    try {
+
+
+                        //todo modificar para que venga el string solo
+                        JSONObject root = new JSONObject(response.body());
+
+                        String bearer = root.getString("id_token");
+
+                        tokenJWT = "Bearer " + bearer;
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "Token NULO");
+                    }
+
+                    Log.i(TAG, "Token JWT: " + tokenJWT);
+
+                    prefs.edit().putString(Constantes.KEY_TOKEN_JWT, tokenJWT).apply();
+
+
+
+
+                    obtenerComercios(tokenJWT);
+
+
+
+                } else {
+
+                    try {
+                        Log.i(TAG, "Error en API Login " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+                Log.i(TAG, "On Failure Login Usuario");
+
+                try{
+
+                    Log.e(TAG, t.getMessage());
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    private void obtenerComercios(String tokenJWT) {
+
+        Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios(tokenJWT);
+
+        obtenerComerciosEmpleado.enqueue(new Callback<List<Comercio>>() {
+            @Override
+            public void onResponse(Call<List<Comercio>> call, Response<List<Comercio>> response) {
+
+                Log.i(TAG, "Get Comercios OK");
+
+                if (response.isSuccessful()) {
+
+                    List<Comercio> listaComercios = new ArrayList<>();
+
+                    try {
+
+                        listaComercios = response.body();
+
+                        Log.i(TAG, "Comercio 1 USER COMERCIO: " + listaComercios.get(0).getUserComercio());
+                        Log.i(TAG, "Comercio 1 EMPLEADO ID: " + listaComercios.get(0).getEmpleadoId());
+
+                        Log.i(TAG, "Comercio 1 ID: " + listaComercios.get(0).getId());
+                        Log.i(TAG, "Comercio 1 USER ID: " + listaComercios.get(0).getUserId());
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+
+                    try {
+                        Log.i(TAG, "Get Comercios IS NOT SUCCESFUL " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comercio>> call, Throwable t) {
+
+                Log.i(TAG, "On Failure Get Comercios");
+
+                try{
+
+                    Log.e(TAG, t.getMessage());
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+        Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
+
+//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO, nombreUsuario);
+//
+//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_EMAIL_USUARIO, email);
+//
+//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_IMAGEN_USUARIO, imagenUsuario);
+
+        startActivity(pasarAMainActivity);
+
 
     }
 
