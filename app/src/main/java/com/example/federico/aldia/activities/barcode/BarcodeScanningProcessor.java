@@ -22,12 +22,11 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
 
     private final FirebaseVisionBarcodeDetector detector;
 
-    public BarcodeScanningProcessor() {
-        // Note that if you know which format of barcode your app is dealing with, detection will be
-        // faster to specify the supported barcode formats one by one, e.g.
-        // new FirebaseVisionBarcodeDetectorOptions.Builder()
-        //     .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_QR_CODE)
-        //     .build();
+    private QRDetectedListener qrListener;
+
+    public BarcodeScanningProcessor(QRDetectedListener qrListener) {
+
+        this.qrListener = qrListener;
 
         FirebaseVisionBarcodeDetectorOptions options =
                 new FirebaseVisionBarcodeDetectorOptions.Builder()
@@ -36,8 +35,6 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
                         .build();
 
         detector = FirebaseVision.getInstance().getVisionBarcodeDetector(options);
-
-
 
     }
 
@@ -63,18 +60,22 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
         graphicOverlay.clear();
 
 
-        for (int i = 0; i < barcodes.size(); ++i) {
-            FirebaseVisionBarcode barcode = barcodes.get(i);
-            BarcodeGraphic barcodeGraphic = new BarcodeGraphic(graphicOverlay, barcode);
-            graphicOverlay.add(barcodeGraphic);
+        if (barcodes.size()>0) {
+            try {
+                detector.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            FirebaseVisionBarcode barcode = barcodes.get(0);
+           // BarcodeGraphic barcodeGraphic = new BarcodeGraphic(graphicOverlay, barcode);
+          //  graphicOverlay.add(barcodeGraphic);
 
-            CamaraActivity.acaEsta();
+            if (qrListener != null) {
+                qrListener.QRDetected(barcode.getRawValue());
 
+            }
 
         }
-
-
-
     }
 
     @Override

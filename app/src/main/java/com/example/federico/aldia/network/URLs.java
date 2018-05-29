@@ -14,6 +14,20 @@ public class URLs {
 
     public static final String COMERCIOS = "comercios";
 
+    public static final String LIQUIDACIONES = "liquidacions";
+
+    public static final String ONE = "one";
+
+    public static final String ALL = "all";
+
+    public static final String PERIODOS = "periodos";
+
+    public static final String NEW = "new";
+
+
+
+
+
 
 
 }

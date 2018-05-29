@@ -9,7 +9,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.data.Liquidacion;
+import com.example.federico.aldia.model.Liquidacion;
+import com.example.federico.aldia.utils.Utils;
 
 import java.util.List;
 
@@ -40,9 +41,27 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         Liquidacion liquidacion = listaLiquidaciones.get(position);
 
-        holder.tvFechaLiquidacion.setText(liquidacion.getFecha());
+        String fecha = "";
+        String montoTotal = "";
 
-        holder.tvRecaudacionTotalLiquidacion.setText(liquidacion.getMontoTotal());
+        try{
+
+            fecha = liquidacion.getFecha();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            montoTotal = liquidacion.getMontoTotal().toString();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(fecha));
+
+        holder.tvRecaudacionTotalLiquidacion.setText(montoTotal);
 
     }
 
@@ -83,7 +102,7 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
             Liquidacion liquidacionClickeada = listaLiquidaciones.get(clickedPosition);
 
-            mOnClickListener.onListItemClick(clickedPosition,liquidacionClickeada);
+            mOnClickListener.onListItemClick(clickedPosition, liquidacionClickeada);
 
 
         }

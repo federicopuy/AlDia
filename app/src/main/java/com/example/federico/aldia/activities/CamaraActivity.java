@@ -1,8 +1,10 @@
 package com.example.federico.aldia.activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +16,24 @@ import com.example.federico.aldia.activities.barcode.BarcodeScanningProcessor;
 import com.example.federico.aldia.activities.barcode.CameraSource;
 import com.example.federico.aldia.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldia.activities.barcode.GraphicOverlay;
+import com.example.federico.aldia.activities.barcode.QRDetectedListener;
+import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.model.Periodo;
+import com.example.federico.aldia.model.TokenQR;
+import com.example.federico.aldia.model.TokenRetro;
+import com.example.federico.aldia.network.APIInterface;
+import com.example.federico.aldia.network.RetrofitClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class CamaraActivity extends AppCompatActivity {
+
+public class CamaraActivity extends AppCompatActivity implements QRDetectedListener{
 
     private static final String BARCODE_DETECTION = "Barcode Detection";
 
@@ -29,6 +42,8 @@ public class CamaraActivity extends AppCompatActivity {
     private GraphicOverlay graphicOverlay;
     private String selectedModel = BARCODE_DETECTION;
     private static final int PERMISSION_REQUESTS = 1;
+    private APIInterface mService;
+    int i = 1;
 
 
     private static final String TAG = "CamaraActivity";
@@ -39,6 +54,7 @@ public class CamaraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
 
+
         preview = findViewById(R.id.firePreview);
         if (preview == null) {
             Log.d(TAG, "Preview is null");
@@ -48,19 +64,94 @@ public class CamaraActivity extends AppCompatActivity {
             Log.d(TAG, "graphicOverlay is null");
         }
 
-
         if (allPermissionsGranted()) {
-
 
             createCameraSource(BARCODE_DETECTION);
             startCameraSource();
-
 
         } else {
             getRuntimePermissions();
         }
 
     }
+
+    @Override
+    public void QRDetected(String rawValue) {
+
+        if (i == 1) {
+            i++;
+
+            final String nombreLlamada = "postNewPeriodo";
+
+            mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+
+            TokenQR tokenQR = new TokenQR(rawValue);
+
+            Call<Periodo> postNewPeriodo = mService.newPeriodo(tokenQR);
+
+            postNewPeriodo.enqueue(new Callback<Periodo>() {
+                @Override
+                public void onResponse(Call<Periodo> call, Response<Periodo> response) {
+
+                    Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
+
+                    if (response.isSuccessful()) {
+
+                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+                        try {
+
+                            Periodo periodoEscaneado = response.body();
+
+                            if (periodoEscaneado.getHoraFin() != null) {
+
+                                // esta finalizando
+                                Log.i(TAG, "TERMINO PERIODO");
+
+                            } else {
+
+                                // esta iniciando
+
+                                Log.i(TAG, "INICIO PERIODO");
+
+
+
+                            }
+
+                            finish();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+
+                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+                        try {
+                            Log.e(TAG, response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        finish();
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<Periodo> call, Throwable t) {
+
+                    Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+                    finish();
+
+                }
+            });
+
+
+        }
+
+    }
+
+
 
     private void createCameraSource(String model) {
         // If there's no existing cameraSource, create one.
@@ -75,7 +166,7 @@ public class CamaraActivity extends AppCompatActivity {
         Log.i(TAG, "Using Barcode Detector Processor");
 
         try {
-            cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor());
+            cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor(this));
 
 
 
@@ -190,12 +281,5 @@ public class CamaraActivity extends AppCompatActivity {
         return false;
     }
 
-    public static void acaEsta(){
 
-
-        System.out.println("ESTAAAAA");
-
-
-
-    }
 }

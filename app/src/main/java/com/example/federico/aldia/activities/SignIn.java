@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.data.Comercio;
-import com.example.federico.aldia.data.Constantes;
-import com.example.federico.aldia.data.TokenRetro;
+import com.example.federico.aldia.model.Comercio;
+import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.model.TokenRetro;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,9 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -184,7 +181,7 @@ public class SignIn extends AppCompatActivity implements
     /*-------------------------------------- Update UI --------------------------------------------***/
 
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(final FirebaseUser user) {
 
         //   hideProgressDialog();
 
@@ -194,8 +191,6 @@ public class SignIn extends AppCompatActivity implements
 
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
 
-            String nombreUsuario = user.getDisplayName();
-            String email = user.getEmail();
 
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -211,7 +206,7 @@ public class SignIn extends AppCompatActivity implements
 
                                 if(!tokenFirebase.equals("")){
 
-                                    servicioEnviarToken(tokenFirebase);
+                                    servicioEnviarToken(user);
 
                                 }
 
@@ -229,7 +224,7 @@ public class SignIn extends AppCompatActivity implements
 
     }
 
-    private void servicioEnviarToken(String tokenFirebase) {
+    private void servicioEnviarToken(final FirebaseUser user) {
 
          mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
 
@@ -250,28 +245,26 @@ public class SignIn extends AppCompatActivity implements
                     try {
 
 
-                        //todo modificar para que venga el string solo
+                        //todo meter en un utils
+
                         JSONObject root = new JSONObject(response.body());
 
                         String bearer = root.getString("id_token");
 
                         tokenJWT = "Bearer " + bearer;
 
+                        System.out.println("JWT" + tokenJWT);
+
+                        prefs.edit().putString(Constantes.KEY_TOKEN_JWT, tokenJWT).apply();
+
+                        obtenerComercios(user);
+
+                        Log.i(TAG, "Token JWT: " + tokenJWT);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "Token NULO");
                     }
-
-                    Log.i(TAG, "Token JWT: " + tokenJWT);
-
-                    prefs.edit().putString(Constantes.KEY_TOKEN_JWT, tokenJWT).apply();
-
-
-
-
-                    obtenerComercios(tokenJWT);
-
-
 
                 } else {
 
@@ -300,9 +293,9 @@ public class SignIn extends AppCompatActivity implements
         });
     }
 
-    private void obtenerComercios(String tokenJWT) {
+    private void obtenerComercios(final FirebaseUser user) {
 
-        Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios(tokenJWT);
+        Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios();
 
         obtenerComerciosEmpleado.enqueue(new Callback<List<Comercio>>() {
             @Override
@@ -318,11 +311,32 @@ public class SignIn extends AppCompatActivity implements
 
                         listaComercios = response.body();
 
-                        Log.i(TAG, "Comercio 1 USER COMERCIO: " + listaComercios.get(0).getUserComercio());
-                        Log.i(TAG, "Comercio 1 EMPLEADO ID: " + listaComercios.get(0).getEmpleadoId());
+                        for (Comercio comercio:listaComercios) {
 
-                        Log.i(TAG, "Comercio 1 ID: " + listaComercios.get(0).getId());
-                        Log.i(TAG, "Comercio 1 USER ID: " + listaComercios.get(0).getUserId());
+
+                            Log.i(TAG, "Comercio 1 USER ID: " + comercio.getUserId());
+
+                            Log.i(TAG, "Comercio 1 USER COMERCIO: " + comercio.getUserComercio());
+
+                            prefs.edit().putInt(Constantes.KEY_COMERCIO_ID, comercio.getUserId()).apply();
+
+                        }
+
+                            Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
+
+                            final String nombreUsuario = user.getDisplayName();
+                            final String email = user.getEmail();
+                            final String imagenUsuario = user.getPhotoUrl().toString();
+
+                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO, nombreUsuario);
+
+                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_EMAIL_USUARIO, email);
+
+                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_IMAGEN_USUARIO, imagenUsuario);
+
+                            startActivity(pasarAMainActivity);
+
+
 
 
                     } catch (Exception e) {
@@ -356,24 +370,6 @@ public class SignIn extends AppCompatActivity implements
         });
 
 
-
-
-
-
-
-
-
-
-
-        Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
-
-//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO, nombreUsuario);
-//
-//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_EMAIL_USUARIO, email);
-//
-//                    pasarAMainActivity.putExtra(Constantes.KEY_INTENT_IMAGEN_USUARIO, imagenUsuario);
-
-        startActivity(pasarAMainActivity);
 
 
     }

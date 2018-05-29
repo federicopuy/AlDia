@@ -23,16 +23,21 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".activities.SignIn" />
+        <activity android:name=".activities.SignIn">
+
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
+
+        </activity>
+
         <activity android:name=".activities.Ingreso" />
         <activity android:name=".activities.Egreso" />
-        <activity android:name=".activities.HistorialActivity" />
+        <activity android:name=".activities.PeriodosActivity" />
         <activity android:name=".activities.LiquidacionesActivity" />
         <activity android:name=".activities.MiPerfilActivity" />
         <activity android:name=".activities.CamaraActivity"></activity>

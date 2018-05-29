@@ -17,14 +17,14 @@ public class RetrofitClient {
 
         if (retrofit==null){
 
-//            client = new OkHttpClient.Builder()
-//                    .addInterceptor(new ConnectivityInterceptor(mContext))
-//                    .addInterceptor(new TokenExpiryInterceptor(mContext))
-//                    .build();
+            client = new OkHttpClient.Builder()
+                        .addInterceptor(new TokenInterceptor(mContext))
+                //    .addInterceptor(new TokenExpiryInterceptor(mContext))
+                    .build();
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(URLs.APIURLCOMPLETA)
-                //    .client(client)
+                    .client(client)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
