@@ -77,8 +77,8 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
 
             tvHoraIngresoEgreso = itemView.findViewById(R.id.tvHoraIngresoEgreso);
             tvfecha = itemView.findViewById(R.id.tvfecha);
-            tvhorasRegularesTotales = itemView.findViewById(R.id.tvhorasRegularesTotales);
-            tvhorasExtraTotales = itemView.findViewById(R.id.tvhorasExtraTotales);
+            tvhorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
+            tvhorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
 
 
         }

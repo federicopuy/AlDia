@@ -16,6 +16,10 @@ public class URLs {
 
     public static final String LIQUIDACIONES = "liquidacions";
 
+    public static final String EMPLEADOS = "empleados";
+
+    public static final String GET_EMPLEADO = "getEmpleado";
+
     public static final String ONE = "one";
 
     public static final String ALL = "all";

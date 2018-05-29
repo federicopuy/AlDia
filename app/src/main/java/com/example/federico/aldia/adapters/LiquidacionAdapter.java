@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Liquidacion;
+import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.utils.Utils;
 
 import java.util.List;
@@ -43,25 +44,32 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         String fecha = "";
         String montoTotal = "";
+        String horasRegulares = "";
+        String horasExtra = "";
 
         try{
-
             fecha = liquidacion.getFecha();
-
         } catch (Exception e){
             e.printStackTrace();
         }
 
         try{
             montoTotal = liquidacion.getMontoTotal().toString();
-
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(fecha));
+        try{
+            horasRegulares = liquidacion.getHorasTotExt().toString();
+            horasExtra = liquidacion.getHorasTotExt().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(fecha));
         holder.tvRecaudacionTotalLiquidacion.setText(montoTotal);
+        holder.tvHorasRegularesTotales.setText(horasRegulares);
+        holder.tvHorasExtraTotales.setText(horasExtra);
 
     }
 
@@ -78,8 +86,7 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
       class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvFechaLiquidacion;
-        TextView tvRecaudacionTotalLiquidacion;
+        TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales;
 
 
         private AdapterView.OnItemClickListener listener;
@@ -87,9 +94,11 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
 
-
-            tvFechaLiquidacion = itemView.findViewById(R.id.tvFechaLiquidacion);
             tvRecaudacionTotalLiquidacion = itemView.findViewById(R.id.tvRecaudacionTotalLiquidacion);
+            tvFechaLiquidacion = itemView.findViewById(R.id.tvFechaLiquidacion);
+            tvHorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
+            tvHorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
+
 
             itemView.setOnClickListener(this);
 

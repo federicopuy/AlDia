@@ -28,8 +28,10 @@ import com.example.federico.aldia.model.Constantes;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
+import com.example.federico.aldia.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +47,13 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "Main Activity";
     private static final int PERMISSION_REQUESTS = 1;
+    private static final int REQUEST_CODE = 2;
+
 
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
 
-    TextView tvNombreComercio, tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion;
+    TextView tvNombreComercio, tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria;
 
     SharedPreferences prefs;
 
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         tvHorasRegulares = content_view.findViewById(R.id.tvHorasRegulares);
         tvHorasExtra = content_view.findViewById(R.id.tvHorasExtra);
         tvFechaUltimaLiquidacion = content_view.findViewById(R.id.tvFechaUltimaLiquidacion);
+        tvCategoria = content_view.findViewById(R.id.tvCategoria);
 
         obtenerUltimaLiquidacion();
 
@@ -116,6 +121,12 @@ public class MainActivity extends AppCompatActivity
 
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
 
+                    try {
+                        Log.e(TAG, response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
             }
@@ -138,11 +149,13 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 //todo nombre comercio
-                tvNombreComercio.setText("NOMBRE COMERCIO");
+                tvNombreComercio.setText("Chajuco Bar");
+                tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
                 tvRecaudado.setText(ultimaLiquidacion.getMontoTotal().toString());
                 tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
-                tvFechaUltimaLiquidacion.setText(ultimaLiquidacion.getFecha());
+                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -161,8 +174,27 @@ public class MainActivity extends AppCompatActivity
         }
 
         Intent pasarACamara = new Intent(MainActivity.this, CamaraActivity.class);
-        startActivity(pasarACamara);
 
+        startActivityForResult(pasarACamara, REQUEST_CODE);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Log.i(TAG, "Result OK");
+
+            } else {
+                if (resultCode==RESULT_CANCELED){
+
+                    Log.i(TAG, "Result CANCELED");
+
+                }
+            }
+        }
     }
 
     /*-------------------------------------- Permissions --------------------------------------------***/
@@ -298,16 +330,16 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_mi_perfil) {
 
-            Intent pasarAMiPerfil = new Intent(MainActivity.this, MiPerfilActivity.class);
+            Intent pasarAMiPerfil = new Intent(MainActivity.this, EmpleadoActivity.class);
 
             startActivity(pasarAMiPerfil);
 
 
-        } else if (id == R.id.nav_historial) {
+        } else if (id == R.id.nav_periodos) {
 
-            Intent pasarAHistorial = new Intent(MainActivity.this, PeriodosActivity.class);
+            Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
 
-            startActivity(pasarAHistorial);
+            startActivity(pasarAPeriodos);
 
         } else if (id == R.id.nav_liquidaciones) {
 

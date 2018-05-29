@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EmpleadoActivity">
+
+    <TextView
+        android:id="@+id/tvNombreText"
+        style="@style/textViewsMiPerfilText"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="88dp"
+        android:text="Nombre"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNombreValue"
+        style="@style/textViewsMiPerfilValue"
+        tools:text="Federico"
+        app:layout_constraintStart_toStartOf="@+id/tvNombreText"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreText" />
+
+
+    <TextView
+        android:id="@+id/tvDireccionText"
+        style="@style/textViewsMiPerfilText"
+        android:layout_marginTop="44dp"
+        android:text="Dirección"
+        app:layout_constraintStart_toStartOf="@+id/tvNombreValue"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreValue" />
+
+    <TextView
+        android:id="@+id/tvDireccionValue"
+        style="@style/textViewsMiPerfilValue"
+        tools:text="9 de Julio 1100"
+        app:layout_constraintStart_toStartOf="@+id/tvDireccionText"
+        app:layout_constraintTop_toBottomOf="@+id/tvDireccionText" />
+
+    <TextView
+        android:id="@+id/tvEmailText"
+        style="@style/textViewsMiPerfilText"
+        android:layout_marginTop="44dp"
+        android:text="Email"
+        app:layout_constraintStart_toStartOf="@+id/tvDireccionValue"
+        app:layout_constraintTop_toBottomOf="@+id/tvDireccionValue" />
+
+    <TextView
+        android:id="@+id/tvEmailValue"
+        style="@style/textViewsMiPerfilValue"
+        tools:text="federicopuy@gmail.com"
+        app:layout_constraintStart_toStartOf="@+id/tvEmailText"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailText" />
+
+    <TextView
+        android:id="@+id/tvDNIText"
+        style="@style/textViewsMiPerfilText"
+        android:layout_marginTop="44dp"
+        android:text="DNI"
+        app:layout_constraintStart_toStartOf="@+id/tvEmailValue"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailValue" />
+
+    <TextView
+        android:id="@+id/tvDNIValue"
+        style="@style/textViewsMiPerfilValue"
+        tools:text="36417243"
+        app:layout_constraintStart_toStartOf="@+id/tvDNIText"
+        app:layout_constraintTop_toBottomOf="@+id/tvDNIText" />
+
+    <TextView
+        android:id="@+id/tvTelefonoText"
+        style="@style/textViewsMiPerfilText"
+        android:layout_marginTop="44dp"
+        android:text="Teléfono"
+        app:layout_constraintStart_toStartOf="@+id/tvDNIValue"
+        app:layout_constraintTop_toBottomOf="@+id/tvDNIValue" />
+
+    <TextView
+        android:id="@+id/tvTelefonoValue"
+        style="@style/textViewsMiPerfilValue"
+        tools:text="261-26361323"
+        app:layout_constraintStart_toStartOf="@+id/tvTelefonoText"
+        app:layout_constraintTop_toBottomOf="@+id/tvTelefonoText" />
+
+
+</android.support.constraint.ConstraintLayout>

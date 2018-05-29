@@ -1,10 +1,10 @@
 package com.example.federico.aldia.activities;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +20,9 @@ import com.example.federico.aldia.activities.barcode.QRDetectedListener;
 import com.example.federico.aldia.model.Constantes;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
-import com.example.federico.aldia.model.TokenRetro;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,22 +102,19 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
 
                             Periodo periodoEscaneado = response.body();
 
-                            if (periodoEscaneado.getHoraFin() != null) {
 
-                                // esta finalizando
-                                Log.i(TAG, "TERMINO PERIODO");
+                            Intent pasarAIngresoEgreso = new Intent(CamaraActivity.this, IngresoEgreso.class);
 
-                            } else {
+                            Gson gsonPeriodo = new Gson();
 
-                                // esta iniciando
+                            pasarAIngresoEgreso.putExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
 
-                                Log.i(TAG, "INICIO PERIODO");
+                            pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 
-
-
-                            }
+                            startActivity(pasarAIngresoEgreso);
 
                             finish();
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -131,6 +128,8 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                             e.printStackTrace();
                         }
 
+                        Intent returnIntent = getIntent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
                         finish();
 
                     }
@@ -141,8 +140,10 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                 public void onFailure(Call<Periodo> call, Throwable t) {
 
                     Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                    finish();
 
+                    Intent returnIntent = getIntent();
+                    setResult(Activity.RESULT_CANCELED, returnIntent);
+                    finish();
                 }
             });
 

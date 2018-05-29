@@ -7,82 +7,88 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.federico.aldia.activities.MainActivity"
+    tools:layout_editor_absoluteY="81dp"
     tools:showIn="@layout/app_bar_main">
 
     <TextView
         android:id="@+id/tvNombreComercio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:text="Chajuco Bar"
-        android:textSize="26dp"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        style="@style/textViewsTitulos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.011" />
+        tools:text="Chajuco Bar" />
+
+    <TextView
+        android:id="@+id/tvCategoria"
+        style="@style/textViewDatosMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/puestoTv"
+        tools:text="Cocinero 8hs" />
 
 
     <TextView
         android:id="@+id/tvRecaudado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
-        android:text="$3650,87"
-        android:textSize="22dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
+        app:layout_constraintTop_toBottomOf="@+id/recaudaciontv"
+        tools:text="$3650,87" />
 
 
     <TextView
         android:id="@+id/tvHorasRegulares"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="Horas regulares: 20:30"
-        android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecaudado" />
+        app:layout_constraintTop_toBottomOf="@+id/horasRegularestv"
+        tools:text="20:30" />
 
     <TextView
         android:id="@+id/tvHorasExtra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="Horas extra: 2:16"
-        android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHorasRegulares" />
+        app:layout_constraintTop_toBottomOf="@+id/horasExtratv"
+        tools:text="2:16" />
 
 
     <TextView
         android:id="@+id/tvFechaUltimaLiquidacion"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:text="Última liquidación: 3 de marzo de 2018"
-        android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/textViewDatosMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ultimaLiquidaciontv"
+        tools:text="3 de marzo de 2018" />
+
+    <TextView
+        android:id="@+id/puestoTv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/puesto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
+
+    <TextView
+        android:id="@+id/recaudaciontv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/monto_recaudado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+
+    <TextView
+        android:id="@+id/horasRegularestv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/horas_regulares"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecaudado" />
+
+    <TextView
+        android:id="@+id/horasExtratv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/horas_extra"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHorasRegulares" />
+
+    <TextView
+        android:id="@+id/ultimaLiquidaciontv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/ltima_liquidaci_n"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHorasExtra" />
-
-
 
 
 </android.support.constraint.ConstraintLayout>

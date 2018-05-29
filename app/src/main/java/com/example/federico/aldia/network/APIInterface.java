@@ -2,6 +2,7 @@ package com.example.federico.aldia.network;
 
 import com.example.federico.aldia.model.AllLiquidaciones;
 import com.example.federico.aldia.model.Comercio;
+import com.example.federico.aldia.model.Empleado;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
@@ -37,6 +38,9 @@ public interface APIInterface {
 
     @GET(URLs.PERIODOS + "/{userId}")
     Call<Periodo>getPeriodos(@Path("userId") int userId);
+
+    @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
+    Call<Empleado>getDatosEmpleado();
 
 
 

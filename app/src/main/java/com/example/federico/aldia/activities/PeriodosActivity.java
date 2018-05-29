@@ -15,16 +15,13 @@ import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PeriodosActivity extends AppCompatActivity {
 
-    private static final String TAG = "Historial Activity";
+    private static final String TAG = "Periodos Activity";
     private static PeriodoAdapter mAdapter;
     RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -34,7 +31,7 @@ public class PeriodosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historial);
+        setContentView(R.layout.activity_periodos);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

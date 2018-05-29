@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="nav_drawer_cerrar_sesion">Cerrar Sesión</string>
     <string name="nav_drawer_mi_perfil">Mi Perfil</string>
-    <string name="nav_drawer_historial">Historial</string>
+    <string name="nav_drawer_periodos">Períodos</string>
     <string name="nav_drawer_sesion">Sesión</string>
     <string name="nav_drawer_liquidaciones">Liquidaciones</string>
 
@@ -18,4 +18,12 @@
     <string name="is_successful">is Successful </string>
     <string name="is_not_successful">is NOT Successful </string>
     <string name="on_failure">onFailure </string>
+    <string name="puesto">Puesto</string>
+    <string name="monto_recaudado">Monto Recaudado</string>
+    <string name="horas_regulares">Horas Regulares</string>
+    <string name="horas_extra">Horas Extra</string>
+    <string name="ltima_liquidaci_n">Última Liquidación</string>
+    <string name="egreso">Egreso</string>
+    <string name="Ingreso">Ingreso</string>
+
 </resources>

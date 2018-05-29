@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.federico.aldia.activities.IngresoEgreso">
+
+    <TextView
+        android:id="@+id/tvIngresoEgreso"
+        style="@style/textViewsTitulos"
+        tools:text="INGRESO"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNombreComercio"
+        style="@style/textViewDatosMain"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvIngresoEgreso"
+        tools:text="Chajuco Bar" />
+
+    <TextView
+        android:id="@+id/tvHoraIngreso"
+        style="@style/textViewDatosMain"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio"
+        tools:text="19:22" />
+
+    <TextView
+        android:id="@+id/tvHoraEgreso"
+        style="@style/textViewDatosMain"
+        android:layout_marginTop="30dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso"
+        tools:text="21:23" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAceptarIngresoEgreso"
+        style="@style/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_crop" />
+
+
+</android.support.constraint.ConstraintLayout>

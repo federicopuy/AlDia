@@ -59,22 +59,13 @@ public class BarcodeScanningProcessor extends VisionProcessorBase<List<FirebaseV
             @NonNull GraphicOverlay graphicOverlay) {
         graphicOverlay.clear();
 
-
         if (barcodes.size()>0) {
-            try {
-                detector.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             FirebaseVisionBarcode barcode = barcodes.get(0);
-           // BarcodeGraphic barcodeGraphic = new BarcodeGraphic(graphicOverlay, barcode);
-          //  graphicOverlay.add(barcodeGraphic);
 
             if (qrListener != null) {
                 qrListener.QRDetected(barcode.getRawValue());
-
             }
-
         }
     }
 
