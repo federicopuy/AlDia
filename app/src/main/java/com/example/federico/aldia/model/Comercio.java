@@ -8,7 +8,7 @@ public class Comercio {
 
     @SerializedName("userId")
     @Expose
-    private Integer userId;
+    private long userId;
     @SerializedName("userComercio")
     @Expose
     private String userComercio;
@@ -28,18 +28,18 @@ public class Comercio {
     public Comercio() {
     }
 
-    public Comercio(Integer userId, String userComercio, String fechaFin, String fechaInicio) {
+    public Comercio(long userId, String userComercio, String fechaFin, String fechaInicio) {
         this.userId = userId;
         this.userComercio = userComercio;
         this.fechaFin = fechaFin;
         this.fechaInicio = fechaInicio;
     }
 
-    public Integer getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

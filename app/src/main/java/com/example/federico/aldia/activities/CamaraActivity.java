@@ -17,7 +17,7 @@ import com.example.federico.aldia.activities.barcode.CameraSource;
 import com.example.federico.aldia.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldia.activities.barcode.GraphicOverlay;
 import com.example.federico.aldia.activities.barcode.QRDetectedListener;
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
 import com.example.federico.aldia.network.APIInterface;

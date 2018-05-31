@@ -22,7 +22,7 @@ public class Liquidacion {
     private Integer horasTotReg;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private long id;
     @SerializedName("montoTotal")
     @Expose
     private Integer montoTotal;
@@ -44,7 +44,7 @@ public class Liquidacion {
      * @param empleado
      * @param montoTotal
      */
-    public Liquidacion(Categoria categoria, Empleado empleado, String fecha, Integer horasTotExt, Integer horasTotReg, Integer id, Integer montoTotal) {
+    public Liquidacion(Categoria categoria, Empleado empleado, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Integer montoTotal) {
         super();
         this.categoria = categoria;
         this.empleado = empleado;
@@ -95,11 +95,11 @@ public class Liquidacion {
         this.horasTotReg = horasTotReg;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

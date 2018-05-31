@@ -16,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface APIInterface {
 
@@ -27,17 +28,19 @@ public interface APIInterface {
     Call<List<Comercio>>getComercios();
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ONE + "/{userId}")
-    Call<Liquidacion>getUltimaLiquidacion(@Path("userId") int userId);
+    Call<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ALL + "/{userId}")
-    Call<AllLiquidaciones>getAllLiquidaciones(@Path("userId") int userId);
+    Call<AllLiquidaciones>getAllLiquidaciones(@Path("userId") long userId);
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.PERIODOS + "/" + URLs.NEW)
     Call<Periodo> newPeriodo(@Body TokenQR tokenQR);
 
-    @GET(URLs.PERIODOS + "/{userId}")
-    Call<Periodo>getPeriodos(@Path("userId") int userId);
+    @GET(URLs.PERIODOS + "/{method}" + "/{id}")
+    Call<List<Periodo>>getPeriodos(@Path("method") String tipoBusqueda,
+                             @Path("id") long id);
+
 
     @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
     Call<Empleado>getDatosEmpleado();

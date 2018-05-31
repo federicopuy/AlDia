@@ -1,4 +1,4 @@
-package com.example.federico.aldia.model;
+package com.example.federico.aldia.utils;
 
 public class Constantes {
 
@@ -14,6 +14,8 @@ public class Constantes {
     public static final String KEY_INTENT_NOMBRE_USUARIO = "keyIntentNombreUsuario";
 
     public static final String KEY_INTENT_PERIODO_INGRESO_EGRESO = "keyIntentPeriodoIngresoEgreso";
+
+    public static final String KEY_INTENT_LIQUIDACION_PERIODO = "keyIntentObtenerPeriodoDeLiquidacion";
 
 
     public static final String KEY_COMERCIO_ID = "comercioID";

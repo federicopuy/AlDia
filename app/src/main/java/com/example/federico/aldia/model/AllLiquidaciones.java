@@ -18,19 +18,19 @@ public class AllLiquidaciones {
     private Boolean last;
     @SerializedName("number")
     @Expose
-    private Integer number;
+    private long number;
     @SerializedName("numberOfElements")
     @Expose
-    private Integer numberOfElements;
+    private long numberOfElements;
     @SerializedName("size")
     @Expose
-    private Integer size;
+    private long size;
     @SerializedName("totalElements")
     @Expose
-    private Integer totalElements;
+    private long totalElements;
     @SerializedName("totalPages")
     @Expose
-    private Integer totalPages;
+    private long totalPages;
 
     /**
      * No args constructor for use in serialization
@@ -50,7 +50,7 @@ public class AllLiquidaciones {
      * @param totalPages
      * @param size
      */
-    public AllLiquidaciones(List<Liquidacion> liquidacion, Boolean first, Boolean last, Integer number, Integer numberOfElements, Integer size, Integer totalElements, Integer totalPages) {
+    public AllLiquidaciones(List<Liquidacion> liquidacion, Boolean first, Boolean last, long number, long numberOfElements, long size, long totalElements, long totalPages) {
         super();
         this.liquidacion = liquidacion;
         this.first = first;
@@ -86,43 +86,43 @@ public class AllLiquidaciones {
         this.last = last;
     }
 
-    public Integer getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
-    public Integer getNumberOfElements() {
+    public long getNumberOfElements() {
         return numberOfElements;
     }
 
-    public void setNumberOfElements(Integer numberOfElements) {
+    public void setNumberOfElements(long numberOfElements) {
         this.numberOfElements = numberOfElements;
     }
 
-    public Integer getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
-    public Integer getTotalElements() {
+    public long getTotalElements() {
         return totalElements;
     }
 
-    public void setTotalElements(Integer totalElements) {
+    public void setTotalElements(long totalElements) {
         this.totalElements = totalElements;
     }
 
-    public Integer getTotalPages() {
+    public long getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(Integer totalPages) {
+    public void setTotalPages(long totalPages) {
         this.totalPages = totalPages;
     }
 

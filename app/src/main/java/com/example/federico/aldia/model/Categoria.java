@@ -10,7 +10,7 @@ public class Categoria {
     private Integer horasTrabajo;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private long id;
     @SerializedName("monto")
     @Expose
     private Integer monto;
@@ -36,7 +36,7 @@ public class Categoria {
      * @param tipoCategoria
      * @param monto
      */
-    public Categoria(Integer horasTrabajo, Integer id, Integer monto, String nombre, String tipoCategoria) {
+    public Categoria(Integer horasTrabajo, long id, Integer monto, String nombre, String tipoCategoria) {
         super();
         this.horasTrabajo = horasTrabajo;
         this.id = id;
@@ -53,11 +53,11 @@ public class Categoria {
         this.horasTrabajo = horasTrabajo;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

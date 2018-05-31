@@ -6,11 +6,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.utils.Utils;
 import com.google.gson.Gson;
@@ -69,7 +68,7 @@ public class IngresoEgreso extends AppCompatActivity {
 
         }
 
-        tvNombreComercio.setText(periodo.getUser());
+       // tvNombreComercio.setText(periodo.getUser());
 
         tvHoraIngreso.setText(Utils.obtenerHora(periodo.getHoraInicio()));
 

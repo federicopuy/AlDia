@@ -16,7 +16,7 @@ public class Empleado {
     private String email;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private long id;
     @SerializedName("nombre")
     @Expose
     private String nombre;
@@ -40,7 +40,7 @@ public class Empleado {
      * @param telefono
      * @param dni
      */
-    public Empleado(String direccion, String dni, String email, Integer id, String nombre, String telefono) {
+    public Empleado(String direccion, String dni, String email, long id, String nombre, String telefono) {
         super();
         this.direccion = direccion;
         this.dni = dni;
@@ -74,11 +74,11 @@ public class Empleado {
         this.email = email;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

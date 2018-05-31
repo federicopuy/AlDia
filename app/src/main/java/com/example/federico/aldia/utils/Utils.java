@@ -1,5 +1,10 @@
 package com.example.federico.aldia.utils;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +48,17 @@ public class Utils {
         return hora;
 
     }
+
+    public static boolean isPermissionGranted(Context context, String permission) {
+        if (ContextCompat.checkSelfPermission(context, permission)
+                == PackageManager.PERMISSION_GRANTED) {
+            Log.i("Permission granted: ", permission);
+            return true;
+        }
+        Log.i("Permission granted: ", permission);
+        return false;
+    }
+
 
 
 

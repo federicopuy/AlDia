@@ -12,7 +12,7 @@ import android.util.Log;
 import com.example.federico.aldia.adapters.LiquidacionAdapter;
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.AllLiquidaciones;
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
@@ -54,7 +54,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
 
         final String nombreLlamada = "callGetLiquidaciones";
 
-        int comercioId = prefs.getInt(Constantes.KEY_COMERCIO_ID, 0);
+        long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
 
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
 
@@ -108,6 +108,8 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
     public void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada) {
 
         Intent pasarAListaPeriodos = new Intent(LiquidacionesActivity.this, PeriodosActivity.class);
+
+        pasarAListaPeriodos.putExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, liquidacionClickeada.getId());
 
         startActivity(pasarAListaPeriodos);
 

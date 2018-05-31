@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
     private static final int PERMISSION_REQUESTS = 1;
     private static final int REQUEST_CODE = 2;
 
-
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
 
@@ -57,15 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences prefs;
 
-    private static boolean isPermissionGranted(Context context, String permission) {
-        if (ContextCompat.checkSelfPermission(context, permission)
-                == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Permission granted: " + permission);
-            return true;
-        }
-        Log.i(TAG, "Permission NOT granted: " + permission);
-        return false;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 
         final String nombreLlamada = "getUltimaLiquidacion";
 
-        int comercioId = prefs.getInt(Constantes.KEY_COMERCIO_ID, 0);
+        long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
 
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
 
@@ -217,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean allPermissionsGranted() {
         for (String permission : getRequiredPermissions()) {
-            if (!isPermissionGranted(this, permission)) {
+            if (!Utils.isPermissionGranted(this, permission)) {
                 return false;
             }
         }
@@ -227,7 +218,7 @@ public class MainActivity extends AppCompatActivity
     private void getRuntimePermissions() {
         List<String> allNeededPermissions = new ArrayList<>();
         for (String permission : getRequiredPermissions()) {
-            if (!isPermissionGranted(this, permission)) {
+            if (!Utils.isPermissionGranted(this, permission)) {
                 allNeededPermissions.add(permission);
             }
         }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Periodo;
+import com.example.federico.aldia.utils.Utils;
 
 import java.util.List;
 
@@ -43,9 +44,10 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
 
         Periodo periodo = listaPeriodos.get(position);
 
-       // holder.tvHoraIngresoEgreso.setText(periodo.getH() + " - " + periodo.getHoraEgreso());
+        holder.tvHoraIngresoEgreso.setText(Utils.obtenerHora(periodo.getHoraInicio())
+                + " - " + Utils.obtenerHora(periodo.getHoraFin()));
 
-      //  holder.tvfecha.setText(periodo.getFecha());
+        holder.tvfecha.setText(Utils.obtenerFechaFormateada(periodo.getHoraInicio()));
 
        // holder.tvhorasRegularesTotales.setText(periodo.getHorasRegularesTotales() + " - " + periodo.getRecaudadoHorasRegulares());
 

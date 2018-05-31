@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Comercio;
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.TokenRetro;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
@@ -318,7 +318,7 @@ public class SignIn extends AppCompatActivity implements
 
                             Log.i(TAG, "Comercio 1 USER COMERCIO: " + comercio.getUserComercio());
 
-                            prefs.edit().putInt(Constantes.KEY_COMERCIO_ID, comercio.getUserId()).apply();
+                            prefs.edit().putLong(Constantes.KEY_COMERCIO_ID, comercio.getUserId()).apply();
 
                         }
 

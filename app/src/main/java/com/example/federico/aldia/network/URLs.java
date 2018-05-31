@@ -28,6 +28,11 @@ public class URLs {
 
     public static final String NEW = "new";
 
+    public static final String SEARCH_METHOD_BY_LIQUIDACION = "findByLiquidacion";
+
+    public static final String SEARCH_METHOD_LAST_LIQUIDACION = "withoutLiquidacion";
+
+
 
 
 

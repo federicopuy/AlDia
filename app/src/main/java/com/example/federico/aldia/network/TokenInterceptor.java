@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.federico.aldia.model.Constantes;
+import com.example.federico.aldia.utils.Constantes;
 
 import java.io.IOException;
 
@@ -28,8 +28,7 @@ public class TokenInterceptor implements Interceptor {
 
             Request request = chain.request();
 
-            SharedPreferences prefs;
-            prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
             String token = prefs.getString(Constantes.KEY_TOKEN_JWT, "");
 
@@ -38,23 +37,7 @@ public class TokenInterceptor implements Interceptor {
 
             return chain.proceed(request);
 
-
         }
-
-
-//            //getAccessToken is your own accessToken(retrieve it by saving in shared preference or any other option )
-//            if(getAccessToken().isEmpty()){
-//                PrintLog.error("retrofit 2","Authorization header is already present or token is empty....");
-//                return chain.proceed(chain.request());
-//            }
-//            Request authorisedRequest = chain.request().newBuilder()
-//                    .addHeader("Authorization", getAccessToken()).build();
-//            PrintLog.error("retrofit 2","Authorization header is added to the url....");
-//            return chain.proceed(authorisedRequest);
-//        }}).build();
-//
-//    }
-
 
     }
 
