@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
                 //todo nombre comercio
                 tvNombreComercio.setText("Chajuco Bar");
                 tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
-                tvRecaudado.setText(ultimaLiquidacion.getMontoTotal().toString());
+                tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
                 tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
                 tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));

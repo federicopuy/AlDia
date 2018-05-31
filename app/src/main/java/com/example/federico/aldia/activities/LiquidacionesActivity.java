@@ -18,6 +18,7 @@ import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +36,8 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liquidaciones);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

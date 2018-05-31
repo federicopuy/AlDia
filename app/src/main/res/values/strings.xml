@@ -12,8 +12,6 @@
     <string name="nav_drawer_liquidaciones">Liquidaciones</string>
 
     <string name="title_activity_camara">CamaraActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="on_response">On Response </string>
     <string name="is_successful">is Successful </string>
     <string name="is_not_successful">is NOT Successful </string>
@@ -25,5 +23,9 @@
     <string name="ltima_liquidaci_n">Última Liquidación</string>
     <string name="egreso">Egreso</string>
     <string name="Ingreso">Ingreso</string>
+    <string name="per_odos_sin_liquidar">Períodos Sin Liquidar</string>
+    <string name="periodos">Períodos</string>
+    <string name="mi_perfil">Mi Perfil</string>
+    <string name="liquidaciones">Liquidaciones</string>
 
 </resources>

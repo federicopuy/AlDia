@@ -59,6 +59,23 @@ public class Utils {
         return false;
     }
 
+    public static String obtenerMontoFormateado(Double monto){
+
+        //todo faltan dos decimales
+
+        String montoFormateado = "Error";
+
+        try {
+
+             montoFormateado = "$ " + String.format("%.2f", monto);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return montoFormateado;
+
+    }
+
 
 
 

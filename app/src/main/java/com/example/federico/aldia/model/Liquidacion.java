@@ -25,7 +25,7 @@ public class Liquidacion {
     private long id;
     @SerializedName("montoTotal")
     @Expose
-    private Integer montoTotal;
+    private Double montoTotal;
 
     /**
      * No args constructor for use in serialization
@@ -44,7 +44,7 @@ public class Liquidacion {
      * @param empleado
      * @param montoTotal
      */
-    public Liquidacion(Categoria categoria, Empleado empleado, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Integer montoTotal) {
+    public Liquidacion(Categoria categoria, Empleado empleado, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Double montoTotal) {
         super();
         this.categoria = categoria;
         this.empleado = empleado;
@@ -103,11 +103,11 @@ public class Liquidacion {
         this.id = id;
     }
 
-    public Integer getMontoTotal() {
+    public Double getMontoTotal() {
         return montoTotal;
     }
 
-    public void setMontoTotal(Integer montoTotal) {
+    public void setMontoTotal(Double montoTotal) {
         this.montoTotal = montoTotal;
     }
 

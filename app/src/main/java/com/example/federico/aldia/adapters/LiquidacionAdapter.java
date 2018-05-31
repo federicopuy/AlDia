@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Liquidacion;
-import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.utils.Utils;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         this.mContext = context;
         mOnClickListener = listener;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,7 +52,7 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         }
 
         try{
-            montoTotal = liquidacion.getMontoTotal().toString();
+            montoTotal = Utils.obtenerMontoFormateado(liquidacion.getMontoTotal());
         } catch (Exception e){
             e.printStackTrace();
         }

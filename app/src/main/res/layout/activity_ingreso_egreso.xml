@@ -43,7 +43,7 @@
         style="@style/fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_crop" />
+        app:srcCompat="@drawable/ic_done_white_36px" />
 
 
 </android.support.constraint.ConstraintLayout>

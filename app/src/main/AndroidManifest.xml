@@ -36,10 +36,16 @@
         </activity>
 
         <activity android:name=".activities.IngresoEgreso" />
-        <activity android:name=".activities.PeriodosActivity" />
-        <activity android:name=".activities.LiquidacionesActivity" />
-        <activity android:name=".activities.EmpleadoActivity" />
-        <activity android:name=".activities.CamaraActivity"></activity>
+        <activity android:name=".activities.PeriodosActivity"
+            android:label="@string/periodos"/>
+        <activity android:name=".activities.LiquidacionesActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/liquidaciones"/>
+        <activity android:name=".activities.EmpleadoActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/mi_perfil"/>
+        <activity android:name=".activities.CamaraActivity"
+            android:parentActivityName=".activities.MainActivity"/>
     </application>
 
 </manifest>
