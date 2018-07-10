@@ -20,8 +20,6 @@ import butterknife.OnClick;
 
 public class IngresoEgreso extends AppCompatActivity {
 
-
-
     @BindView(R.id.fabAceptarIngresoEgreso)
     FloatingActionButton fabAceptarIngresoEgreso;
 
@@ -37,7 +35,11 @@ public class IngresoEgreso extends AppCompatActivity {
     @BindView(R.id.tvHoraEgreso)
     TextView tvHoraEgreso;
 
+    @BindView(R.id.tvCategoria)
+    TextView tvCategoria;
 
+    @BindView(R.id.horaEgresoTv)
+    TextView horaEgresoTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +52,7 @@ public class IngresoEgreso extends AppCompatActivity {
 //todo try catch
 
         if (periodo==null){
-
             //todo a main activity con cancel
-
         }
         if (periodo.getHoraFin()!=null){
 
@@ -62,13 +62,20 @@ public class IngresoEgreso extends AppCompatActivity {
 
             tvHoraEgreso.setText(Utils.obtenerHora(periodo.getHoraFin()));
 
+            horaEgresoTv.setVisibility(View.VISIBLE);
         } else {
 
             tvIngresoEgreso.setText(R.string.Ingreso);
 
         }
 
-       // tvNombreComercio.setText(periodo.getUser());
+     //   tvNombreComercio.setText(periodo.getUser());
+
+        tvCategoria.setText(periodo.getCategoria().getNombre());
+
+        tvNombreComercio.setText("Antares Bar");
+
+        //tvCategoria.setText("Cocinero 8hs");
 
         tvHoraIngreso.setText(Utils.obtenerHora(periodo.getHoraInicio()));
 

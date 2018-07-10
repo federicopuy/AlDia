@@ -29,7 +29,6 @@ import retrofit2.Response;
 public class PeriodosActivity extends AppCompatActivity {
 
     private static final String TAG = "Periodos Activity";
-    private PeriodoAdapter mAdapter;
     RecyclerView mRecyclerView;
 
     @Override
@@ -39,28 +38,20 @@ public class PeriodosActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         mRecyclerView = findViewById(R.id.periodos_recycler_view);
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         Intent vieneDeIntent = getIntent();
-
         long id;
         String tipoBusqueda = "";
 
         if (vieneDeIntent.hasExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO)){
-
-            id = vieneDeIntent.getLongExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, 0);
+            id = vieneDeIntent.getLongExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
             tipoBusqueda = URLs.SEARCH_METHOD_BY_LIQUIDACION;
-
         } else {
-
-            id = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
+            id = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0); //buscar por id de comercio
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
-
         }
 
         obtenerPeriodos(tipoBusqueda, id);
@@ -70,27 +61,19 @@ public class PeriodosActivity extends AppCompatActivity {
     private void obtenerPeriodos(String tipoBusqueda, long id) {
 
         final String nombreLlamada = "getPeriodos";
-
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
         Call<List<Periodo>> callGetPeriodos = mService.getPeriodos(tipoBusqueda, id);
-
         callGetPeriodos.enqueue(new Callback<List<Periodo>>() {
             @Override
             public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
                 Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
 
                 if (response.isSuccessful()) {
-
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-
                     try {
                         List<Periodo> listaPeriodos = response.body();
-
-                        mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
-
+                        PeriodoAdapter mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
                         mRecyclerView.setAdapter(mAdapter);
-
                     } catch (Exception e){
                         e.printStackTrace();
                     }
@@ -98,22 +81,17 @@ public class PeriodosActivity extends AppCompatActivity {
                 } else {
 
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-
                     try {
                         Log.e(TAG, response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<List<Periodo>> call, Throwable t) {
-
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-
             }
         });
 
@@ -125,7 +103,6 @@ public class PeriodosActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
         }
-
         return(super.onOptionsItemSelected(item));
     }
 }

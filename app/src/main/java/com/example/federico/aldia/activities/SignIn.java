@@ -1,13 +1,18 @@
 package com.example.federico.aldia.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
@@ -20,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,44 +41,36 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignIn extends AppCompatActivity implements
-        View.OnClickListener{
-
-
-
+        View.OnClickListener {
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
-
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
-    private TextView mStatusTextView;
     SharedPreferences prefs;
     APIInterface mService;
-
-
     String tokenFirebase = "";
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.sign_in_button)
+    SignInButton signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
-
-
-        mStatusTextView = findViewById(R.id.status);
-
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -80,17 +78,20 @@ public class SignIn extends AppCompatActivity implements
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         mAuth = FirebaseAuth.getInstance();
 
     }
-
 
     /*-------------------------------------- On Start --------------------------------------------***/
 
     @Override
     public void onStart() {
+        //todo implementar en main
         super.onStart();
+        Intent intentCerrarSesion = getIntent();
+        if (intentCerrarSesion.hasExtra(Constantes.KEY_INTENT_CERRAR_SESION)){
+            signOut();
+        }
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
@@ -101,7 +102,6 @@ public class SignIn extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -112,9 +112,7 @@ public class SignIn extends AppCompatActivity implements
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
                 updateUI(null);
-                // [END_EXCLUDE]
             }
         }
     }
@@ -125,9 +123,7 @@ public class SignIn extends AppCompatActivity implements
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-        // showProgressDialog();
-
+        progressBar.setVisibility(View.VISIBLE);
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -138,19 +134,11 @@ public class SignIn extends AppCompatActivity implements
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-
-                          //  Snackbar.make(findViewById(R.id.sign_in), "Error de Autenticación", Snackbar.LENGTH_SHORT).show();
-
-
                             updateUI(null);
                         }
-
-                        //     hideProgressDialog();
-
                     }
                 });
     }
@@ -182,92 +170,76 @@ public class SignIn extends AppCompatActivity implements
 
 
     private void updateUI(final FirebaseUser user) {
-
-        //   hideProgressDialog();
-
+        progressBar.setVisibility(View.VISIBLE);
         if (user != null) {
-            mStatusTextView.setText(("Email " +  user.getEmail()));
-            //Snackbar.make(findViewById(R.id.sign_in), "Authentication Successful", Snackbar.LENGTH_SHORT).show();
+            try {
+                prefs.edit().putString(Constantes.KEY_NOMBRE_USER, user.getDisplayName()).apply();
+                prefs.edit().putString(Constantes.KEY_EMAIL_USER, user.getEmail()).apply();
+                prefs.edit().putString(Constantes.KEY_PHOTO_USER, Objects.requireNonNull(user.getPhotoUrl()).toString()).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+                signInButton.setVisibility(View.VISIBLE);
 
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-
+            }
 
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()){
-
+                            if (task.isSuccessful()) {
                                 tokenFirebase = task.getResult().getToken();
-
                                 Log.d(TAG, "Token Firebase " + tokenFirebase);
-
                                 prefs.edit().putString(Constantes.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
-
-                                if(!tokenFirebase.equals("")){
-
+                                if (!tokenFirebase.equals("")) {
                                     servicioEnviarToken(user);
-
                                 }
+                            } else {
+                                Snackbar.make(findViewById(R.id.sign_in), R.string.error_autenticacion, Snackbar.LENGTH_SHORT).show();
+                                signInButton.setVisibility(View.VISIBLE);
 
                             }
                         }
                     });
-
-
-
         } else {
-
-           // mStatusTextView.setText(R.string.signed_out);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            signInButton.setVisibility(View.VISIBLE);
         }
-
     }
 
+    /*-------------------------------------- servicioEnviarToken --------------------------------------------***/
+
     private void servicioEnviarToken(final FirebaseUser user) {
-
-         mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
+        final String nombreLlamada = "postToken";
+        mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
         TokenRetro tokenRetro = new TokenRetro(tokenFirebase);
-
         Call<String> authenticationCall = mService.loginUser(tokenRetro);
-
         authenticationCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-
-                Log.i(TAG, "Login User OK");
-
                 if (response.isSuccessful()) {
-
+                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     String tokenJWT = "";
-
                     try {
-
-
                         //todo meter en un utils
 
                         JSONObject root = new JSONObject(response.body());
-
                         String bearer = root.getString("id_token");
-
                         tokenJWT = "Bearer " + bearer;
-
                         System.out.println("JWT" + tokenJWT);
-
                         prefs.edit().putString(Constantes.KEY_TOKEN_JWT, tokenJWT).apply();
-
                         obtenerComercios(user);
-
                         Log.i(TAG, "Token JWT: " + tokenJWT);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.e(TAG, "Token NULO");
+                        signInButton.setVisibility(View.VISIBLE);
+
                     }
-
                 } else {
-
+                    signInButton.setVisibility(View.VISIBLE);
+                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+                    Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
                     try {
                         Log.i(TAG, "Error en API Login " + response.errorBody().string());
                     } catch (IOException e) {
@@ -278,113 +250,91 @@ public class SignIn extends AppCompatActivity implements
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
-                Log.i(TAG, "On Failure Login Usuario");
-
-                try{
-
+                signInButton.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+                try {
                     Log.e(TAG, t.getMessage());
-
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }
 
     private void obtenerComercios(final FirebaseUser user) {
-
+        final String nombreLlamada = "obtenerComercios";
         Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios();
-
         obtenerComerciosEmpleado.enqueue(new Callback<List<Comercio>>() {
             @Override
             public void onResponse(Call<List<Comercio>> call, Response<List<Comercio>> response) {
-
-                Log.i(TAG, "Get Comercios OK");
-
                 if (response.isSuccessful()) {
-
-                    List<Comercio> listaComercios = new ArrayList<>();
-
+                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+                    List<Comercio> listaComercios;
                     try {
-
+                        progressBar.setVisibility(View.INVISIBLE);
                         listaComercios = response.body();
-
-                        for (Comercio comercio:listaComercios) {
-
-
-                            Log.i(TAG, "Comercio 1 USER ID: " + comercio.getUserId());
-
-                            Log.i(TAG, "Comercio 1 USER COMERCIO: " + comercio.getUserComercio());
-
-                            prefs.edit().putLong(Constantes.KEY_COMERCIO_ID, comercio.getUserId()).apply();
-
-                        }
-
-                            Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
-
-                            final String nombreUsuario = user.getDisplayName();
-                            final String email = user.getEmail();
-                            final String imagenUsuario = user.getPhotoUrl().toString();
-
-                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO, nombreUsuario);
-
-                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_EMAIL_USUARIO, email);
-
-                            pasarAMainActivity.putExtra(Constantes.KEY_INTENT_IMAGEN_USUARIO, imagenUsuario);
-
-                            startActivity(pasarAMainActivity);
-
-
-
-
+                        crearDialog(listaComercios);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
-
                 } else {
-
-                    try {
-                        Log.i(TAG, "Get Comercios IS NOT SUCCESFUL " + response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+                        progressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Comercio>> call, Throwable t) {
-
-                Log.i(TAG, "On Failure Get Comercios");
-
-                try{
-
+                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+                progressBar.setVisibility(View.INVISIBLE);
+                try {
                     Log.e(TAG, t.getMessage());
-
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    private void crearDialog(final List<Comercio> listaComercios) {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(SignIn.this, android.R.layout.select_dialog_item);
+        for (Comercio c : listaComercios) {
+            arrayAdapter.add(c.getUserComercio());
+        }
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(SignIn.this);
+        builderSingle.setIcon(R.drawable.common_google_signin_btn_text_light_normal);
+        builderSingle.setTitle("Seleccionar Comercio:");
+        builderSingle.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Comercio comercioSeleccionado = listaComercios.get(which);
+                prefs.edit().putLong(Constantes.KEY_COMERCIO_ID, comercioSeleccionado.getUserId()).apply();
+                prefs.edit().putString(Constantes.KEY_COMERCIO_NOMBRE, comercioSeleccionado.getUserComercio()).apply();
+                Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
+                startActivity(pasarAMainActivity);
 
             }
         });
-
-
-
-
-    }
-
+        builderSingle.show();
+}
 
     /*-------------------------------------- On Clicks --------------------------------------------***/
-
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.sign_in_button) {
             signIn();
-        } else if (i == R.id.sign_out_button) {
-            signOut();
         }
     }
 

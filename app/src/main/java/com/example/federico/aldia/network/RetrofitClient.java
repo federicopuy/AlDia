@@ -11,15 +11,12 @@ public class RetrofitClient {
 
     private static Retrofit retrofit = null;
 
-    private static OkHttpClient client = null;
-
     public static Retrofit getClient(Context mContext) {
 
         if (retrofit==null){
-
-            client = new OkHttpClient.Builder()
-                        .addInterceptor(new TokenInterceptor(mContext))
-                //    .addInterceptor(new TokenExpiryInterceptor(mContext))
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new ConnectivityInterceptor(mContext))
+                    .addInterceptor(new TokenInterceptor(mContext))
                     .build();
 
             retrofit = new Retrofit.Builder()
@@ -29,7 +26,6 @@ public class RetrofitClient {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-
         return retrofit;
     }
 }

@@ -84,13 +84,9 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
             i++;
 
             final String nombreLlamada = "postNewPeriodo";
-
             mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
             TokenQR tokenQR = new TokenQR(rawValue);
-
             Call<Periodo> postNewPeriodo = mService.newPeriodo(tokenQR);
-
             postNewPeriodo.enqueue(new Callback<Periodo>() {
                 @Override
                 public void onResponse(Call<Periodo> call, Response<Periodo> response) {
@@ -105,18 +101,13 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                             Periodo periodoEscaneado = response.body();
 
 
+
                             Intent pasarAIngresoEgreso = new Intent(CamaraActivity.this, IngresoEgreso.class);
-
                             Gson gsonPeriodo = new Gson();
-
                             pasarAIngresoEgreso.putExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
-
                             pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-
                             startActivity(pasarAIngresoEgreso);
-
                             finish();
-
 
                         } catch (Exception e) {
                             e.printStackTrace();

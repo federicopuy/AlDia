@@ -21,69 +21,56 @@
             android:layout_height="130dp">
 
             <TextView
-                android:id="@+id/tvHoraIngresoEgreso"
-                style="@style/textViewsPeriodo"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvfecha"
-                app:layout_constraintVertical_bias="0.578"
-                tools:text="10:00 - 12:00" />
-
-
-            <TextView
-                android:id="@+id/tvfecha"
-                style="@style/textViewsPeriodo"
+                android:id="@+id/tvFecha"
+                style="@style/textViewsTitulosLiquidacion"
                 android:textColor="@color/colorPrimaryDark"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:textSize="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="10/03/18" />
 
             <TextView
+                android:id="@+id/tvHoraIngresoEgreso"
+                style="@style/textViewsFechaLiquidacion"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="10:00 - 12:00" />
+
+            <TextView
                 android:id="@+id/tvHorasRegularesText"
-                style="@style/textViewsPeriodo"
-                android:layout_marginStart="80dp"
-                android:layout_marginTop="16dp"
-                android:textSize="12dp"
-                app:layout_constraintStart_toEndOf="@+id/tvfecha"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="Horas Regulares" />
+                style="@style/textViewsTitulosChicosLiquidacion"
+                android:layout_marginTop="@dimen/liquidacion_top_bottom"
+                android:text="@string/horas_regulares"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvFecha"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
                 android:id="@+id/tvHorasRegularesTotales"
-                style="@style/textViewsPeriodo"
-                android:layout_marginBottom="4dp"
-                android:layout_marginStart="80dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvfecha"
-                app:layout_constraintStart_toEndOf="@+id/tvfecha"
+                style="@style/textViewsValoresLiquidacion"
+                android:layout_marginTop="@dimen/liquidacion_separacion"
+                app:layout_constraintBottom_toBottomOf="@+id/tvFecha"
+                app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesText"
+                app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesText"
                 app:layout_constraintTop_toBottomOf="@+id/tvHorasRegularesText"
-                tools:text="02:01 - $120,50" />
+                tools:text="02:01" />
 
             <TextView
                 android:id="@+id/tvHorasExtraText"
-                style="@style/textViewsPeriodo"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="24dp"
-                android:text="Horas Extra"
-                android:textSize="12dp"
-                app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesTotales"
-                app:layout_constraintTop_toBottomOf="@+id/tvHorasRegularesTotales" />
+                style="@style/textViewsTitulosChicosLiquidacion"
+                android:text="@string/horas_extra"
+                app:layout_constraintBottom_toTopOf="@+id/tvHorasExtraTotales"
+                app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesTotales"
+                app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesTotales" />
 
             <TextView
                 android:id="@+id/tvHorasExtraTotales"
-                style="@style/textViewsPeriodo"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
+                style="@style/textViewsValoresLiquidacion"
+                android:layout_marginBottom="@dimen/liquidacion_top_bottom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tvHorasExtraText"
                 app:layout_constraintStart_toStartOf="@+id/tvHorasExtraText"
-                app:layout_constraintTop_toBottomOf="@+id/tvHorasExtraText"
                 tools:text="01:12 - $30,23" />
-
-
 
 
         </android.support.constraint.ConstraintLayout>

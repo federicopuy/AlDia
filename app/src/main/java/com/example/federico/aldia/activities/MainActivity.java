@@ -22,8 +22,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.network.NoConnectivityException;
 import com.example.federico.aldia.utils.Constantes;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
@@ -34,6 +36,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,27 +54,24 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
-
-    TextView tvNombreComercio, tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria;
-
+    TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria;
     SharedPreferences prefs;
-
-
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String nombreComercio = prefs.getString(Constantes.KEY_COMERCIO_NOMBRE,"");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
 
         View content_view = findViewById(R.id.content_view_main);
 
-        tvNombreComercio = content_view.findViewById(R.id.tvNombreComercio);
         tvRecaudado = content_view.findViewById(R.id.tvRecaudado);
         tvHorasRegulares = content_view.findViewById(R.id.tvHorasRegulares);
         tvHorasExtra = content_view.findViewById(R.id.tvHorasExtra);
@@ -87,46 +87,37 @@ public class MainActivity extends AppCompatActivity
     private void obtenerUltimaLiquidacion() {
 
         final String nombreLlamada = "getUltimaLiquidacion";
-
         long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
-
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
         Call<Liquidacion> callGetUltimaLiquidacion = mService.getUltimaLiquidacion(comercioId);
-
         callGetUltimaLiquidacion.enqueue(new Callback<Liquidacion>() {
             @Override
             public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
-
                 Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-
                 if (response.isSuccessful()) {
-
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-
                     Liquidacion ultimaLiquidacion = response.body();
-
                     actualizarUI(ultimaLiquidacion);
-
                 } else {
-
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-
                     try {
+                        assert response.errorBody() != null;
                         Log.e(TAG, response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<Liquidacion> call, Throwable t) {
-
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-
+                if (t instanceof NoConnectivityException) {
+                    t.printStackTrace();
+                    Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -137,23 +128,16 @@ public class MainActivity extends AppCompatActivity
     private void actualizarUI(Liquidacion ultimaLiquidacion) {
 
         if (ultimaLiquidacion != null) {
-
             try {
-                //todo nombre comercio
-                tvNombreComercio.setText("Chajuco Bar");
                 tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
                 tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
                 tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
                 tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 
@@ -163,11 +147,8 @@ public class MainActivity extends AppCompatActivity
         if (!allPermissionsGranted()) {
             getRuntimePermissions();
         }
-
         Intent pasarACamara = new Intent(MainActivity.this, CamaraActivity.class);
-
         startActivityForResult(pasarACamara, REQUEST_CODE);
-
     }
 
     @Override
@@ -175,12 +156,9 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
                 Log.i(TAG, "Result OK");
-
             } else {
                 if (resultCode==RESULT_CANCELED){
-
                     Log.i(TAG, "Result CANCELED");
 
                 }
@@ -243,42 +221,20 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
-
         TextView tvNavUserName = header.findViewById(R.id.tvNavUserName);
-
         TextView tvNavUserMail = header.findViewById(R.id.tvNavUserMail);
-
         ImageView imageViewNavDrawer = header.findViewById(R.id.imageViewNavDrawer);
 
-        Intent intent = getIntent();
-
-        String nombreUsuario = "";
-        String emailUsuario = "";
-        String imagenUsuario = "";
-
-        if ((intent.hasExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO)) && (intent.hasExtra(Constantes.KEY_INTENT_EMAIL_USUARIO))) {
-
-            try {
-
-                nombreUsuario = intent.getStringExtra(Constantes.KEY_INTENT_NOMBRE_USUARIO);
-
-                emailUsuario = intent.getStringExtra(Constantes.KEY_INTENT_EMAIL_USUARIO);
-
-                imagenUsuario = intent.getStringExtra(Constantes.KEY_INTENT_IMAGEN_USUARIO);
-
-                if (!imagenUsuario.equals("")) {
-                    Picasso.get().load(imagenUsuario).into(imageViewNavDrawer);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
+        try{
+            tvNavUserName.setText(prefs.getString(Constantes.KEY_NOMBRE_USER, ""));
+            tvNavUserMail.setText(prefs.getString(Constantes.KEY_EMAIL_USER, ""));
+            String imagenUsuario = prefs.getString(Constantes.KEY_PHOTO_USER, "");
+            if (!imagenUsuario.equals("")) {
+                Picasso.get().load(imagenUsuario).into(imageViewNavDrawer);
             }
-
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
-        tvNavUserName.setText(nombreUsuario);
-        tvNavUserMail.setText(emailUsuario);
-
     }
 
     @Override
@@ -318,34 +274,24 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_mi_perfil) {
-
             Intent pasarAMiPerfil = new Intent(MainActivity.this, EmpleadoActivity.class);
-
             startActivity(pasarAMiPerfil);
 
-
         } else if (id == R.id.nav_periodos) {
-
             Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
-
             startActivity(pasarAPeriodos);
 
         } else if (id == R.id.nav_liquidaciones) {
-
             Intent pasarALiquidaciones = new Intent(MainActivity.this, LiquidacionesActivity.class);
-
             startActivity(pasarALiquidaciones);
 
         } else if (id == R.id.nav_cerrar_sesion) {
-
             Intent pasarASignIn = new Intent(MainActivity.this, SignIn.class);
             startActivity(pasarASignIn);
-
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

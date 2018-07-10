@@ -41,7 +41,6 @@ public interface APIInterface {
     Call<List<Periodo>>getPeriodos(@Path("method") String tipoBusqueda,
                              @Path("id") long id);
 
-
     @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
     Call<Empleado>getDatosEmpleado();
 

@@ -24,45 +24,36 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
     private Context mContext;
 
     public PeriodoAdapter(List<Periodo> listaPeriodos, Context context){
-
         this.listaPeriodos = listaPeriodos;
         this.mContext = context;
-
     }
 
     @Override
     public PeriodoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.cada_periodo, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(PeriodoAdapter.ViewHolder holder, int position) {
 
         Periodo periodo = listaPeriodos.get(position);
-
-        holder.tvHoraIngresoEgreso.setText(Utils.obtenerHora(periodo.getHoraInicio())
-                + " - " + Utils.obtenerHora(periodo.getHoraFin()));
-
-        holder.tvfecha.setText(Utils.obtenerFechaFormateada(periodo.getHoraInicio()));
-
-       // holder.tvhorasRegularesTotales.setText(periodo.getHorasRegularesTotales() + " - " + periodo.getRecaudadoHorasRegulares());
-
-       // holder.tvhorasExtraTotales.setText(periodo.getHorasExtraTotales() + " - " + periodo.getRecaudadoHorasExtra());
-
+        try {
+            holder.tvHoraIngresoEgreso.setText(Utils.obtenerHora(periodo.getHoraInicio())
+                    + " - " + Utils.obtenerHora(periodo.getHoraFin()));
+            holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(periodo.getHoraInicio()));
+            holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMonto(periodo.getHorasReg(), periodo.getCategoria().getMonto()));
+            holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMonto(periodo.getHorasExt(), periodo.getCategoria().getMonto()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
         return listaPeriodos.size();
     }
-
-
-
-
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -75,19 +66,15 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-
             tvHoraIngresoEgreso = itemView.findViewById(R.id.tvHoraIngresoEgreso);
-            tvfecha = itemView.findViewById(R.id.tvfecha);
+            tvfecha = itemView.findViewById(R.id.tvFecha);
             tvhorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
             tvhorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
-
-
         }
 
         @Override
         public void onClick(View view) {
-
+        //todo ver si lo saco
         }
     }
 

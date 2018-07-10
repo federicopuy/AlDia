@@ -28,11 +28,9 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.cada_liquidacion, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override
@@ -76,7 +74,6 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         return listaLiquidaciones.size();
     }
 
-
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada);
     }
@@ -86,9 +83,6 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales;
 
-
-        private AdapterView.OnItemClickListener listener;
-
         public ViewHolder(View itemView) {
             super(itemView);
 
@@ -97,20 +91,15 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
             tvHorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
             tvHorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
 
-
             itemView.setOnClickListener(this);
-
         }
 
         @Override
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
-
             Liquidacion liquidacionClickeada = listaLiquidaciones.get(clickedPosition);
-
             mOnClickListener.onListItemClick(clickedPosition, liquidacionClickeada);
-
 
         }
     }

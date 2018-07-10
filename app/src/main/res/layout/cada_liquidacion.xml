@@ -60,7 +60,6 @@
                 android:text="@string/horas_extra"
                 app:layout_constraintBottom_toTopOf="@+id/tvHorasExtraTotales"
                 app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesText"
-                app:layout_constraintHorizontal_bias="0.481"
                 app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesText" />
 
             <TextView
@@ -69,7 +68,6 @@
                 android:layout_marginBottom="@dimen/liquidacion_top_bottom"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tvHorasExtraText"
-                app:layout_constraintHorizontal_bias="0.529"
                 app:layout_constraintStart_toStartOf="@+id/tvHorasExtraText"
                 tools:text="01:12" />
 

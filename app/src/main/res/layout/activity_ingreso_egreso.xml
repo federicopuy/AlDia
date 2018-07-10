@@ -22,20 +22,47 @@
         tools:text="Chajuco Bar" />
 
     <TextView
+        android:id="@+id/puestoTv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/puesto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
+
+    <TextView
+        android:id="@+id/tvCategoria"
+        style="@style/textViewDatosMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/puestoTv"
+        tools:text="Cocinero 8hs" />
+
+    <TextView
+        android:id="@+id/horaIngresoTv"
+        style="@style/textViewTitulosChicos"
+        android:text="Hora Ingreso"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+
+    <TextView
         android:id="@+id/tvHoraIngreso"
         style="@style/textViewDatosMain"
-        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio"
+        app:layout_constraintTop_toBottomOf="@+id/horaIngresoTv"
         tools:text="19:22" />
+
+    <TextView
+        android:id="@+id/horaEgresoTv"
+        style="@style/textViewTitulosChicos"
+        android:text="Hora Egreso"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso" />
 
     <TextView
         android:id="@+id/tvHoraEgreso"
         style="@style/textViewDatosMain"
-        android:layout_marginTop="30dp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso"
+        app:layout_constraintTop_toBottomOf="@+id/horaEgresoTv"
         tools:text="21:23" />
 
     <android.support.design.widget.FloatingActionButton

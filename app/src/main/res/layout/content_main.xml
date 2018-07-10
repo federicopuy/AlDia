@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.NestedScrollView
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+<android.support.constraint.ConstraintLayout
     android:id="@+id/content_view_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,13 +17,6 @@
     tools:context="com.example.federico.aldia.activities.MainActivity"
     tools:layout_editor_absoluteY="81dp"
     tools:showIn="@layout/app_bar_main">
-
-    <TextView
-        android:id="@+id/tvNombreComercio"
-        style="@style/textViewsTitulos"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Chajuco Bar" />
 
     <TextView
         android:id="@+id/tvCategoria"
@@ -33,20 +34,76 @@
         tools:text="$3650,87" />
 
 
-    <TextView
-        android:id="@+id/tvHorasRegulares"
-        style="@style/textViewDatosMain"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horasRegularestv"
-        tools:text="20:30" />
+    <android.support.v7.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_top_titulos"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        app:layout_constraintTop_toBottomOf="@+id/tvFechaUltimaLiquidacion">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/horasRegularestv"
+                style="@style/textViewTitulosChicosCard"
+                android:text="@string/horas_regulares"
+                app:layout_constraintEnd_toStartOf="@+id/verticalLine"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvHorasRegulares"
+                style="@style/textViewDatosCard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/horasRegularestv"
+                app:layout_constraintStart_toStartOf="@+id/horasRegularestv"
+                app:layout_constraintTop_toBottomOf="@+id/horasRegularestv"
+                tools:text="20:30" />
+
+            <View
+                android:id="@+id/verticalLine"
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/horasExtratv"
+                style="@style/textViewTitulosChicosCard"
+                android:text="@string/horas_extra"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/verticalLine"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tvHorasExtra"
+                style="@style/textViewDatosCard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/horasExtratv"
+                app:layout_constraintStart_toStartOf="@+id/horasExtratv"
+                app:layout_constraintTop_toBottomOf="@+id/horasExtratv"
+                tools:text="2:16" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/tvHorasExtra"
-        style="@style/textViewDatosMain"
+        android:id="@+id/ultimaLiquidaciontv"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/ltima_liquidaci_n"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horasExtratv"
-        tools:text="2:16" />
-
+        app:layout_constraintTop_toBottomOf="@+id/tvRecaudado" />
 
     <TextView
         android:id="@+id/tvFechaUltimaLiquidacion"
@@ -55,12 +112,6 @@
         app:layout_constraintTop_toBottomOf="@+id/ultimaLiquidaciontv"
         tools:text="3 de marzo de 2018" />
 
-    <TextView
-        android:id="@+id/puestoTv"
-        style="@style/textViewTitulosChicos"
-        android:text="@string/puesto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
 
     <TextView
         android:id="@+id/recaudaciontv"
@@ -69,26 +120,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
 
-    <TextView
-        android:id="@+id/horasRegularestv"
-        style="@style/textViewTitulosChicos"
-        android:text="@string/horas_regulares"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecaudado" />
+
 
     <TextView
-        android:id="@+id/horasExtratv"
+        android:id="@+id/puestoTv"
         style="@style/textViewTitulosChicos"
-        android:text="@string/horas_extra"
+        android:text="@string/puesto"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHorasRegulares" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/ultimaLiquidaciontv"
-        style="@style/textViewTitulosChicos"
-        android:text="@string/ltima_liquidaci_n"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHorasExtra" />
+
+
+
+
 
 
 </android.support.constraint.ConstraintLayout>
+    ></android.support.v4.widget.NestedScrollView>

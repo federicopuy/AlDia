@@ -10,6 +10,7 @@
     <string name="nav_drawer_periodos">Períodos</string>
     <string name="nav_drawer_sesion">Sesión</string>
     <string name="nav_drawer_liquidaciones">Liquidaciones</string>
+    <string name="error_autenticacion">Error de Autenticación</string>
 
     <string name="title_activity_camara">CamaraActivity</string>
     <string name="on_response">On Response </string>
@@ -27,5 +28,7 @@
     <string name="periodos">Períodos</string>
     <string name="mi_perfil">Mi Perfil</string>
     <string name="liquidaciones">Liquidaciones</string>
+    <string name="error_servidor">Error al conectarse con servidor</string>
+
 
 </resources>

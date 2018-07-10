@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.federico.aldia.adapters.LiquidacionAdapter;
 import com.example.federico.aldia.R;
@@ -37,50 +38,31 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liquidaciones);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         mRecyclerView = findViewById(R.id.liquidaciones_recycler_view);
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         obtenerLiquidaciones();
-
     }
 
     /*-------------------------------------- Llamada para Obtener Liquidaciones --------------------------------------------***/
 
     private void obtenerLiquidaciones() {
-
         final String nombreLlamada = "callGetLiquidaciones";
-
         long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
-
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
         Call<AllLiquidaciones> callGetLiquidaciones = mService.getAllLiquidaciones(comercioId);
-
         callGetLiquidaciones.enqueue(new Callback<AllLiquidaciones>() {
             @Override
             public void onResponse(Call<AllLiquidaciones> call, Response<AllLiquidaciones> response) {
 
                 Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-
                 if (response.isSuccessful()) {
-
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-
                     try {
-
                         AllLiquidaciones allLiquidaciones = response.body();
-
                         List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
-
                         mAdapter = new LiquidacionAdapter(listaLiquidaciones, LiquidacionesActivity.this, LiquidacionesActivity.this);
-
                         mRecyclerView.setAdapter(mAdapter);
 
                     } catch (Exception e) {
@@ -88,21 +70,15 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
                     }
 
                 } else {
-
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<AllLiquidaciones> call, Throwable t) {
-
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-
             }
         });
-
     }
 
     /*-------------------------------------- OnListItemClick --------------------------------------------***/
@@ -111,9 +87,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
     public void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada) {
 
         Intent pasarAListaPeriodos = new Intent(LiquidacionesActivity.this, PeriodosActivity.class);
-
         pasarAListaPeriodos.putExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, liquidacionClickeada.getId());
-
         startActivity(pasarAListaPeriodos);
 
     }

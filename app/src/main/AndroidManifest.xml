@@ -21,10 +21,10 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionAndStatusBar">
         </activity>
-        <activity android:name=".activities.SignIn">
+        <activity android:name=".activities.SignIn"
+            android:theme="@style/AppTheme.NoActionBar">
 
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
