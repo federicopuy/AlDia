@@ -54,7 +54,6 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
         preview = findViewById(R.id.firePreview);
@@ -99,9 +98,6 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                         try {
 
                             Periodo periodoEscaneado = response.body();
-
-
-
                             Intent pasarAIngresoEgreso = new Intent(CamaraActivity.this, IngresoEgreso.class);
                             Gson gsonPeriodo = new Gson();
                             pasarAIngresoEgreso.putExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));

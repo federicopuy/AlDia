@@ -220,8 +220,6 @@ public class SignIn extends AppCompatActivity implements
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     String tokenJWT = "";
                     try {
-                        //todo meter en un utils
-
                         JSONObject root = new JSONObject(response.body());
                         String bearer = root.getString("id_token");
                         tokenJWT = "Bearer " + bearer;
@@ -234,8 +232,8 @@ public class SignIn extends AppCompatActivity implements
                         e.printStackTrace();
                         Log.e(TAG, "Token NULO");
                         signInButton.setVisibility(View.VISIBLE);
-
                     }
+
                 } else {
                     signInButton.setVisibility(View.VISIBLE);
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
@@ -263,25 +261,28 @@ public class SignIn extends AppCompatActivity implements
     }
 
     private void obtenerComercios(final FirebaseUser user) {
+
         final String nombreLlamada = "obtenerComercios";
         Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios();
         obtenerComerciosEmpleado.enqueue(new Callback<List<Comercio>>() {
+
             @Override
             public void onResponse(Call<List<Comercio>> call, Response<List<Comercio>> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     List<Comercio> listaComercios;
                     try {
-                        progressBar.setVisibility(View.INVISIBLE);
                         listaComercios = response.body();
-                        crearDialog(listaComercios);
+                            assert listaComercios != null;
+                            crearDialog(listaComercios);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        progressBar.setVisibility(View.INVISIBLE);
                     }
+
                 } else {
                         Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                        progressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -299,15 +300,15 @@ public class SignIn extends AppCompatActivity implements
     }
 
     private void crearDialog(final List<Comercio> listaComercios) {
+
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(SignIn.this, android.R.layout.select_dialog_item);
         for (Comercio c : listaComercios) {
             arrayAdapter.add(c.getUserComercio());
         }
 
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(SignIn.this);
-        builderSingle.setIcon(R.drawable.common_google_signin_btn_text_light_normal);
-        builderSingle.setTitle("Seleccionar Comercio:");
-        builderSingle.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        builderSingle.setTitle(R.string.seleccionar_comercio);
+        builderSingle.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

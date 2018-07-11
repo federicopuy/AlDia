@@ -43,8 +43,9 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
             holder.tvHoraIngresoEgreso.setText(Utils.obtenerHora(periodo.getHoraInicio())
                     + " - " + Utils.obtenerHora(periodo.getHoraFin()));
             holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(periodo.getHoraInicio()));
-            holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMonto(periodo.getHorasReg(), periodo.getCategoria().getMonto()));
-            holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMonto(periodo.getHorasExt(), periodo.getCategoria().getMonto()));
+            holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMontoRegular(periodo.getHorasReg(), periodo.getCategoria().getMonto()));
+            holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMontoExtra(periodo.getHorasExt(), periodo.getCategoria().getMonto()));
+
         }catch (Exception e){
             e.printStackTrace();
         }

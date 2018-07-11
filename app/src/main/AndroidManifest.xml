@@ -35,17 +35,20 @@
 
         </activity>
 
-        <activity android:name=".activities.IngresoEgreso" />
+        <activity android:name=".activities.IngresoEgreso"
+            android:theme="@style/AppTheme.NoActionAndStatusBar"/>
         <activity android:name=".activities.PeriodosActivity"
             android:label="@string/periodos"/>
         <activity android:name=".activities.LiquidacionesActivity"
             android:parentActivityName=".activities.MainActivity"
             android:label="@string/liquidaciones"/>
-        <activity android:name=".activities.EmpleadoActivity"
+        <activity android:name=".activities.MiPerfilActivity"
             android:parentActivityName=".activities.MainActivity"
             android:label="@string/mi_perfil"/>
         <activity android:name=".activities.CamaraActivity"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionAndStatusBar"/>
+
     </application>
 
 </manifest>

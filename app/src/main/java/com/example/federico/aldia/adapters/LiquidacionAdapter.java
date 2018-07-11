@@ -56,7 +56,7 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         }
 
         try{
-            horasRegulares = liquidacion.getHorasTotExt().toString();
+            horasRegulares = liquidacion.getHorasTotReg().toString();
             horasExtra = liquidacion.getHorasTotExt().toString();
         } catch (Exception e) {
             e.printStackTrace();

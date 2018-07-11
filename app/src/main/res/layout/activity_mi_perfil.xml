@@ -4,84 +4,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.EmpleadoActivity">
+    tools:context=".activities.MiPerfilActivity">
 
     <TextView
         android:id="@+id/tvNombreText"
         style="@style/textViewsMiPerfilText"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="88dp"
-        android:text="Nombre"
+        android:layout_marginTop="50dp"
+        android:text="@string/nombre"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvNombreValue"
         style="@style/textViewsMiPerfilValue"
-        tools:text="Federico"
-        app:layout_constraintStart_toStartOf="@+id/tvNombreText"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreText" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreText"
+        tools:text="Federico" />
 
     <TextView
         android:id="@+id/tvDireccionText"
         style="@style/textViewsMiPerfilText"
-        android:layout_marginTop="44dp"
-        android:text="Dirección"
-        app:layout_constraintStart_toStartOf="@+id/tvNombreValue"
+        android:text="@string/direccion"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNombreValue" />
 
     <TextView
         android:id="@+id/tvDireccionValue"
         style="@style/textViewsMiPerfilValue"
-        tools:text="9 de Julio 1100"
-        app:layout_constraintStart_toStartOf="@+id/tvDireccionText"
-        app:layout_constraintTop_toBottomOf="@+id/tvDireccionText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDireccionText"
+        tools:text="9 de Julio 1100" />
 
     <TextView
         android:id="@+id/tvEmailText"
         style="@style/textViewsMiPerfilText"
-        android:layout_marginTop="44dp"
-        android:text="Email"
-        app:layout_constraintStart_toStartOf="@+id/tvDireccionValue"
+        android:text="@string/email"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDireccionValue" />
 
     <TextView
         android:id="@+id/tvEmailValue"
         style="@style/textViewsMiPerfilValue"
-        tools:text="federicopuy@gmail.com"
-        app:layout_constraintStart_toStartOf="@+id/tvEmailText"
-        app:layout_constraintTop_toBottomOf="@+id/tvEmailText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailText"
+        tools:text="federicopuy@gmail.com" />
 
     <TextView
         android:id="@+id/tvDNIText"
         style="@style/textViewsMiPerfilText"
-        android:layout_marginTop="44dp"
-        android:text="DNI"
-        app:layout_constraintStart_toStartOf="@+id/tvEmailValue"
+        android:text="@string/dni"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEmailValue" />
 
     <TextView
         android:id="@+id/tvDNIValue"
         style="@style/textViewsMiPerfilValue"
-        tools:text="36417243"
-        app:layout_constraintStart_toStartOf="@+id/tvDNIText"
-        app:layout_constraintTop_toBottomOf="@+id/tvDNIText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDNIText"
+        tools:text="36417243" />
 
     <TextView
         android:id="@+id/tvTelefonoText"
         style="@style/textViewsMiPerfilText"
-        android:layout_marginTop="44dp"
-        android:text="Teléfono"
-        app:layout_constraintStart_toStartOf="@+id/tvDNIValue"
+        android:text="@string/tel_fono"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDNIValue" />
 
     <TextView
         android:id="@+id/tvTelefonoValue"
         style="@style/textViewsMiPerfilValue"
-        tools:text="261-26361323"
-        app:layout_constraintStart_toStartOf="@+id/tvTelefonoText"
-        app:layout_constraintTop_toBottomOf="@+id/tvTelefonoText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTelefonoText"
+        tools:text="261-26361323" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

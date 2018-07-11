@@ -22,13 +22,20 @@
     <string name="horas_regulares">Horas Regulares</string>
     <string name="horas_extra">Horas Extra</string>
     <string name="ltima_liquidaci_n">Última Liquidación</string>
-    <string name="egreso">Egreso</string>
+    <string name="salida">Salida</string>
     <string name="Ingreso">Ingreso</string>
     <string name="per_odos_sin_liquidar">Períodos Sin Liquidar</string>
     <string name="periodos">Períodos</string>
     <string name="mi_perfil">Mi Perfil</string>
     <string name="liquidaciones">Liquidaciones</string>
     <string name="error_servidor">Error al conectarse con servidor</string>
+    <string name="seleccionar_comercio">Seleccionar Comercio:</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="nombre">Nombre</string>
+    <string name="direccion">Dirección</string>
+    <string name="dni">DNI</string>
+    <string name="tel_fono">Teléfono</string>
+    <string name="email">Email</string>
 
 
 </resources>

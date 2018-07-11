@@ -13,6 +13,7 @@
     <dimen name="lista_periodos_margin">16dp</dimen>
     <dimen name="liquidacion_top_bottom">16dp</dimen>
     <dimen name="liquidacion_separacion">4dp</dimen>
+    <dimen name="app_bar_height">240dp</dimen>
 
 
 </resources>

@@ -44,12 +44,4 @@ public interface APIInterface {
     @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
     Call<Empleado>getDatosEmpleado();
 
-
-
-
-
-
-
-
-
 }

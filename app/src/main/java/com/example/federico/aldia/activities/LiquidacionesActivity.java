@@ -50,6 +50,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
     private void obtenerLiquidaciones() {
         final String nombreLlamada = "callGetLiquidaciones";
         long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
+        System.out.println(comercioId + " Comercio ID");
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
         Call<AllLiquidaciones> callGetLiquidaciones = mService.getAllLiquidaciones(comercioId);
         callGetLiquidaciones.enqueue(new Callback<AllLiquidaciones>() {
@@ -64,7 +65,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
                         List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
                         mAdapter = new LiquidacionAdapter(listaLiquidaciones, LiquidacionesActivity.this, LiquidacionesActivity.this);
                         mRecyclerView.setAdapter(mAdapter);
-
+                        
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

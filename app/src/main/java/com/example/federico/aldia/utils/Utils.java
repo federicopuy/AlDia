@@ -52,20 +52,22 @@ public class Utils {
 
     }
 
-    public static String obtenerHoraYMonto(long horas, double montoXHora){
+    public static String obtenerHoraYMontoRegular(long horas, double montoXHora){
 
         double montoTotal = horas * montoXHora;
         return horas + " hs - " + obtenerMontoFormateado(montoTotal);
     }
 
+    public static String obtenerHoraYMontoExtra(long horas, double montoXHora){
+
+        double montoTotal = horas * montoXHora * 2;
+        return horas + " hs - " + obtenerMontoFormateado(montoTotal);
+    }
+
     public static String obtenerHora(String fechaTimestamp){
-
         String hora = "";
-
         try{
-
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fechaTimestamp.replace("T"," "));
-
             hora = new SimpleDateFormat("HH:mm").format(date);
 
         }catch (Exception e){
