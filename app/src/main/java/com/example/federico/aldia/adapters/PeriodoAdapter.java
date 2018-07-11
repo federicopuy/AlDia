@@ -40,8 +40,9 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
 
         Periodo periodo = listaPeriodos.get(position);
         try {
-            holder.tvHoraIngresoEgreso.setText(Utils.obtenerHora(periodo.getHoraInicio())
-                    + " - " + Utils.obtenerHora(periodo.getHoraFin()));
+            String horaIngresoEgreso = Utils.obtenerHora(periodo.getHoraInicio())
+                    + " - " + Utils.obtenerHora(periodo.getHoraFin());
+            holder.tvHoraIngresoEgreso.setText(horaIngresoEgreso);
             holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(periodo.getHoraInicio()));
             holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMontoRegular(periodo.getHorasReg(), periodo.getCategoria().getMonto()));
             holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMontoExtra(periodo.getHorasExt(), periodo.getCategoria().getMonto()));
@@ -56,14 +57,12 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
         return listaPeriodos.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvHoraIngresoEgreso;
         TextView tvfecha;
         TextView tvhorasRegularesTotales;
         TextView tvhorasExtraTotales;
-
-        private AdapterView.OnItemClickListener listener;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,10 +72,6 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
             tvhorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
         }
 
-        @Override
-        public void onClick(View view) {
-        //todo ver si lo saco
-        }
     }
 
 

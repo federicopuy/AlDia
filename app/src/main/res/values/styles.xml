@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -18,9 +17,8 @@
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-    <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -28,40 +26,30 @@
     <style name="textViewsBasic" parent="TextAppearance.AppCompat">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-
     </style>
-
 
     <!-- Mi Perfil Activity -->
 
-
     <style name="textViewsMiPerfilText" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:layout_marginStart">52dp</item>
         <item name="android:layout_marginTop">44dp</item>
-
-
     </style>
 
     <style name="textViewsMiPerfilValue" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
         <item name="android:layout_marginStart">52dp</item>
-
     </style>
 
     <!-- Activity -->
 
-
     <style name="textViewsTitulos" parent="textViewsBasic">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">32sp</item>
@@ -69,30 +57,25 @@
         <item name="android:layout_marginStart">80dp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textAllCaps">false</item>
-
     </style>
 
     <style name="textViewDatosMain" parent="textViewsBasic">
-
-    <item name="android:textSize">22sp</item>
-    <item name="android:layout_marginTop">0dp</item>
-    <item name="android:layout_marginStart">80dp</item>
-    <item name="android:textColor">@color/colorPrimary_text</item>
-    <item name="android:textAllCaps">false</item>
-</style>
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginStart">80dp</item>
+        <item name="android:textColor">@color/colorPrimary_text</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 
     <style name="textViewDatosCard" parent="textViewsBasic">
-
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">20dp</item>
-
         <item name="android:textColor">@color/colorPrimary_text</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="textViewTitulosChicos" parent="textViewsBasic">
-
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">@dimen/margin_top_titulos</item>
         <item name="android:layout_marginStart">80dp</item>
@@ -101,14 +84,11 @@
     </style>
 
     <style name="textViewTitulosChicosCard" parent="textViewsBasic">
-
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
         <item name="android:textAllCaps">false</item>
     </style>
-
-
 
     <!-- Liquidacion Activity -->
 
@@ -118,13 +98,12 @@
         <item name="android:textSize">32sp</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginStart">12dp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textAllCaps">false</item>
-
     </style>
 
     <style name="textViewsFechaLiquidacion" parent="textViewsBasic">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginStart">12dp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
@@ -132,30 +111,22 @@
     </style>
 
     <style name="textViewsTitulosChicosLiquidacion" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
-
     </style>
 
     <style name="textViewsValoresLiquidacion" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
-
-
     </style>
-
 
     <!-- Cada Periodo -->
 
-
     <style name="textViewFechaPeriodo" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
@@ -166,7 +137,6 @@
     </style>
 
     <style name="textViewHorariosPeriodo" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
@@ -175,10 +145,8 @@
         <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
         <item name="android:textSize">18dp</item>
     </style>
-
 
     <style name="textViewsPeriodo" parent="TextAppearance.AppCompat">
-
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
@@ -187,10 +155,6 @@
         <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
         <item name="android:textSize">18dp</item>
     </style>
-
-
-
-
 
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
@@ -212,7 +176,5 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
-
-
-
+    
 </resources>

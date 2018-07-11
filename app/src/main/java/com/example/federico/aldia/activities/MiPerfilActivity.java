@@ -91,13 +91,11 @@ public class MiPerfilActivity extends AppCompatActivity {
     private void actualizarUI(Empleado empleado) {
 
         try{
-
             tvNombreValue.setText(empleado.getNombre());
             tvEmailValue.setText(empleado.getEmail());
             tvDNIValue.setText(empleado.getDni());
             tvTelefonoValue.setText(empleado.getTelefono());
             tvDireccionValue.setText(empleado.getDireccion());
-
         }catch (Exception e){
             e.printStackTrace();
         }

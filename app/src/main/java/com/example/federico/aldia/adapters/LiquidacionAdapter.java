@@ -56,8 +56,8 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         }
 
         try{
-            horasRegulares = liquidacion.getHorasTotReg().toString();
-            horasExtra = liquidacion.getHorasTotExt().toString();
+            horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";;
+            horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,7 +78,6 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada);
     }
 
-
       class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales;
@@ -96,11 +95,9 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         @Override
         public void onClick(View view) {
-
             int clickedPosition = getAdapterPosition();
             Liquidacion liquidacionClickeada = listaLiquidaciones.get(clickedPosition);
             mOnClickListener.onListItemClick(clickedPosition, liquidacionClickeada);
-
         }
     }
 

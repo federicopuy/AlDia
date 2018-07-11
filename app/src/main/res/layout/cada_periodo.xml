@@ -7,15 +7,6 @@
     android:layout_marginTop="1dp"
     android:padding="1dp">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardElevation="6dp"
-        app:contentPadding="4dp">
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="130dp">
@@ -44,7 +35,6 @@
                 app:layout_constraintStart_toEndOf="@+id/tvFecha"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <TextView
                 android:id="@+id/tvHorasRegularesTotales"
                 style="@style/textViewsValoresLiquidacion"
@@ -53,7 +43,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesText"
                 app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesText"
                 app:layout_constraintTop_toBottomOf="@+id/tvHorasRegularesText"
-                tools:text="02:01" />
+                tools:text="5hs - $30.00" />
 
             <TextView
                 android:id="@+id/tvHorasExtraText"
@@ -70,10 +60,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tvHorasExtraText"
                 app:layout_constraintStart_toStartOf="@+id/tvHorasExtraText"
-                tools:text="01:12 - $30,23" />
-
+                tools:text="2hs - $60.00" />
 
         </android.support.constraint.ConstraintLayout>
 
-    </android.support.v7.widget.CardView>
 </FrameLayout>

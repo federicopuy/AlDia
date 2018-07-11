@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,10 +38,10 @@ public class PeriodosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_periodos);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mRecyclerView = findViewById(R.id.periodos_recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
 
         Intent vieneDeIntent = getIntent();
         long id;
@@ -49,7 +50,9 @@ public class PeriodosActivity extends AppCompatActivity {
         if (vieneDeIntent.hasExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO)){
             id = vieneDeIntent.getLongExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
             tipoBusqueda = URLs.SEARCH_METHOD_BY_LIQUIDACION;
+
         } else {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             id = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0); //buscar por id de comercio
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
         }
@@ -74,6 +77,9 @@ public class PeriodosActivity extends AppCompatActivity {
                         List<Periodo> listaPeriodos = response.body();
                         PeriodoAdapter mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
                         mRecyclerView.setAdapter(mAdapter);
+                        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                                DividerItemDecoration.VERTICAL);
+                        mRecyclerView.addItemDecoration(dividerItemDecoration);
                     } catch (Exception e){
                         e.printStackTrace();
                     }
