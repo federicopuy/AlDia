@@ -36,6 +36,9 @@
     <string name="dni">DNI</string>
     <string name="tel_fono">Teléfono</string>
     <string name="email">Email</string>
+    <string name="no_existen_per_odos_para_mostrar">Sin Períodos para mostrar</string>
+    <string name="no_existen_liquidaciones_para_mostrar">Sin Liquidaciones para mostrar</string>
+
 
 
 </resources>

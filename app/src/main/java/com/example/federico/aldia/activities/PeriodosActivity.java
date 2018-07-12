@@ -10,6 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.federico.aldia.adapters.PeriodoAdapter;
 import com.example.federico.aldia.R;
@@ -23,6 +26,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,11 +36,17 @@ public class PeriodosActivity extends AppCompatActivity {
 
     private static final String TAG = "Periodos Activity";
     RecyclerView mRecyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.tvSinPeriodos)
+    TextView tvSinPeriodos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_periodos);
+        ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         mRecyclerView = findViewById(R.id.periodos_recycler_view);
@@ -64,28 +75,33 @@ public class PeriodosActivity extends AppCompatActivity {
     private void obtenerPeriodos(String tipoBusqueda, long id) {
 
         final String nombreLlamada = "getPeriodos";
+        progressBar.setVisibility(View.VISIBLE);
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
         Call<List<Periodo>> callGetPeriodos = mService.getPeriodos(tipoBusqueda, id);
         callGetPeriodos.enqueue(new Callback<List<Periodo>>() {
             @Override
             public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
                 Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-
+                progressBar.setVisibility(View.INVISIBLE);
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     try {
                         List<Periodo> listaPeriodos = response.body();
-                        PeriodoAdapter mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
-                        mRecyclerView.setAdapter(mAdapter);
-                        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                                DividerItemDecoration.VERTICAL);
-                        mRecyclerView.addItemDecoration(dividerItemDecoration);
+                        assert listaPeriodos != null;
+                        if (listaPeriodos.size()<1){
+                            tvSinPeriodos.setVisibility(View.VISIBLE);
+                        }else {
+                            PeriodoAdapter mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
+                            mRecyclerView.setAdapter(mAdapter);
+                            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                                    DividerItemDecoration.VERTICAL);
+                            mRecyclerView.addItemDecoration(dividerItemDecoration);
+                        }
                     } catch (Exception e){
                         e.printStackTrace();
                     }
 
                 } else {
-
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
                     try {
                         Log.e(TAG, response.errorBody().string());
@@ -97,6 +113,7 @@ public class PeriodosActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Periodo>> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
             }
         });

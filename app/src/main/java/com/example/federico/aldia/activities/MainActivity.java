@@ -125,12 +125,45 @@ public class MainActivity extends AppCompatActivity
     private void actualizarUI(Liquidacion ultimaLiquidacion) {
 
         if (ultimaLiquidacion != null) {
+
+            String categoria = "";
+            String montoRecaudado = "$0.00";
+            String horasRegulares = "0 hs";
+            String horasExtra = "0 hs";
+            String ultLiquidacion = "";
+
+            try{
+                categoria = ultimaLiquidacion.getCategoria().getNombre();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                montoRecaudado = Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                horasRegulares = ultimaLiquidacion.getHorasTotReg().toString();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                horasExtra = ultimaLiquidacion.getHorasTotExt().toString();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                ultLiquidacion = Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
             try {
-                tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
-                tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
-                tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
-                tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
-                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
+                tvCategoria.setText(categoria);
+                tvRecaudado.setText(montoRecaudado);
+                tvHorasRegulares.setText(horasRegulares);
+                tvHorasExtra.setText(horasExtra);
+                tvFechaUltimaLiquidacion.setText(ultLiquidacion);
             } catch (Exception e) {
                 e.printStackTrace();
             }

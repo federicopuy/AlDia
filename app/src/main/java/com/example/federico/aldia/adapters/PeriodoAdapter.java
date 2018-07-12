@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
@@ -50,6 +51,14 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        if (periodo.getEliminado()){
+            holder.imageEliminado.setVisibility(View.VISIBLE);
+            holder.tvHoraIngresoEgreso.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvfecha.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvhorasRegularesTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvhorasExtraTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+        }
     }
 
     @Override
@@ -63,6 +72,7 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
         TextView tvfecha;
         TextView tvhorasRegularesTotales;
         TextView tvhorasExtraTotales;
+        ImageView imageEliminado;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -70,6 +80,8 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
             tvfecha = itemView.findViewById(R.id.tvFecha);
             tvhorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
             tvhorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
+            imageEliminado = itemView.findViewById(R.id.imageEliminado);
+
         }
 
     }

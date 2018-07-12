@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.federico.aldia.adapters.LiquidacionAdapter;
@@ -38,6 +39,8 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.tvSinLiquidaciones)
+    TextView tvSinLiquidaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +79,12 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
                         AllLiquidaciones allLiquidaciones = response.body();
                         assert allLiquidaciones != null;
                         List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
-                        mAdapter = new LiquidacionAdapter(listaLiquidaciones, LiquidacionesActivity.this, LiquidacionesActivity.this);
-                        mRecyclerView.setAdapter(mAdapter);
+                        if (listaLiquidaciones.size()<1){
+                            tvSinLiquidaciones.setVisibility(View.VISIBLE);
+                        }else {
+                            mAdapter = new LiquidacionAdapter(listaLiquidaciones, LiquidacionesActivity.this, LiquidacionesActivity.this);
+                            mRecyclerView.setAdapter(mAdapter);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
