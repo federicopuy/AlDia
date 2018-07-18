@@ -129,7 +129,7 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                 public void onFailure(Call<Periodo> call, Throwable t) {
 
                     Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-
+                    System.out.println("Message " + t.getMessage());
                     Intent returnIntent = getIntent();
                     setResult(Activity.RESULT_CANCELED, returnIntent);
                     finish();

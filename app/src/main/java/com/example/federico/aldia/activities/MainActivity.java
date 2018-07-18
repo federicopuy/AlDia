@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
-    TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria;
+    TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria, recaudaciontv, horasRegularestv, horasExtratv;
     SharedPreferences prefs;
     Toolbar toolbar;
     @Override
@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity
         tvHorasExtra = content_view.findViewById(R.id.tvHorasExtra);
         tvFechaUltimaLiquidacion = content_view.findViewById(R.id.tvFechaUltimaLiquidacion);
         tvCategoria = content_view.findViewById(R.id.tvCategoria);
+        recaudaciontv = content_view.findViewById(R.id.recaudaciontv);
+        horasRegularestv = content_view.findViewById(R.id.horasRegularestv);
+        horasExtratv = content_view.findViewById(R.id.horasExtratv);
 
         obtenerUltimaLiquidacion();
 
@@ -126,29 +129,14 @@ public class MainActivity extends AppCompatActivity
 
         if (ultimaLiquidacion != null) {
 
-            String categoria = "";
-            String montoRecaudado = "$0.00";
+            String puesto = "";
+            String monto = "$0.00";
             String horasRegulares = "0 hs";
             String horasExtra = "0 hs";
             String ultLiquidacion = "";
 
             try{
-                categoria = ultimaLiquidacion.getCategoria().getNombre();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try{
-                montoRecaudado = Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal());
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try{
-                horasRegulares = ultimaLiquidacion.getHorasTotReg().toString();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try{
-                horasExtra = ultimaLiquidacion.getHorasTotExt().toString();
+                puesto = ultimaLiquidacion.getCategoria().getNombre();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -158,11 +146,61 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
 
-            try {
-                tvCategoria.setText(categoria);
-                tvRecaudado.setText(montoRecaudado);
+            if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")){
+                Log.d(TAG,"Empleado fijo");
+                recaudaciontv.setText(R.string.sueldo_mensual);
+                try{
+                    monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto());
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+                horasRegularestv.setText("Días de Trabajo");
+                horasExtratv.setText("Horas Por Día");
+                try {
+                    horasRegulares = ultimaLiquidacion.getCategoria().getDiasTrabajo().toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 tvHorasRegulares.setText(horasRegulares);
+                try {
+                    horasExtra = ultimaLiquidacion.getCategoria().getHorasTrabajo().toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 tvHorasExtra.setText(horasExtra);
+
+            }else {
+                Log.d(TAG,"Empleado por Horas");
+
+                if ((ultimaLiquidacion.getMontoTotal())==null){
+                    monto = "$0.00";
+                } else {
+                    try {
+                        monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }                }
+                try {
+                    horasRegulares = ultimaLiquidacion.getHorasTotReg().toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                tvHorasRegulares.setText(horasRegulares);
+                try {
+                    horasExtra = ultimaLiquidacion.getHorasTotExt().toString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                tvHorasExtra.setText(horasExtra);
+            }
+
+
+            try {
+                tvCategoria.setText(puesto);
+                if (monto==null) {
+                    monto = "$ 0.00";
+                }
+                tvRecaudado.setText(monto);
                 tvFechaUltimaLiquidacion.setText(ultLiquidacion);
             } catch (Exception e) {
                 e.printStackTrace();

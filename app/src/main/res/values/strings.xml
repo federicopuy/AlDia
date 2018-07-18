@@ -38,7 +38,11 @@
     <string name="email">Email</string>
     <string name="no_existen_per_odos_para_mostrar">Sin Períodos para mostrar</string>
     <string name="no_existen_liquidaciones_para_mostrar">Sin Liquidaciones para mostrar</string>
-
+    <string name="periodo_eliminado">Período Eliminado por Administrador</string>
+    <string name="sueldo_mensual">Sueldo Mensual</string>
+    <string name="hora_entrada">Hora Entrada</string>
+    <string name="hora_salida">Hora Salida</string>
+    <string name="inasistencia">Inasistencia</string>
 
 
 </resources>

@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
         private String user;
         @SerializedName("montoTotal")
         @Expose
-        private Long montoTotal;
+        private Double montoTotal;
         @SerializedName("horasReg")
         @Expose
         private Long horasReg;
@@ -55,7 +55,7 @@ import com.google.gson.annotations.SerializedName;
          * @param horasReg
          * @param montoTotal
          */
-        public Periodo(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Categoria categoria, String user, Long montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
+        public Periodo(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Categoria categoria, String user, Double montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
             super();
             this.id = id;
             this.horaInicio = horaInicio;
@@ -126,11 +126,11 @@ import com.google.gson.annotations.SerializedName;
             this.user = user;
         }
 
-        public Long getMontoTotal() {
+        public Double getMontoTotal() {
             return montoTotal;
         }
 
-        public void setMontoTotal(Long montoTotal) {
+        public void setMontoTotal(Double montoTotal) {
             this.montoTotal = montoTotal;
         }
 

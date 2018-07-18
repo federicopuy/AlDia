@@ -38,10 +38,27 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         Liquidacion liquidacion = listaLiquidaciones.get(position);
 
+        if (liquidacion.getCategoria().getTipoCategoria().equals("FIJO")){
+
+        } else {
+            holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
+            holder.tvHorasExtraText.setVisibility(View.VISIBLE);
+            holder.tvHorasExtraTotales.setVisibility(View.VISIBLE);
+            holder.tvHorasRegularesTotales.setVisibility(View.VISIBLE);
+            String horasRegulares = "";
+            String horasExtra = "";
+            try{
+                horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";;
+                horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            holder.tvHorasRegularesTotales.setText(horasRegulares);
+            holder.tvHorasExtraTotales.setText(horasExtra);
+        }
+
         String fecha = "";
         String montoTotal = "";
-        String horasRegulares = "";
-        String horasExtra = "";
 
         try{
             fecha = liquidacion.getFecha();
@@ -55,17 +72,8 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
             e.printStackTrace();
         }
 
-        try{
-            horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";;
-            horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(fecha));
         holder.tvRecaudacionTotalLiquidacion.setText(montoTotal);
-        holder.tvHorasRegularesTotales.setText(horasRegulares);
-        holder.tvHorasExtraTotales.setText(horasExtra);
 
     }
 
@@ -80,7 +88,7 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
       class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales;
+        TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales, tvHorasRegularesText, tvHorasExtraText;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +97,10 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
             tvFechaLiquidacion = itemView.findViewById(R.id.tvFechaLiquidacion);
             tvHorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
             tvHorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
+            tvHorasRegularesText = itemView.findViewById(R.id.tvHorasRegularesText);
+            tvHorasExtraText = itemView.findViewById(R.id.tvHorasExtraText);
+
+
 
             itemView.setOnClickListener(this);
         }

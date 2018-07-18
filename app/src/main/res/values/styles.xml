@@ -103,7 +103,7 @@
     </style>
 
     <style name="textViewsFechaLiquidacion" parent="textViewsBasic">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_marginStart">12dp</item>
         <item name="android:textColor">@color/colorPrimary_text</item>
