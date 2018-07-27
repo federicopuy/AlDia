@@ -12,6 +12,7 @@ import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.ViewHolder>{
@@ -20,10 +21,21 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
     private List<Liquidacion> listaLiquidaciones;
     private Context mContext;
 
-    public LiquidacionAdapter(List<Liquidacion> listaLiquidaciones, Context context, LiquidacionAdapter.ListItemClickListener listener){
-        this.listaLiquidaciones = listaLiquidaciones;
+    public LiquidacionAdapter(Context context, LiquidacionAdapter.ListItemClickListener listener){
         this.mContext = context;
         mOnClickListener = listener;
+        listaLiquidaciones = new ArrayList<>();
+    }
+
+    public void addItems(List<Liquidacion> listaLiquidaciones){
+        for (Liquidacion l:listaLiquidaciones){
+            addItem(l);
+        }
+    }
+    void addItem(Liquidacion l){
+        listaLiquidaciones.add(l);
+        notifyItemInserted(listaLiquidaciones.size()-1);
+
     }
 
     @Override

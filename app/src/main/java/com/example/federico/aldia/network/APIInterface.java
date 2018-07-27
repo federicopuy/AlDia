@@ -10,6 +10,8 @@ import com.example.federico.aldia.model.TokenRetro;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -28,10 +30,12 @@ public interface APIInterface {
     Call<List<Comercio>>getComercios();
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ONE + "/{userId}")
-    Call<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
+   Call<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ALL + "/{userId}")
-    Call<AllLiquidaciones>getAllLiquidaciones(@Path("userId") long userId);
+    Call<AllLiquidaciones>getAllLiquidaciones(@Path("userId") long userId,
+                                              @Query("page") long page,
+                                              @Query("size") int size);
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.PERIODOS + "/" + URLs.NEW)

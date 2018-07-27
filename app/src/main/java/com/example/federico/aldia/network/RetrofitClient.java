@@ -2,6 +2,8 @@ package com.example.federico.aldia.network;
 
 import android.content.Context;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,6 +23,7 @@ public class RetrofitClient {
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(URLs.APIURLCOMPLETA)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())

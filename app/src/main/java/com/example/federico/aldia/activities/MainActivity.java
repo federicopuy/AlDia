@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -38,6 +39,12 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria, recaudaciontv, horasRegularestv, horasExtratv;
     SharedPreferences prefs;
     Toolbar toolbar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +98,8 @@ public class MainActivity extends AppCompatActivity
         final String nombreLlamada = "getUltimaLiquidacion";
         long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+
+
         Call<Liquidacion> callGetUltimaLiquidacion = mService.getUltimaLiquidacion(comercioId);
         callGetUltimaLiquidacion.enqueue(new Callback<Liquidacion>() {
             @Override
