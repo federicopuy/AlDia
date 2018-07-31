@@ -43,6 +43,9 @@
     <string name="hora_entrada">Hora Entrada</string>
     <string name="hora_salida">Hora Salida</string>
     <string name="inasistencia">Inasistencia</string>
+    <string name="null_money_value">$0.00</string>
+    <string name="dias_trabajo">Días de Trabajo</string>
+    <string name="hours_per_shift">Horas Por Día</string>
 
 
 </resources>

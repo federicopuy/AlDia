@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
@@ -63,10 +64,27 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
-    TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria, recaudaciontv, horasRegularestv, horasExtratv;
-    View viewHoursData;
-    SharedPreferences prefs;
+    @BindView(R.id.content_view_main)
+    View content_view;
+    @BindView(R.id.tvRecaudado)
+    TextView tvRecaudado;
+    @BindView(R.id.tvHorasRegulares)
+    TextView tvHorasRegulares;
+    @BindView(R.id.tvHorasExtra)
+    TextView tvHorasExtra;
+    @BindView(R.id.tvFechaUltimaLiquidacion)
+    TextView tvFechaUltimaLiquidacion;
+    @BindView(R.id.tvCategoria)
+    TextView tvCategoria;
+    @BindView(R.id.recaudaciontv)
+    TextView recaudaciontv;
+    @BindView(R.id.horasRegularestv)
+    TextView horasRegularestv;
+    @BindView(R.id.horasExtratv)
+    TextView horasExtratv;
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
+    SharedPreferences prefs;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -75,49 +93,25 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String nombreComercio = prefs.getString(Constantes.KEY_COMERCIO_NOMBRE, "");
         Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
-
-        View content_view = findViewById(R.id.content_view_main);
-
-        tvRecaudado = content_view.findViewById(R.id.tvRecaudado);
-        tvHorasRegulares = content_view.findViewById(R.id.tvHorasRegulares);
-        tvHorasExtra = content_view.findViewById(R.id.tvHorasExtra);
-        tvFechaUltimaLiquidacion = content_view.findViewById(R.id.tvFechaUltimaLiquidacion);
-        tvCategoria = content_view.findViewById(R.id.tvCategoria);
-        recaudaciontv = content_view.findViewById(R.id.recaudaciontv);
-        horasRegularestv = content_view.findViewById(R.id.horasRegularestv);
-        horasExtratv = content_view.findViewById(R.id.horasExtratv);
-        viewHoursData = content_view.findViewById(R.id.viewHoursData);
-
         mCompositeDisposable = new CompositeDisposable();
-
-
         obtenerUltimaLiquidacion();
-
-        viewHoursData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
-                startActivity(pasarAPeriodos);
-            }
-        });
 
     }
 
     /*-------------------------------------- Llamada Obtener Ultima Liquidacion --------------------------------------------***/
 
     private void obtenerUltimaLiquidacion() {
-
+        //todo composite disposable
         final String nombreLlamada = "getUltimaLiquidacion";
         long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
 
         Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
         observable.subscribeOn(Schedulers.io())
@@ -135,10 +129,11 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onNext(Liquidacion value) {
+                    public void onNext(Liquidacion ultimaLiquidacion) {
                         Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                        Liquidacion ultimaLiquidacion = value;
-                        actualizarUI(ultimaLiquidacion);
+                        if (ultimaLiquidacion!=null){
+                            actualizarUI(ultimaLiquidacion);
+                        }
                     }
 
                     @Override
@@ -157,7 +152,6 @@ public class MainActivity extends AppCompatActivity
 
                     }
                 });
-
     }
 
     /*-------------------------------------- Actualizar UI --------------------------------------------***/
@@ -166,19 +160,14 @@ public class MainActivity extends AppCompatActivity
 
         if (ultimaLiquidacion != null) {
 
-            String puesto = "";
-            String monto = "$0.00";
-            String horasRegulares = "0 hs";
-            String horasExtra = "0 hs";
-            String ultLiquidacion = "";
-
             try {
-                puesto = ultimaLiquidacion.getCategoria().getNombre();
+                tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             try {
-                ultLiquidacion = Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha());
+                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -186,64 +175,61 @@ public class MainActivity extends AppCompatActivity
             if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")) {
                 Log.d(TAG, "Empleado fijo");
                 recaudaciontv.setText(R.string.sueldo_mensual);
+
                 try {
-                    monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto());
+                    tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto()));
+                } catch (NullPointerException n) {
+                    n.printStackTrace();
+                    tvRecaudado.setText(R.string.null_money_value);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                horasRegularestv.setText("Días de Trabajo");
-                horasExtratv.setText("Horas Por Día");
+
+                horasRegularestv.setText(R.string.dias_trabajo);
                 try {
-                    horasRegulares = ultimaLiquidacion.getCategoria().getDiasTrabajo().toString();
+                    tvHorasRegulares.setText(ultimaLiquidacion.getCategoria().getDiasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                tvHorasRegulares.setText(horasRegulares);
+
+                horasExtratv.setText(R.string.hours_per_shift);
                 try {
-                    horasExtra = ultimaLiquidacion.getCategoria().getHorasTrabajo().toString();
+                    tvHorasExtra.setText(ultimaLiquidacion.getCategoria().getHorasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                tvHorasExtra.setText(horasExtra);
 
             } else {
                 Log.d(TAG, "Empleado por Horas");
 
-                if ((ultimaLiquidacion.getMontoTotal()) == null) {
-                    monto = "$0.00";
-                } else {
-                    try {
-                        monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
                 try {
-                    horasRegulares = ultimaLiquidacion.getHorasTotReg().toString();
+                    tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
+                } catch (NullPointerException n) {
+                    n.printStackTrace();
+                    tvRecaudado.setText(R.string.null_money_value);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                tvHorasRegulares.setText(horasRegulares);
+                
                 try {
-                    horasExtra = ultimaLiquidacion.getHorasTotExt().toString();
+                    tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                tvHorasExtra.setText(horasExtra);
-            }
 
-
-            try {
-                tvCategoria.setText(puesto);
-                if (monto == null) {
-                    monto = "$ 0.00";
+                try {
+                    tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                tvRecaudado.setText(monto);
-                tvFechaUltimaLiquidacion.setText(ultLiquidacion);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
+    }
+
+    @OnClick(R.id.viewHoursData)
+    public void pasarAPeriodos() {
+        Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
+        startActivity(pasarAPeriodos);
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 
@@ -317,13 +303,13 @@ public class MainActivity extends AppCompatActivity
 
     private void createNavDrawer(Toolbar toolbar) {
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
@@ -345,7 +331,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -391,6 +377,5 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         mCompositeDisposable.dispose();
         super.onDestroy();
-
     }
 }
