@@ -15,27 +15,30 @@ import com.example.federico.aldia.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.ViewHolder>{
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.ViewHolder> {
 
     final private LiquidacionAdapter.ListItemClickListener mOnClickListener;
     private List<Liquidacion> listaLiquidaciones;
     private Context mContext;
 
-    public LiquidacionAdapter(Context context, LiquidacionAdapter.ListItemClickListener listener){
+    public LiquidacionAdapter(Context context, LiquidacionAdapter.ListItemClickListener listener) {
         this.mContext = context;
         mOnClickListener = listener;
         listaLiquidaciones = new ArrayList<>();
     }
 
-    public void addItems(List<Liquidacion> listaLiquidaciones){
-        for (Liquidacion l:listaLiquidaciones){
+    public void addItems(List<Liquidacion> listaLiquidaciones) {
+        for (Liquidacion l : listaLiquidaciones) {
             addItem(l);
         }
     }
-    void addItem(Liquidacion l){
-        listaLiquidaciones.add(l);
-        notifyItemInserted(listaLiquidaciones.size()-1);
 
+    void addItem(Liquidacion l) {
+        listaLiquidaciones.add(l);
+        notifyItemInserted(listaLiquidaciones.size() - 1);
     }
 
     @Override
@@ -50,17 +53,16 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
 
         Liquidacion liquidacion = listaLiquidaciones.get(position);
 
-        if (liquidacion.getCategoria().getTipoCategoria().equals("FIJO")){
-
-        } else {
+        if (!(liquidacion.getCategoria().getTipoCategoria().equals("FIJO"))) {
             holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
             holder.tvHorasExtraText.setVisibility(View.VISIBLE);
             holder.tvHorasExtraTotales.setVisibility(View.VISIBLE);
             holder.tvHorasRegularesTotales.setVisibility(View.VISIBLE);
+
             String horasRegulares = "";
             String horasExtra = "";
-            try{
-                horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";;
+            try {
+                horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";
                 horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,24 +71,17 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
             holder.tvHorasExtraTotales.setText(horasExtra);
         }
 
-        String fecha = "";
-        String montoTotal = "";
-
-        try{
-            fecha = liquidacion.getFecha();
-        } catch (Exception e){
+        try {
+            holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(liquidacion.getFecha()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-            montoTotal = Utils.obtenerMontoFormateado(liquidacion.getMontoTotal());
-        } catch (Exception e){
+        try {
+            holder.tvRecaudacionTotalLiquidacion.setText(Utils.obtenerMontoFormateado(liquidacion.getMontoTotal()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(fecha));
-        holder.tvRecaudacionTotalLiquidacion.setText(montoTotal);
-
     }
 
     @Override
@@ -98,22 +93,24 @@ public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.
         void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada);
     }
 
-      class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvRecaudacionTotalLiquidacion, tvFechaLiquidacion, tvHorasRegularesTotales, tvHorasExtraTotales, tvHorasRegularesText, tvHorasExtraText;
+        @BindView(R.id.tvRecaudacionTotalLiquidacion)
+        TextView tvRecaudacionTotalLiquidacion;
+        @BindView(R.id.tvFechaLiquidacion)
+        TextView tvFechaLiquidacion;
+        @BindView(R.id.tvHorasRegularesTotales)
+        TextView tvHorasRegularesTotales;
+        @BindView(R.id.tvHorasExtraTotales)
+        TextView tvHorasExtraTotales;
+        @BindView(R.id.tvHorasRegularesText)
+        TextView tvHorasRegularesText;
+        @BindView(R.id.tvHorasExtraText)
+        TextView tvHorasExtraText;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            tvRecaudacionTotalLiquidacion = itemView.findViewById(R.id.tvRecaudacionTotalLiquidacion);
-            tvFechaLiquidacion = itemView.findViewById(R.id.tvFechaLiquidacion);
-            tvHorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
-            tvHorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
-            tvHorasRegularesText = itemView.findViewById(R.id.tvHorasRegularesText);
-            tvHorasExtraText = itemView.findViewById(R.id.tvHorasExtraText);
-
-
-
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

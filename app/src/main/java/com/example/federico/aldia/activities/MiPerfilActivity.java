@@ -26,20 +26,15 @@ public class MiPerfilActivity extends AppCompatActivity {
     private static final String TAG = "Empleado Activity";
 
     @BindView(R.id.tvNombreValue)
-    TextView tvNombreValue ;
-
+    TextView tvNombreValue;
     @BindView(R.id.tvDireccionValue)
     TextView tvDireccionValue;
-
     @BindView(R.id.tvEmailValue)
     TextView tvEmailValue;
-
     @BindView(R.id.tvDNIValue)
     TextView tvDNIValue;
-
     @BindView(R.id.tvTelefonoValue)
     TextView tvTelefonoValue;
-
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
@@ -96,9 +91,9 @@ public class MiPerfilActivity extends AppCompatActivity {
             tvDNIValue.setText(empleado.getDni());
             tvTelefonoValue.setText(empleado.getTelefono());
             tvDireccionValue.setText(empleado.getDireccion());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
+        }catch (NullPointerException n) {
+            n.printStackTrace();
+        }
     }
 }

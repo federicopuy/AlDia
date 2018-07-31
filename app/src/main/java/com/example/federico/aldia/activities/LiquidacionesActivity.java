@@ -36,13 +36,11 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
 
     private static final String TAG = "Liquidaciones Activity";
     private LiquidacionAdapter mAdapter;
-    RecyclerView mRecyclerView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.tvSinLiquidaciones)
     TextView tvSinLiquidaciones;
     int size = 15;
-
 
     int pageNumber = 0;
     boolean isLastPage = false;
@@ -50,6 +48,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
 
     RecyclerView.LayoutManager mLayoutManager;
     APIInterface mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,23 +56,24 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
         ButterKnife.bind(this);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        mRecyclerView = findViewById(R.id.liquidaciones_recycler_view);
+        RecyclerView mRecyclerView = findViewById(R.id.liquidaciones_recycler_view);
 
         mAdapter = new LiquidacionAdapter(LiquidacionesActivity.this, this);
         mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
         mRecyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) mLayoutManager) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
-                pageNumber +=1;
+                pageNumber += 1;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         loadNextPage();
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -92,21 +92,11 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
             }
         });
 
-
-
-
-
-
-         mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+        mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
         loadFirstPage();
-
-
     }
 
-
-
     /*-------------------------------------- Llamada para Obtener Liquidaciones --------------------------------------------***/
-
 
     private void loadFirstPage() {
         final String nombreLlamada = "callGetLiquidaciones";
@@ -126,15 +116,13 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
 
-                        AllLiquidaciones allLiquidaciones = fetchResults(response);
-                        List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
-                        mAdapter.addItems(listaLiquidaciones);
-                        if (pageNumber<=allLiquidaciones.getTotalPages()) {
-                       //     mAdapter.addLoadingFooter();
+                    AllLiquidaciones allLiquidaciones = response.body();
+                    List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
+                    mAdapter.addItems(listaLiquidaciones);
 
-                        }else {
-                            isLastPage = true;
-                        }
+                    if (!(pageNumber <= allLiquidaciones.getTotalPages())) {
+                        isLastPage = true;
+                    }
 
                 } else {
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
@@ -161,83 +149,38 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
             @Override
             public void onResponse(Call<AllLiquidaciones> call, Response<AllLiquidaciones> response) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-                isLoading = false;
+                if (response.isSuccessful()) {
 
-                AllLiquidaciones allLiquidaciones = fetchResults(response);
-                List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
-                mAdapter.addItems(listaLiquidaciones);
-                if (pageNumber!= allLiquidaciones.getTotalPages()) {
-                    //mAdapter.addLoadingFooter();
+                    Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
+                    isLoading = false;
 
-                }else {
-                    isLastPage = true;
+                    AllLiquidaciones allLiquidaciones = response.body();
+                    List<Liquidacion> listaLiquidaciones = allLiquidaciones.getLiquidacion();
+                    mAdapter.addItems(listaLiquidaciones);
+
+                    if (pageNumber == allLiquidaciones.getTotalPages()) {
+                        isLastPage = true;
+                    }
+                } else {
+                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
                 }
             }
 
             @Override
             public void onFailure(Call<AllLiquidaciones> call, Throwable t) {
-
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
             }
         });
-
-
     }
-
-
-
-        private AllLiquidaciones fetchResults(Response<AllLiquidaciones> response) {	//3
-            AllLiquidaciones liquidacionesHeader = response.body();
-            return liquidacionesHeader;
-        }
-
-
-//    private void obtenerLiquidaciones(int page) {
-//        final String nombreLlamada = "callGetLiquidaciones";
-//
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
-//        progressBar.setVisibility(View.VISIBLE);
-//        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-//        Call<AllLiquidaciones> callGetLiquidaciones = mService.getAllLiquidaciones(comercioId, page, size);
-//
-//        callGetLiquidaciones.enqueue(new Callback<AllLiquidaciones>() {
-//
-//            @Override
-//            public void onResponse(Call<AllLiquidaciones> call, Response<AllLiquidaciones> response) {
-//                progressBar.setVisibility(View.INVISIBLE);
-//
-//                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-//                if (response.isSuccessful()) {
-//                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-//                    try {
-//                      fetchResults(response);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                } else {
-//                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AllLiquidaciones> call, Throwable t) {
-//                progressBar.setVisibility(View.INVISIBLE);
-//                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-//            }
-//        });
-//        }
 
     /*-------------------------------------- OnListItemClick --------------------------------------------***/
 
     @Override
     public void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada) {
-
         Intent pasarAListaPeriodos = new Intent(LiquidacionesActivity.this, PeriodosActivity.class);
         pasarAListaPeriodos.putExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, liquidacionClickeada.getId());
         startActivity(pasarAListaPeriodos);
-
     }
 
 

@@ -17,6 +17,9 @@ import com.example.federico.aldia.utils.Utils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Federico on 16/04/2018.
  */
@@ -94,23 +97,24 @@ public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        @BindView(R.id.tvHoraIngresoEgreso)
         TextView tvHoraIngresoEgreso;
+        @BindView(R.id.tvFecha)
         TextView tvfecha;
+        @BindView(R.id.tvHorasRegularesTotales)
         TextView tvhorasRegularesTotales;
+        @BindView(R.id.tvHorasRegularesText)
         TextView tvhorasRegularesText;
+        @BindView(R.id.tvHorasExtraTotales)
         TextView tvhorasExtraTotales;
+        @BindView(R.id.tvHorasExtraText)
         TextView tvhorasExtraText;
+        @BindView(R.id.imageEliminado)
         ImageButton imageEliminado;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvHoraIngresoEgreso = itemView.findViewById(R.id.tvHoraIngresoEgreso);
-            tvfecha = itemView.findViewById(R.id.tvFecha);
-            tvhorasRegularesTotales = itemView.findViewById(R.id.tvHorasRegularesTotales);
-            tvhorasRegularesText = itemView.findViewById(R.id.tvHorasRegularesText);
-            tvhorasExtraTotales = itemView.findViewById(R.id.tvHorasExtraTotales);
-            tvhorasExtraText = itemView.findViewById(R.id.tvHorasExtraText);
-            imageEliminado = itemView.findViewById(R.id.imageEliminado);
+            ButterKnife.bind(this, itemView);
             imageEliminado.setOnClickListener(this);
         }
 

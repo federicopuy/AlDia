@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                 .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
-                        return objectObservable.delay(5, TimeUnit.SECONDS);
+                        return objectObservable.delay(30, TimeUnit.SECONDS);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
                 try {
                     tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 } catch (Exception e) {

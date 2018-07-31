@@ -35,12 +35,11 @@ import retrofit2.Response;
 public class PeriodosActivity extends AppCompatActivity {
 
     private static final String TAG = "Periodos Activity";
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.tvSinPeriodos)
     TextView tvSinPeriodos;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,6 @@ public class PeriodosActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.periodos_recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
 
         Intent vieneDeIntent = getIntent();
         long id;
@@ -71,6 +69,8 @@ public class PeriodosActivity extends AppCompatActivity {
         obtenerPeriodos(tipoBusqueda, id);
 
     }
+
+    /*-------------------------------------- Obtener Periodos --------------------------------------------***/
 
     private void obtenerPeriodos(String tipoBusqueda, long id) {
 
