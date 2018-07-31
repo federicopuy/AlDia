@@ -232,6 +232,8 @@ public class SignIn extends AppCompatActivity implements
                         e.printStackTrace();
                         Log.e(TAG, "Token NULO");
                         signInButton.setVisibility(View.VISIBLE);
+                        Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
+
                     }
 
                 } else {
@@ -250,6 +252,7 @@ public class SignIn extends AppCompatActivity implements
             public void onFailure(Call<String> call, Throwable t) {
                 signInButton.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
+                Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
                 try {
                     Log.e(TAG, t.getMessage());

@@ -41,7 +41,7 @@ public class LiquidacionesActivity extends AppCompatActivity implements Liquidac
     ProgressBar progressBar;
     @BindView(R.id.tvSinLiquidaciones)
     TextView tvSinLiquidaciones;
-    int size = 3;
+    int size = 15;
 
 
     int pageNumber = 0;

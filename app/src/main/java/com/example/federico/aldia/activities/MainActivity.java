@@ -35,15 +35,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,9 +64,11 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.fabEscanearQR)
     FloatingActionButton fabEscanearQR;
     TextView tvRecaudado, tvHorasRegulares, tvHorasExtra, tvFechaUltimaLiquidacion, tvCategoria, recaudaciontv, horasRegularestv, horasExtratv;
+    View viewHoursData;
     SharedPreferences prefs;
     Toolbar toolbar;
 
+    private CompositeDisposable mCompositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String nombreComercio = prefs.getString(Constantes.KEY_COMERCIO_NOMBRE,"");
+        String nombreComercio = prefs.getString(Constantes.KEY_COMERCIO_NOMBRE, "");
         Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
@@ -86,8 +93,20 @@ public class MainActivity extends AppCompatActivity
         recaudaciontv = content_view.findViewById(R.id.recaudaciontv);
         horasRegularestv = content_view.findViewById(R.id.horasRegularestv);
         horasExtratv = content_view.findViewById(R.id.horasExtratv);
+        viewHoursData = content_view.findViewById(R.id.viewHoursData);
+
+        mCompositeDisposable = new CompositeDisposable();
+
 
         obtenerUltimaLiquidacion();
+
+        viewHoursData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
+                startActivity(pasarAPeriodos);
+            }
+        });
 
     }
 
@@ -100,37 +119,44 @@ public class MainActivity extends AppCompatActivity
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
 
 
-        Call<Liquidacion> callGetUltimaLiquidacion = mService.getUltimaLiquidacion(comercioId);
-        callGetUltimaLiquidacion.enqueue(new Callback<Liquidacion>() {
-            @Override
-            public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
-                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-                if (response.isSuccessful()) {
-                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    Liquidacion ultimaLiquidacion = response.body();
-                    actualizarUI(ultimaLiquidacion);
-                } else {
-                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-                    try {
-                        assert response.errorBody() != null;
-                        Log.e(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
+        observable.subscribeOn(Schedulers.io())
+                .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
+                        return objectObservable.delay(5, TimeUnit.SECONDS);
                     }
-                }
-            }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Liquidacion>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
 
-            @Override
-            public void onFailure(Call<Liquidacion> call, Throwable t) {
-                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                if (t instanceof NoConnectivityException) {
-                    t.printStackTrace();
-                    Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+                    @Override
+                    public void onNext(Liquidacion value) {
+                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+                        Liquidacion ultimaLiquidacion = value;
+                        actualizarUI(ultimaLiquidacion);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+                        if (e instanceof NoConnectivityException) {
+                            e.printStackTrace();
+                            Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
     }
 
@@ -146,23 +172,23 @@ public class MainActivity extends AppCompatActivity
             String horasExtra = "0 hs";
             String ultLiquidacion = "";
 
-            try{
+            try {
                 puesto = ultimaLiquidacion.getCategoria().getNombre();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            try{
+            try {
                 ultLiquidacion = Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")){
-                Log.d(TAG,"Empleado fijo");
+            if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")) {
+                Log.d(TAG, "Empleado fijo");
                 recaudaciontv.setText(R.string.sueldo_mensual);
-                try{
+                try {
                     monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto());
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 horasRegularestv.setText("Días de Trabajo");
@@ -180,17 +206,18 @@ public class MainActivity extends AppCompatActivity
                 }
                 tvHorasExtra.setText(horasExtra);
 
-            }else {
-                Log.d(TAG,"Empleado por Horas");
+            } else {
+                Log.d(TAG, "Empleado por Horas");
 
-                if ((ultimaLiquidacion.getMontoTotal())==null){
+                if ((ultimaLiquidacion.getMontoTotal()) == null) {
                     monto = "$0.00";
                 } else {
                     try {
                         monto = Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal());
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }                }
+                    }
+                }
                 try {
                     horasRegulares = ultimaLiquidacion.getHorasTotReg().toString();
                 } catch (Exception e) {
@@ -208,7 +235,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 tvCategoria.setText(puesto);
-                if (monto==null) {
+                if (monto == null) {
                     monto = "$ 0.00";
                 }
                 tvRecaudado.setText(monto);
@@ -237,7 +264,7 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 obtenerUltimaLiquidacion();
             } else {
-                if (resultCode==RESULT_CANCELED){
+                if (resultCode == RESULT_CANCELED) {
                     Log.i(TAG, "Result CANCELED");
 
                 }
@@ -304,14 +331,14 @@ public class MainActivity extends AppCompatActivity
         TextView tvNavUserMail = header.findViewById(R.id.tvNavUserMail);
         ImageView imageViewNavDrawer = header.findViewById(R.id.imageViewNavDrawer);
 
-        try{
+        try {
             tvNavUserName.setText(prefs.getString(Constantes.KEY_NOMBRE_USER, ""));
             tvNavUserMail.setText(prefs.getString(Constantes.KEY_EMAIL_USER, ""));
             String imagenUsuario = prefs.getString(Constantes.KEY_PHOTO_USER, "");
             if (!imagenUsuario.equals("")) {
                 Picasso.get().load(imagenUsuario).into(imageViewNavDrawer);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -351,12 +378,19 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_cerrar_sesion) {
             Intent pasarASignIn = new Intent(MainActivity.this, SignIn.class);
-            pasarASignIn.putExtra(Constantes.KEY_INTENT_CERRAR_SESION,"");
+            pasarASignIn.putExtra(Constantes.KEY_INTENT_CERRAR_SESION, "");
             startActivity(pasarASignIn);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mCompositeDisposable.dispose();
+        super.onDestroy();
+
     }
 }

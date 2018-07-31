@@ -35,16 +35,16 @@
 
 
     <android.support.v7.widget.CardView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_top_titulos"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?selectableItemBackground"
+        android:foreground="?selectableItemBackgroundBorderless"
         app:layout_constraintTop_toBottomOf="@+id/tvFechaUltimaLiquidacion">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/viewHoursData"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
