@@ -21,34 +21,44 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionAndStatusBar">
-        </activity>
-        <activity android:name=".activities.SignIn"
+            android:theme="@style/AppTheme.NoActionAndStatusBar"></activity>
+        <activity
+            android:name=".activities.SignIn"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.IngresoEgreso"
+            android:theme="@style/AppTheme.NoActionAndStatusBar" />
+        <activity
+            android:name=".activities.PeriodosActivity"
+            android:label="@string/periodos" />
+        <activity
+            android:name=".activities.LiquidacionesActivity"
+            android:label="@string/liquidaciones"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.MiPerfilActivity"
+            android:label="@string/mi_perfil"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.CamaraActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionAndStatusBar" />
 
-        <activity android:name=".activities.IngresoEgreso"
-            android:theme="@style/AppTheme.NoActionAndStatusBar"/>
-        <activity android:name=".activities.PeriodosActivity"
-            android:label="@string/periodos"/>
-        <activity android:name=".activities.LiquidacionesActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="@string/liquidaciones"/>
-        <activity android:name=".activities.MiPerfilActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="@string/mi_perfil"/>
-        <activity android:name=".activities.CamaraActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionAndStatusBar"/>
+        <receiver android:name=".ScanWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/scan_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>
