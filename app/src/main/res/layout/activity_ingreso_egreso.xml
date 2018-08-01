@@ -12,90 +12,94 @@
         android:id="@+id/appBarIngresoEgreso"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
         android:background="@drawable/ingreso_background"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
-
 
         <TextView
             android:id="@+id/textViewIngresoEgreso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:textSize="32sp"
-            android:layout_weight="1"
             tools:text="@string/Ingreso" />
+
     </android.support.design.widget.AppBarLayout>
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.federico.aldia.activities.IngresoEgreso"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
-
-    <TextView
-        android:id="@+id/tvNombreComercio"
-        style="@style/textViewDatosMain"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Chajuco Bar" />
-
-    <TextView
-        android:id="@+id/puestoTv"
-        style="@style/textViewTitulosChicos"
-        android:text="@string/puesto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
-
-    <TextView
-        android:id="@+id/tvCategoria"
-        style="@style/textViewDatosMain"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/puestoTv"
-        tools:text="Cocinero 8hs" />
-
-    <TextView
-        android:id="@+id/horaIngresoTv"
-        style="@style/textViewTitulosChicos"
-        android:text="Hora Ingreso"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
-
-    <TextView
-        android:id="@+id/tvHoraIngreso"
-        style="@style/textViewDatosMain"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horaIngresoTv"
-        tools:text="19:22" />
-
-    <TextView
-        android:id="@+id/horaEgresoTv"
-        style="@style/textViewTitulosChicos"
-        android:text="Hora Egreso"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso" />
-
-    <TextView
-        android:id="@+id/tvHoraEgreso"
-        style="@style/textViewDatosMain"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horaEgresoTv"
-        tools:text="21:23" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAceptarIngresoEgreso"
         style="@style/fab"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_done_white_36px" />
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</android.support.constraint.ConstraintLayout>
-    </android.support.design.widget.CoordinatorLayout>
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context="com.example.federico.aldia.activities.IngresoEgreso">
+
+            <TextView
+                android:id="@+id/tvNombreComercio"
+                style="@style/textViewDatosMain"
+                android:layout_marginTop="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Chajuco Bar" />
+
+            <TextView
+                android:id="@+id/puestoTv"
+                style="@style/textViewTitulosChicos"
+                android:text="@string/puesto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
+
+            <TextView
+                android:id="@+id/tvCategoria"
+                style="@style/textViewDatosMain"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/puestoTv"
+                tools:text="Cocinero 8hs" />
+
+            <TextView
+                android:id="@+id/horaIngresoTv"
+                style="@style/textViewTitulosChicos"
+                android:text="@string/hora_entrada"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+
+            <TextView
+                android:id="@+id/tvHoraIngreso"
+                style="@style/textViewDatosMain"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horaIngresoTv"
+                tools:text="19:22" />
+
+            <TextView
+                android:id="@+id/horaEgresoTv"
+                style="@style/textViewTitulosChicos"
+                android:text="@string/hora_salida"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso" />
+
+            <TextView
+                android:id="@+id/tvHoraEgreso"
+                style="@style/textViewDatosMain"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horaEgresoTv"
+                tools:text="21:23" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
