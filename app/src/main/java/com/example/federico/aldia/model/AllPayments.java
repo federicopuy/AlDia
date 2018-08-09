@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class AllLiquidaciones {
+public class AllPayments {
 
     @SerializedName("content")
     @Expose
@@ -36,7 +36,7 @@ public class AllLiquidaciones {
      * No args constructor for use in serialization
      *
      */
-    public AllLiquidaciones() {
+    public AllPayments() {
     }
 
     /**
@@ -50,7 +50,7 @@ public class AllLiquidaciones {
      * @param totalPages
      * @param size
      */
-    public AllLiquidaciones(List<Liquidacion> liquidacion, Boolean first, Boolean last, long number, long numberOfElements, long size, long totalElements, long totalPages) {
+    public AllPayments(List<Liquidacion> liquidacion, Boolean first, Boolean last, long number, long numberOfElements, long size, long totalElements, long totalPages) {
         super();
         this.liquidacion = liquidacion;
         this.first = first;

@@ -7,7 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.federico.aldia.activities.SignIn;
+import com.example.federico.aldia.activities.SignInActivity;
+import com.example.federico.aldia.utils.Constants;
 
 /**
  * Implementation of App Widget functionality.
@@ -25,8 +26,9 @@ public class ScanWidgetProvider extends AppWidgetProvider {
 //        views.setTextViewText(R.id.appwidget_text, widgetText);
 
 
-        Intent intent = new Intent(context, SignIn.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+        Intent intent = new Intent(context, SignInActivity.class);
+        intent.putExtra(Constants.KEY_INTENT_WIDGET_BUTTON, "");
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
         views.setOnClickPendingIntent(R.id.camera_widget_image, pendingIntent);
 
         // Instruct the widget manager to update the widget

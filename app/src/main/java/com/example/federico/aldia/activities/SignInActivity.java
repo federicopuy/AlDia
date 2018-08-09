@@ -13,11 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.Comercio;
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.model.Business;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.TokenRetro;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
@@ -39,7 +38,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignIn extends AppCompatActivity implements
+public class SignInActivity extends AppCompatActivity implements
         View.OnClickListener {
 
     private static final String TAG = "GoogleActivity";
@@ -89,7 +87,7 @@ public class SignIn extends AppCompatActivity implements
         //todo implementar en main
         super.onStart();
         Intent intentCerrarSesion = getIntent();
-        if (intentCerrarSesion.hasExtra(Constantes.KEY_INTENT_CERRAR_SESION)){
+        if (intentCerrarSesion.hasExtra(Constants.KEY_INTENT_CERRAR_SESION)){
             signOut();
         }
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -173,9 +171,9 @@ public class SignIn extends AppCompatActivity implements
         progressBar.setVisibility(View.VISIBLE);
         if (user != null) {
             try {
-                prefs.edit().putString(Constantes.KEY_NOMBRE_USER, user.getDisplayName()).apply();
-                prefs.edit().putString(Constantes.KEY_EMAIL_USER, user.getEmail()).apply();
-                prefs.edit().putString(Constantes.KEY_PHOTO_USER, Objects.requireNonNull(user.getPhotoUrl()).toString()).apply();
+                prefs.edit().putString(Constants.KEY_NOMBRE_USER, user.getDisplayName()).apply();
+                prefs.edit().putString(Constants.KEY_EMAIL_USER, user.getEmail()).apply();
+                prefs.edit().putString(Constants.KEY_PHOTO_USER, Objects.requireNonNull(user.getPhotoUrl()).toString()).apply();
             } catch (Exception e) {
                 e.printStackTrace();
                 signInButton.setVisibility(View.VISIBLE);
@@ -189,7 +187,7 @@ public class SignIn extends AppCompatActivity implements
                             if (task.isSuccessful()) {
                                 tokenFirebase = task.getResult().getToken();
                                 Log.d(TAG, "Token Firebase " + tokenFirebase);
-                                prefs.edit().putString(Constantes.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
+                                prefs.edit().putString(Constants.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
                                 if (!tokenFirebase.equals("")) {
                                     servicioEnviarToken(user);
                                 }
@@ -224,9 +222,21 @@ public class SignIn extends AppCompatActivity implements
                         String bearer = root.getString("id_token");
                         tokenJWT = "Bearer " + bearer;
                         System.out.println("JWT" + tokenJWT);
-                        prefs.edit().putString(Constantes.KEY_TOKEN_JWT, tokenJWT).apply();
-                        obtenerComercios(user);
+                        prefs.edit().putString(Constants.KEY_TOKEN_JWT, tokenJWT).apply();
                         Log.i(TAG, "Token JWT: " + tokenJWT);
+
+                        Intent comesFromIntent = getIntent();
+                        if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)){
+
+                            Intent goToCameraDirectly = new Intent(SignInActivity.this, MainActivity.class);
+                            goToCameraDirectly.putExtra(Constants.KEY_INTENT_WIDGET_BUTTON,"");
+                            startActivity(goToCameraDirectly);
+
+                        } else {
+                            obtenerComercios(user);
+                        }
+
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -266,20 +276,20 @@ public class SignIn extends AppCompatActivity implements
     private void obtenerComercios(final FirebaseUser user) {
 
         final String nombreLlamada = "obtenerComercios";
-        Call<List<Comercio>> obtenerComerciosEmpleado = mService.getComercios();
-        obtenerComerciosEmpleado.enqueue(new Callback<List<Comercio>>() {
+        Call<List<Business>> obtenerComerciosEmpleado = mService.getComercios();
+        obtenerComerciosEmpleado.enqueue(new Callback<List<Business>>() {
 
             @Override
-            public void onResponse(Call<List<Comercio>> call, Response<List<Comercio>> response) {
+            public void onResponse(Call<List<Business>> call, Response<List<Business>> response) {
                 progressBar.setVisibility(View.INVISIBLE);
 
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    List<Comercio> listaComercios;
+                    List<Business> businessesList;
                     try {
-                        listaComercios = response.body();
-                            assert listaComercios != null;
-                            crearDialog(listaComercios);
+                        businessesList = response.body();
+                            assert businessesList != null;
+                            crearDialog(businessesList);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -290,7 +300,7 @@ public class SignIn extends AppCompatActivity implements
             }
 
             @Override
-            public void onFailure(Call<List<Comercio>> call, Throwable t) {
+            public void onFailure(Call<List<Business>> call, Throwable t) {
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
                 progressBar.setVisibility(View.INVISIBLE);
                 try {
@@ -302,14 +312,14 @@ public class SignIn extends AppCompatActivity implements
         });
     }
 
-    private void crearDialog(final List<Comercio> listaComercios) {
+    private void crearDialog(final List<Business> businessesList) {
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(SignIn.this, android.R.layout.select_dialog_item);
-        for (Comercio c : listaComercios) {
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(SignInActivity.this, android.R.layout.select_dialog_item);
+        for (Business c : businessesList) {
             arrayAdapter.add(c.getUserComercio());
         }
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(SignIn.this);
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(SignInActivity.this);
         builderSingle.setTitle(R.string.seleccionar_comercio);
         builderSingle.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
             @Override
@@ -321,10 +331,10 @@ public class SignIn extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Comercio comercioSeleccionado = listaComercios.get(which);
-                prefs.edit().putLong(Constantes.KEY_COMERCIO_ID, comercioSeleccionado.getUserId()).apply();
-                prefs.edit().putString(Constantes.KEY_COMERCIO_NOMBRE, comercioSeleccionado.getUserComercio()).apply();
-                Intent pasarAMainActivity = new Intent(SignIn.this, MainActivity.class);
+                Business selectedBusiness = businessesList.get(which);
+                prefs.edit().putLong(Constants.KEY_COMERCIO_ID, selectedBusiness.getUserId()).apply();
+                prefs.edit().putString(Constants.KEY_COMERCIO_NOMBRE, selectedBusiness.getUserComercio()).apply();
+                Intent pasarAMainActivity = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(pasarAMainActivity);
 
             }

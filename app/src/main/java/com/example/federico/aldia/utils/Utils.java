@@ -5,11 +5,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.example.federico.aldia.model.Categoria;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Period;
 import java.util.Date;
 
 public class Utils {

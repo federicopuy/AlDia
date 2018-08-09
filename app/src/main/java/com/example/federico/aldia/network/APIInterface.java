@@ -1,8 +1,8 @@
 package com.example.federico.aldia.network;
 
-import com.example.federico.aldia.model.AllLiquidaciones;
-import com.example.federico.aldia.model.Comercio;
-import com.example.federico.aldia.model.Empleado;
+import com.example.federico.aldia.model.AllPayments;
+import com.example.federico.aldia.model.Business;
+import com.example.federico.aldia.model.Employee;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
@@ -11,7 +11,6 @@ import com.example.federico.aldia.model.TokenRetro;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -27,15 +26,15 @@ public interface APIInterface {
     Call<String> loginUser(@Body TokenRetro token);
 
     @GET(URLs.COMERCIOS)
-    Call<List<Comercio>>getComercios();
+    Call<List<Business>>getComercios();
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ONE + "/{userId}")
    Observable<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ALL + "/{userId}")
-    Call<AllLiquidaciones>getAllLiquidaciones(@Path("userId") long userId,
-                                              @Query("page") long page,
-                                              @Query("size") int size);
+    Call<AllPayments>getAllLiquidaciones(@Path("userId") long userId,
+                                         @Query("page") long page,
+                                         @Query("size") int size);
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.PERIODOS + "/" + URLs.NEW)
@@ -46,6 +45,6 @@ public interface APIInterface {
                              @Path("id") long id);
 
     @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
-    Call<Empleado>getDatosEmpleado();
+    Call<Employee>getDatosEmpleado();
 
 }

@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,25 +22,25 @@ import butterknife.ButterKnife;
  * Created by Federico on 16/04/2018.
  */
 
-public class PeriodoAdapter extends RecyclerView.Adapter<PeriodoAdapter.ViewHolder> {
+public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> {
 
     private List<Periodo> listaPeriodos;
     private Context mContext;
 
-    public PeriodoAdapter(List<Periodo> listaPeriodos, Context context) {
+    public ShiftAdapter(List<Periodo> listaPeriodos, Context context) {
         this.listaPeriodos = listaPeriodos;
         this.mContext = context;
     }
 
     @Override
-    public PeriodoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShiftAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.cada_periodo, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PeriodoAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ShiftAdapter.ViewHolder holder, int position) {
 
         Periodo periodo = listaPeriodos.get(position);
 

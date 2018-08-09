@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.utils.Constants;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class TokenInterceptor implements Interceptor {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            String token = prefs.getString(Constantes.KEY_TOKEN_JWT, "");
+            String token = prefs.getString(Constants.KEY_TOKEN_JWT, "");
 
             request = request.newBuilder()
                     .addHeader("authorization", token).build();

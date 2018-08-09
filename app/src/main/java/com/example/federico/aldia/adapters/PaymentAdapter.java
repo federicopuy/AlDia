@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
@@ -18,13 +17,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LiquidacionAdapter extends RecyclerView.Adapter<LiquidacionAdapter.ViewHolder> {
+public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHolder> {
 
-    final private LiquidacionAdapter.ListItemClickListener mOnClickListener;
+    final private PaymentAdapter.ListItemClickListener mOnClickListener;
     private List<Liquidacion> listaLiquidaciones;
     private Context mContext;
 
-    public LiquidacionAdapter(Context context, LiquidacionAdapter.ListItemClickListener listener) {
+    public PaymentAdapter(Context context, PaymentAdapter.ListItemClickListener listener) {
         this.mContext = context;
         mOnClickListener = listener;
         listaLiquidaciones = new ArrayList<>();

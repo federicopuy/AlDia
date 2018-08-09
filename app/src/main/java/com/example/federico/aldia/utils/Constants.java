@@ -1,6 +1,6 @@
 package com.example.federico.aldia.utils;
 
-public class Constantes {
+public class Constants {
 
 
     public static final String KEY_TOKEN_FIREBASE = "keyTokenFirebase";
@@ -15,6 +15,8 @@ public class Constantes {
 
 
     public static final String KEY_INTENT_PERIODO_INGRESO_EGRESO = "keyIntentPeriodoIngresoEgreso";
+    public static final String KEY_INTENT_WIDGET_BUTTON = "keyIntentWidgetButton";
+
 
     public static final String KEY_INTENT_LIQUIDACION_PERIODO = "keyIntentObtenerPeriodoDeLiquidacion";
     public static final String KEY_INTENT_CERRAR_SESION = "keyIntentCerrarSesion";

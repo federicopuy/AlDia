@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.federico.aldia.adapters.PeriodoAdapter;
+import com.example.federico.aldia.adapters.ShiftAdapter;
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
@@ -32,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PeriodosActivity extends AppCompatActivity {
+public class ShiftsActivity extends AppCompatActivity {
 
     private static final String TAG = "Periodos Activity";
     private RecyclerView mRecyclerView;
@@ -56,13 +56,13 @@ public class PeriodosActivity extends AppCompatActivity {
         long id;
         String tipoBusqueda = "";
 
-        if (vieneDeIntent.hasExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO)){
-            id = vieneDeIntent.getLongExtra(Constantes.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
+        if (vieneDeIntent.hasExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO)){
+            id = vieneDeIntent.getLongExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
             tipoBusqueda = URLs.SEARCH_METHOD_BY_LIQUIDACION;
 
         } else {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            id = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0); //buscar por id de comercio
+            id = prefs.getLong(Constants.KEY_COMERCIO_ID, 0); //buscar por id de comercio
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
         }
 
@@ -91,7 +91,7 @@ public class PeriodosActivity extends AppCompatActivity {
                         if (listaPeriodos.size()<1){
                             tvSinPeriodos.setVisibility(View.VISIBLE);
                         }else {
-                            PeriodoAdapter mAdapter = new PeriodoAdapter(listaPeriodos, PeriodosActivity.this);
+                            ShiftAdapter mAdapter = new ShiftAdapter(listaPeriodos, ShiftsActivity.this);
                             mRecyclerView.setAdapter(mAdapter);
                             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                                     DividerItemDecoration.VERTICAL);

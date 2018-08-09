@@ -17,7 +17,7 @@ import com.example.federico.aldia.activities.barcode.CameraSource;
 import com.example.federico.aldia.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldia.activities.barcode.GraphicOverlay;
 import com.example.federico.aldia.activities.barcode.QRDetectedListener;
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
 import com.example.federico.aldia.network.APIInterface;
@@ -27,14 +27,13 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CamaraActivity extends AppCompatActivity implements QRDetectedListener{
+public class CameraActivity extends AppCompatActivity implements QRDetectedListener{
 
     private static final String BARCODE_DETECTION = "Barcode Detection";
 
@@ -47,14 +46,13 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
     int i = 1;
 
 
-    private static final String TAG = "CamaraActivity";
+    private static final String TAG = "CameraActivity";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
-
 
         preview = findViewById(R.id.firePreview);
         if (preview == null) {
@@ -98,9 +96,9 @@ public class CamaraActivity extends AppCompatActivity implements QRDetectedListe
                         try {
 
                             Periodo periodoEscaneado = response.body();
-                            Intent pasarAIngresoEgreso = new Intent(CamaraActivity.this, IngresoEgreso.class);
+                            Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
                             Gson gsonPeriodo = new Gson();
-                            pasarAIngresoEgreso.putExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
+                            pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
                             pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                             startActivity(pasarAIngresoEgreso);
                             finish();

@@ -4,7 +4,6 @@ package com.example.federico.aldia.activities.barcode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.federico.aldia.activities.CamaraActivity;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;

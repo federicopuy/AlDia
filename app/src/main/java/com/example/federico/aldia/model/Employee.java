@@ -3,7 +3,7 @@ package com.example.federico.aldia.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Empleado {
+public class Employee {
 
     @SerializedName("direccion")
     @Expose
@@ -28,7 +28,7 @@ public class Empleado {
      * No args constructor for use in serialization
      *
      */
-    public Empleado() {
+    public Employee() {
     }
 
     /**
@@ -40,7 +40,7 @@ public class Empleado {
      * @param telefono
      * @param dni
      */
-    public Empleado(String direccion, String dni, String email, long id, String nombre, String telefono) {
+    public Employee(String direccion, String dni, String email, long id, String nombre, String telefono) {
         super();
         this.direccion = direccion;
         this.dni = dni;

@@ -23,7 +23,7 @@
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionAndStatusBar"></activity>
         <activity
-            android:name=".activities.SignIn"
+            android:name=".activities.SignInActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,21 +32,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.IngresoEgreso"
+            android:name=".activities.EntryExitActivity"
             android:theme="@style/AppTheme.NoActionAndStatusBar" />
         <activity
-            android:name=".activities.PeriodosActivity"
+            android:name=".activities.ShiftsActivity"
             android:label="@string/periodos" />
         <activity
-            android:name=".activities.LiquidacionesActivity"
+            android:name=".activities.PaymentsActivity"
             android:label="@string/liquidaciones"
             android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".activities.MiPerfilActivity"
+            android:name=".activities.ProfileActivity"
             android:label="@string/mi_perfil"
             android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".activities.CamaraActivity"
+            android:name=".activities.CameraActivity"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionAndStatusBar" />
 

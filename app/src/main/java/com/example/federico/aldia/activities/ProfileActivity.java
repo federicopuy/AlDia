@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.Empleado;
+import com.example.federico.aldia.model.Employee;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 
@@ -21,9 +21,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MiPerfilActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
-    private static final String TAG = "Empleado Activity";
+    private static final String TAG = "Employee Activity";
 
     @BindView(R.id.tvNombreValue)
     TextView tvNombreValue;
@@ -53,17 +53,17 @@ public class MiPerfilActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         final String nombreLlamada = "callGetDatosEmpleado";
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-        Call<Empleado> callGetDatosEmpleado = mService.getDatosEmpleado();
-        callGetDatosEmpleado.enqueue(new Callback<Empleado>() {
+        Call<Employee> callGetDatosEmpleado = mService.getDatosEmpleado();
+        callGetDatosEmpleado.enqueue(new Callback<Employee>() {
 
             @Override
-            public void onResponse(Call<Empleado> call, Response<Empleado> response) {
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
                 progressBar.setVisibility(View.INVISIBLE);
                 Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    Empleado empleado = response.body();
-                    actualizarUI(empleado);
+                    Employee employee = response.body();
+                    actualizarUI(employee);
 
                 } else {
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
@@ -76,21 +76,21 @@ public class MiPerfilActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Empleado> call, Throwable t) {
+            public void onFailure(Call<Employee> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
                 Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
             }
         });
     }
 
-    private void actualizarUI(Empleado empleado) {
+    private void actualizarUI(Employee employee) {
 
         try{
-            tvNombreValue.setText(empleado.getNombre());
-            tvEmailValue.setText(empleado.getEmail());
-            tvDNIValue.setText(empleado.getDni());
-            tvTelefonoValue.setText(empleado.getTelefono());
-            tvDireccionValue.setText(empleado.getDireccion());
+            tvNombreValue.setText(employee.getNombre());
+            tvEmailValue.setText(employee.getEmail());
+            tvDNIValue.setText(employee.getDni());
+            tvTelefonoValue.setText(employee.getTelefono());
+            tvDireccionValue.setText(employee.getDireccion());
 
         }catch (NullPointerException n) {
             n.printStackTrace();

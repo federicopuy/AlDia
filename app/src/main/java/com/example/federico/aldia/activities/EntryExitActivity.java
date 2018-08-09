@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Periodo;
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.utils.Utils;
 import com.google.gson.Gson;
 
@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class IngresoEgreso extends AppCompatActivity {
+public class EntryExitActivity extends AppCompatActivity {
 
     @BindView(R.id.textViewIngresoEgreso)
     TextView textViewIngresoEgreso;
@@ -49,7 +49,7 @@ public class IngresoEgreso extends AppCompatActivity {
         }
         if (periodo.getHoraFin()!=null){
             View appBar = findViewById(R.id.appBarIngresoEgreso);
-            appBar.setBackground(ContextCompat.getDrawable(IngresoEgreso.this, R.drawable.salida_background));
+            appBar.setBackground(ContextCompat.getDrawable(EntryExitActivity.this, R.drawable.salida_background));
             textViewIngresoEgreso.setText(R.string.salida);
             tvHoraEgreso.setVisibility(View.VISIBLE);
             tvHoraEgreso.setText(Utils.obtenerHora(periodo.getHoraFin()));
@@ -70,8 +70,8 @@ public class IngresoEgreso extends AppCompatActivity {
         Intent intent = getIntent();
         Periodo periodo = null;
 
-        if (intent.hasExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO)){
-            String objetoJSON = intent.getStringExtra(Constantes.KEY_INTENT_PERIODO_INGRESO_EGRESO);
+        if (intent.hasExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO)){
+            String objetoJSON = intent.getStringExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO);
             Gson gson = new Gson();
             periodo = gson.fromJson(objetoJSON, Periodo.class);
         }

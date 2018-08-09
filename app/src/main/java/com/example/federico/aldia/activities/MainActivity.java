@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -24,36 +23,29 @@ import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.network.NoConnectivityException;
-import com.example.federico.aldia.utils.Constantes;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.utils.Utils;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -95,8 +87,18 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        Intent comesFromIntent = getIntent();
+        if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)) {
+            Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
+
+            if (!allPermissionsGranted()) {
+                getRuntimePermissions();
+            }
+            startActivityForResult(pasarACamara, REQUEST_CODE);
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String nombreComercio = prefs.getString(Constantes.KEY_COMERCIO_NOMBRE, "");
+        String nombreComercio = prefs.getString(Constants.KEY_COMERCIO_NOMBRE, "");
         Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity
     private void obtenerUltimaLiquidacion() {
         //todo composite disposable
         final String nombreLlamada = "getUltimaLiquidacion";
-        long comercioId = prefs.getLong(Constantes.KEY_COMERCIO_ID, 0);
+        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
         APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
 
         Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")) {
-                Log.d(TAG, "Empleado fijo");
+                Log.d(TAG, "Employee fijo");
                 recaudaciontv.setText(R.string.sueldo_mensual);
 
                 try {
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
             } else {
-                Log.d(TAG, "Empleado por Horas");
+                Log.d(TAG, "Employee por Horas");
 
                 try {
                     tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
@@ -228,7 +230,7 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.viewHoursData)
     public void pasarAPeriodos() {
-        Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
+        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
         startActivity(pasarAPeriodos);
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity
         if (!allPermissionsGranted()) {
             getRuntimePermissions();
         }
-        Intent pasarACamara = new Intent(MainActivity.this, CamaraActivity.class);
+        Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
         startActivityForResult(pasarACamara, REQUEST_CODE);
     }
 
@@ -318,9 +320,9 @@ public class MainActivity extends AppCompatActivity
         ImageView imageViewNavDrawer = header.findViewById(R.id.imageViewNavDrawer);
 
         try {
-            tvNavUserName.setText(prefs.getString(Constantes.KEY_NOMBRE_USER, ""));
-            tvNavUserMail.setText(prefs.getString(Constantes.KEY_EMAIL_USER, ""));
-            String imagenUsuario = prefs.getString(Constantes.KEY_PHOTO_USER, "");
+            tvNavUserName.setText(prefs.getString(Constants.KEY_NOMBRE_USER, ""));
+            tvNavUserMail.setText(prefs.getString(Constants.KEY_EMAIL_USER, ""));
+            String imagenUsuario = prefs.getString(Constants.KEY_PHOTO_USER, "");
             if (!imagenUsuario.equals("")) {
                 Picasso.get().load(imagenUsuario).into(imageViewNavDrawer);
             }
@@ -351,20 +353,20 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_mi_perfil) {
-            Intent pasarAMiPerfil = new Intent(MainActivity.this, MiPerfilActivity.class);
+            Intent pasarAMiPerfil = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(pasarAMiPerfil);
 
         } else if (id == R.id.nav_periodos) {
-            Intent pasarAPeriodos = new Intent(MainActivity.this, PeriodosActivity.class);
+            Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
             startActivity(pasarAPeriodos);
 
         } else if (id == R.id.nav_liquidaciones) {
-            Intent pasarALiquidaciones = new Intent(MainActivity.this, LiquidacionesActivity.class);
+            Intent pasarALiquidaciones = new Intent(MainActivity.this, PaymentsActivity.class);
             startActivity(pasarALiquidaciones);
 
         } else if (id == R.id.nav_cerrar_sesion) {
-            Intent pasarASignIn = new Intent(MainActivity.this, SignIn.class);
-            pasarASignIn.putExtra(Constantes.KEY_INTENT_CERRAR_SESION, "");
+            Intent pasarASignIn = new Intent(MainActivity.this, SignInActivity.class);
+            pasarASignIn.putExtra(Constants.KEY_INTENT_CERRAR_SESION, "");
             startActivity(pasarASignIn);
         }
 
