@@ -12,17 +12,15 @@ import okhttp3.Response;
 public class ConnectivityInterceptor implements Interceptor {
 
     private static final String Tag = "Network Interceptor";
-    private Context mContext;
 
-    ConnectivityInterceptor(Context mContext) {
-        this.mContext = mContext;
+    ConnectivityInterceptor( ) {
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Log.d(Tag, " Network Intercepted");
 
-        if (!NetworkUtils.isOnline(mContext)) {
+        if (!NetworkUtils.isOnline(AppController.getAppContext())) {
             Log.e("Error", "Error de Conexion");
             throw new NoConnectivityException();
         }

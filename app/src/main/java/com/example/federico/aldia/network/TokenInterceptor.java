@@ -16,22 +16,15 @@ public class TokenInterceptor implements Interceptor {
 
     private static final String Tag = "Token Interceptor";
 
-    private Context mContext;
-
-    public TokenInterceptor(Context mContext) {
-        this.mContext = mContext;
+    public TokenInterceptor( ) {
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
 
-
             Request request = chain.request();
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AppController.getAppContext());
             String token = prefs.getString(Constants.KEY_TOKEN_JWT, "");
-
             request = request.newBuilder()
                     .addHeader("authorization", token).build();
 

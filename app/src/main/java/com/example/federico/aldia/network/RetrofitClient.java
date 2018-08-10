@@ -17,8 +17,8 @@ public class RetrofitClient {
 
         if (retrofit==null){
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(new ConnectivityInterceptor(mContext))
-                    .addInterceptor(new TokenInterceptor(mContext))
+                    .addInterceptor(new ConnectivityInterceptor())
+                    .addInterceptor(new TokenInterceptor())
                     .build();
 
             retrofit = new Retrofit.Builder()
@@ -30,5 +30,24 @@ public class RetrofitClient {
                     .build();
         }
         return retrofit;
+    }
+
+    public static APIInterface getClientVM() {
+        //todo remove top
+        if (retrofit==null){
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new ConnectivityInterceptor())
+                    .addInterceptor(new TokenInterceptor())
+                    .build();
+
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(URLs.APIURLCOMPLETA)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(client)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit.create(APIInterface.class);
     }
 }

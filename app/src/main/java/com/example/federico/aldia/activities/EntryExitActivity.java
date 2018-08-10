@@ -46,6 +46,7 @@ public class EntryExitActivity extends AppCompatActivity {
 
         if (periodo==null){
             //todo a main activity con cancel
+
         }
         if (periodo.getHoraFin()!=null){
             View appBar = findViewById(R.id.appBarIngresoEgreso);
@@ -62,7 +63,6 @@ public class EntryExitActivity extends AppCompatActivity {
         tvCategoria.setText(periodo.getCategoria().getNombre());
         tvNombreComercio.setText(periodo.getUser());
         tvHoraIngreso.setText(Utils.obtenerHora(periodo.getHoraInicio()));
-
     }
 
     private Periodo obtenerPeriodoDeIntent() {

@@ -1,8 +1,11 @@
 package com.example.federico.aldia.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,11 +19,13 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.adapters.ShiftAdapter;
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.network.URLs;
+import com.example.federico.aldia.viewmodel.ShiftsViewModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,11 +40,12 @@ import retrofit2.Response;
 public class ShiftsActivity extends AppCompatActivity {
 
     private static final String TAG = "Periodos Activity";
-    private RecyclerView mRecyclerView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.tvSinPeriodos)
     TextView tvSinPeriodos;
+    @BindView(R.id.periodos_recycler_view)
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +54,12 @@ public class ShiftsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerView = findViewById(R.id.periodos_recycler_view);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        Intent vieneDeIntent = getIntent();
+        Intent comesFromIntent = getIntent();
         long id;
         String tipoBusqueda = "";
 
-        if (vieneDeIntent.hasExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO)){
-            id = vieneDeIntent.getLongExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
+        if (comesFromIntent.hasExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO)){
+            id = comesFromIntent.getLongExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
             tipoBusqueda = URLs.SEARCH_METHOD_BY_LIQUIDACION;
 
         } else {
@@ -66,59 +68,76 @@ public class ShiftsActivity extends AppCompatActivity {
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
         }
 
-        obtenerPeriodos(tipoBusqueda, id);
+        //obtenerPeriodos(tipoBusqueda, id);
 
-    }
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-    /*-------------------------------------- Obtener Periodos --------------------------------------------***/
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-    private void obtenerPeriodos(String tipoBusqueda, long id) {
-
-        final String nombreLlamada = "getPeriodos";
-        progressBar.setVisibility(View.VISIBLE);
-        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-        Call<List<Periodo>> callGetPeriodos = mService.getPeriodos(tipoBusqueda, id);
-        callGetPeriodos.enqueue(new Callback<List<Periodo>>() {
+        ShiftsViewModel.Factory factory = new ShiftsViewModel.Factory(AppController.get(this), tipoBusqueda, id);
+        ShiftsViewModel shiftsViewModel = ViewModelProviders.of(this, factory).get(ShiftsViewModel.class);
+        shiftsViewModel.getShiftsList().observe(this, new Observer<List<Periodo>>() {
             @Override
-            public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
-                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-                progressBar.setVisibility(View.INVISIBLE);
-                if (response.isSuccessful()) {
-                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    try {
-                        List<Periodo> listaPeriodos = response.body();
-                        assert listaPeriodos != null;
-                        if (listaPeriodos.size()<1){
-                            tvSinPeriodos.setVisibility(View.VISIBLE);
-                        }else {
-                            ShiftAdapter mAdapter = new ShiftAdapter(listaPeriodos, ShiftsActivity.this);
-                            mRecyclerView.setAdapter(mAdapter);
-                            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                                    DividerItemDecoration.VERTICAL);
-                            mRecyclerView.addItemDecoration(dividerItemDecoration);
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-                    try {
-                        Log.e(TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Periodo>> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+            public void onChanged(@Nullable List<Periodo> periodos) {
+                ShiftAdapter mAdapter = new ShiftAdapter(periodos, ShiftsActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
 
     }
+
+    /*-------------------------------------- Obtener Periodos --------------------------------------------***/
+//
+//    private void obtenerPeriodos(String tipoBusqueda, long id) {
+//
+//        final String nombreLlamada = "getPeriodos";
+//        progressBar.setVisibility(View.VISIBLE);
+//        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+//        Call<List<Periodo>> callGetPeriodos = mService.getPeriodos(tipoBusqueda, id);
+//        callGetPeriodos.enqueue(new Callback<List<Periodo>>() {
+//            @Override
+//            public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
+//                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
+//                progressBar.setVisibility(View.INVISIBLE);
+//                if (response.isSuccessful()) {
+//                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+//                    try {
+//                        List<Periodo> listaPeriodos = response.body();
+//                        assert listaPeriodos != null;
+//                        if (listaPeriodos.size()<1){
+//                            tvSinPeriodos.setVisibility(View.VISIBLE);
+//                        }else {
+//                            ShiftAdapter mAdapter = new ShiftAdapter(listaPeriodos, ShiftsActivity.this);
+//                            mRecyclerView.setAdapter(mAdapter);
+//                            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                                    DividerItemDecoration.VERTICAL);
+//                            mRecyclerView.addItemDecoration(dividerItemDecoration);
+//                        }
+//                    } catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//
+//                } else {
+//                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+//                    try {
+//                        Log.e(TAG, response.errorBody().string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Periodo>> call, Throwable t) {
+//                progressBar.setVisibility(View.INVISIBLE);
+//                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+//            }
+//        });
+//
+//    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
