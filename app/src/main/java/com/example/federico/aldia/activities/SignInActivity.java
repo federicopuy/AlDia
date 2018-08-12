@@ -217,6 +217,7 @@ public class SignInActivity extends AppCompatActivity implements
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     String tokenJWT = "";
+                    System.out.println(call.toString());
                     try {
                         JSONObject root = new JSONObject(response.body());
                         String bearer = root.getString("id_token");

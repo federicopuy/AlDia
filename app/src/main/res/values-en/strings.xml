@@ -43,6 +43,8 @@
     <string name="null_money_value">$0.00</string>
     <string name="dias_trabajo">Working Days</string>
     <string name="hours_per_shift">Hours per Day</string>
+    <string name="shift_ending_notification_title">Shift about to end</string>
+    <string name="shift_ending_notification_body">Your shift is about to finish, please remember to scan on leaving</string>
 
 
 </resources>

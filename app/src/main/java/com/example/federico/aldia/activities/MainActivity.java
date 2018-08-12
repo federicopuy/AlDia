@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.network.NoConnectivityException;
+import com.example.federico.aldia.notifications.NotificationUtils;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
@@ -230,8 +231,11 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.viewHoursData)
     public void pasarAPeriodos() {
-        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
-        startActivity(pasarAPeriodos);
+//        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
+//        startActivity(pasarAPeriodos);
+
+        NotificationUtils.remindUserBecausePeriodAboutToFinish(this);
+
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 

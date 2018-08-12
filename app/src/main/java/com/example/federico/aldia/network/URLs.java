@@ -3,8 +3,8 @@ package com.example.federico.aldia.network;
 public class URLs {
 
     private static final String URLBASE = "http://192.168.43.131:";
-   // private static final String URLBASE = "http://66.97.34.149:";
-    private static final String PORT = "8086";
+    //private static final String URLBASE = "http://66.97.34.149:";
+    private static final String PORT = "8080";
 
   //  private static final String PORT = "8080";
     private static final String APIURL = "/api/";
