@@ -118,9 +118,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         Intent returnIntent = getIntent();
                         setResult(Activity.RESULT_CANCELED, returnIntent);
                         finish();
-
                     }
-
                 }
 
                 @Override
@@ -144,20 +142,12 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
     private void createCameraSource(String model) {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
-
             cameraSource = new CameraSource(this, graphicOverlay);
-
             cameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
-
         }
-
         Log.i(TAG, "Using Barcode Detector Processor");
-
         try {
             cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor(this));
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }

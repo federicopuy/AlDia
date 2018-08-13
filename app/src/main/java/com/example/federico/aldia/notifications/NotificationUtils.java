@@ -98,4 +98,10 @@ public class NotificationUtils {
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_icon_dark);
         return largeIcon;
     }
+
+    public static void clearAllNotifications(Context context) {
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+    }
 }
