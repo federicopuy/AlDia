@@ -32,7 +32,7 @@ public class ReminderUtilities {
                 .setService(ShiftEndingFirebaseJobService.class)
                 .setTag(REMINDER_JOB_TAG)
                 .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
+                .setRecurring(false)
                 /*
                  * We want the reminders to happen every 15 minutes or so. The first argument for
                  * Trigger class's static executionWindow method is the start of the time frame
