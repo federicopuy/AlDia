@@ -1,11 +1,14 @@
 package com.example.federico.aldia.activities;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -22,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.model.QrToken;
+import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.network.NoConnectivityException;
 import com.example.federico.aldia.notifications.NotificationUtils;
 import com.example.federico.aldia.notifications.ReminderUtilities;
@@ -30,6 +35,9 @@ import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.utils.Utils;
+import com.example.federico.aldia.viewmodel.MainActivityViewModel;
+import com.example.federico.aldia.viewmodel.QrTokenViewModel;
+import com.example.federico.aldia.viewmodel.ShiftsViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -105,60 +113,72 @@ public class MainActivity extends AppCompatActivity
 
         createNavDrawer(toolbar);
         mCompositeDisposable = new CompositeDisposable();
-        obtenerUltimaLiquidacion();
+        //obtenerUltimaLiquidacion();
        // ReminderUtilities.scheduleShiftEndReminder(this);
 
+        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
+
+        MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this),comercioId);
+        MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+        mainActivityViewModel.getLastPayment().observe(this, new android.arch.lifecycle.Observer<Liquidacion>() {
+            @Override
+            public void onChanged(@Nullable Liquidacion liquidacion) {
+
+                actualizarUI(liquidacion);
+
+            }
+        });
 
     }
 
     /*-------------------------------------- Llamada Obtener Ultima Liquidacion --------------------------------------------***/
 
-    private void obtenerUltimaLiquidacion() {
-        //todo composite disposable
-        final String nombreLlamada = "getUltimaLiquidacion";
-        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
-        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-
-        Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
-        observable.subscribeOn(Schedulers.io())
-                .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
-                        return objectObservable.delay(30, TimeUnit.SECONDS);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Liquidacion>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mCompositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(Liquidacion ultimaLiquidacion) {
-                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                        if (ultimaLiquidacion!=null){
-                            actualizarUI(ultimaLiquidacion);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                        if (e instanceof NoConnectivityException) {
-                            e.printStackTrace();
-                            Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
+//    private void obtenerUltimaLiquidacion() {
+//        //todo composite disposable
+//        final String nombreLlamada = "getUltimaLiquidacion";
+//        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
+//        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+//
+//        Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
+//        observable.subscribeOn(Schedulers.io())
+//                .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
+//                    @Override
+//                    public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
+//                        return objectObservable.delay(30, TimeUnit.SECONDS);
+//                    }
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<Liquidacion>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        mCompositeDisposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(Liquidacion ultimaLiquidacion) {
+//                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+//                        if (ultimaLiquidacion!=null){
+//                            actualizarUI(ultimaLiquidacion);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+//                        if (e instanceof NoConnectivityException) {
+//                            e.printStackTrace();
+//                            Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
+//                        } else {
+//                            Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+//    }
 
     /*-------------------------------------- Actualizar UI --------------------------------------------***/
 
@@ -237,9 +257,8 @@ public class MainActivity extends AppCompatActivity
 //        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
 //        startActivity(pasarAPeriodos);
 
-        //NotificationUtils.remindUserBecausePeriodAboutToFinish(this);
+        //ReminderUtilities.scheduleShiftEndReminder(this);
 
-        ReminderUtilities.scheduleShiftEndReminder(this);
 
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
@@ -259,7 +278,8 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                obtenerUltimaLiquidacion();
+             //   obtenerUltimaLiquidacion();
+            //todo check this
             } else {
                 if (resultCode == RESULT_CANCELED) {
                     Log.i(TAG, "Result CANCELED");

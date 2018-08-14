@@ -1,10 +1,14 @@
 package com.example.federico.aldia.activities;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,15 +21,23 @@ import com.example.federico.aldia.activities.barcode.CameraSource;
 import com.example.federico.aldia.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldia.activities.barcode.GraphicOverlay;
 import com.example.federico.aldia.activities.barcode.QRDetectedListener;
+import com.example.federico.aldia.model.QrToken;
+import com.example.federico.aldia.model.Resource;
+import com.example.federico.aldia.model.Status;
+import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.TokenQR;
 import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
+import com.example.federico.aldia.viewmodel.QrTokenViewModel;
+import com.example.federico.aldia.viewmodel.ShiftsViewModel;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,22 +92,51 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         if (i == 1) {
             i++;
 
-            final String nombreLlamada = "postNewPeriodo";
-            mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-            TokenQR tokenQR = new TokenQR(rawValue);
-            Call<Periodo> postNewPeriodo = mService.newPeriodo(tokenQR);
-            postNewPeriodo.enqueue(new Callback<Periodo>() {
+            Date currentTime = Calendar.getInstance().getTime();
+            QrToken qrToken = new QrToken(rawValue, currentTime.toString());
+
+
+
+            QrTokenViewModel.Factory factory = new QrTokenViewModel.Factory(AppController.get(this), qrToken);
+
+            QrTokenViewModel qrTokenViewModel = ViewModelProviders.of(this,factory).get(QrTokenViewModel.class);
+
+
+            qrTokenViewModel.getmAllPendingQrTokens().observe(this, new android.arch.lifecycle.Observer<List<QrToken>>() {
                 @Override
-                public void onResponse(Call<Periodo> call, Response<Periodo> response) {
+                public void onChanged(@Nullable List<QrToken> qrTokens) {
 
-                    Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
+                    int i =0;
+                    for (QrToken qr : qrTokens) {
+                        i++;
+                        System.out.println(i+ " = " + qr.getMToken());
+                        System.out.println(i+ " = " + qr.getMToken());
+                    }
+                }
+            });
 
-                    if (response.isSuccessful()) {
 
-                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                        try {
+            qrTokenViewModel.postQrTokenToServer(qrToken).observe(this, new Observer<Resource<Periodo>>() {
+                @Override
+                public void onChanged(@Nullable Resource<Periodo> periodoResource) {
+                    final String nombreLlamada = "postNewPeriodo";
 
-                            Periodo periodoEscaneado = response.body();
+
+                    if (periodoResource.status == Status.FAILED) {
+
+                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+
+                        Intent returnIntent = getIntent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
+                        finish();
+
+
+                    } else {
+                        if (periodoResource.status == Status.SUCCESS) {
+                            Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+
+
+                            Periodo periodoEscaneado = periodoResource.data;
                             Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
                             Gson gsonPeriodo = new Gson();
                             pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
@@ -103,37 +144,76 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                             startActivity(pasarAIngresoEgreso);
                             finish();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
 
-                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-                        try {
-                            Log.e(TAG, response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } else {
+                            //todo show progress bar
                         }
-
-                        Intent returnIntent = getIntent();
-                        setResult(Activity.RESULT_CANCELED, returnIntent);
-                        finish();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Periodo> call, Throwable t) {
 
-                    Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                    System.out.println("Message " + t.getMessage());
-                    Intent returnIntent = getIntent();
-                    setResult(Activity.RESULT_CANCELED, returnIntent);
-                    finish();
                 }
             });
 
-
         }
+
+
+//
+//
+//
+//            final String nombreLlamada = "postNewPeriodo";
+//            mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+//            TokenQR tokenQR = new TokenQR(rawValue);
+//            Call<Periodo> postNewPeriodo = mService.newPeriodo(tokenQR);
+//            postNewPeriodo.enqueue(new Callback<Periodo>() {
+//                @Override
+//                public void onResponse(Call<Periodo> call, Response<Periodo> response) {
+//
+//                    Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
+//
+//                    if (response.isSuccessful()) {
+//
+//                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+//                        try {
+//
+//                            Periodo periodoEscaneado = response.body();
+//                            Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
+//                            Gson gsonPeriodo = new Gson();
+//                            pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
+//                            pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//                            startActivity(pasarAIngresoEgreso);
+//                            finish();
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    } else {
+//
+//                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+//                        try {
+//                            Log.e(TAG, response.errorBody().string());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        Intent returnIntent = getIntent();
+//                        setResult(Activity.RESULT_CANCELED, returnIntent);
+//                        finish();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Periodo> call, Throwable t) {
+//
+//                    Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
+//                    System.out.println("Message " + t.getMessage());
+//                    Intent returnIntent = getIntent();
+//                    setResult(Activity.RESULT_CANCELED, returnIntent);
+//                    finish();
+//                }
+//            });
+//
+//
+//        }
 
     }
 

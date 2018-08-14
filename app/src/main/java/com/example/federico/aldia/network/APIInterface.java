@@ -29,7 +29,7 @@ public interface APIInterface {
     Call<List<Business>>getComercios();
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ONE + "/{userId}")
-   Observable<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
+   Call<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
 
     @GET(URLs.LIQUIDACIONES + "/" + URLs.ALL + "/{userId}")
     Call<AllPayments>getAllLiquidaciones(@Path("userId") long userId,

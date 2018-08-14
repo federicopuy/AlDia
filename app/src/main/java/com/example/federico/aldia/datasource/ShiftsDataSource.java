@@ -21,11 +21,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ApiDataSource {
+public class ShiftsDataSource {
 
     private AppController appController;
 
-    public ApiDataSource(AppController appController) {
+    public ShiftsDataSource(AppController appController) {
         this.appController = appController;
     }
 

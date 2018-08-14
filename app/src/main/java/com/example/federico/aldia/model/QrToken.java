@@ -1,6 +1,7 @@
 package com.example.federico.aldia.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import io.reactivex.annotations.NonNull;
@@ -16,6 +17,12 @@ public class QrToken {
 
     @NonNull
     private String mTimestamp;
+
+    @Ignore
+    public QrToken(String mToken, String mTimestamp) {
+        this.mToken = mToken;
+        this.mTimestamp = mTimestamp;
+    }
 
     public QrToken(int id, String mToken, String mTimestamp) {
         this.id = id;
