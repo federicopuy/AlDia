@@ -28,11 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QrTokenDataSource {
+public class CameraActivityDataSource {
 
     private AppController appController;
 
-    public QrTokenDataSource(AppController appController) {
+    public CameraActivityDataSource(AppController appController) {
         this.appController = appController;
     }
 

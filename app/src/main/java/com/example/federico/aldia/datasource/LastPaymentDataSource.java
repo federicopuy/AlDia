@@ -21,8 +21,7 @@ public class LastPaymentDataSource {
         networkState = new MutableLiveData();
     }
 
-    public LiveData<Liquidacion> getLastPayment (long businessId){
-        final String callName = "getLastPayment";
+    public LiveData<Liquidacion> getLastPayment(long businessId) {
         final MutableLiveData<Liquidacion> data = new MutableLiveData<>();
         networkState.postValue(NetworkState.LOADING);
 
@@ -43,9 +42,10 @@ public class LastPaymentDataSource {
                         String errorMessage = t == null ? "unknown error" : t.getMessage();
                         networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
                     }
-                    });
-    return data;
+                });
+        return data;
     }
+
     public MutableLiveData getNetworkState() {
         return networkState;
     }

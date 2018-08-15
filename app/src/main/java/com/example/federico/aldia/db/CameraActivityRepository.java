@@ -1,33 +1,25 @@
 package com.example.federico.aldia.db;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.example.federico.aldia.datasource.QrTokenDataSource;
+import com.example.federico.aldia.datasource.CameraActivityDataSource;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
-import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 
-import java.util.List;
-
-public class QrTokenRepository {
+public class CameraActivityRepository {
 
     private QrTokenDAO mDao;
-    private LiveData<List<QrToken>> mAllPendingTokenQrs;
     AppController appController;
+    LiveData<Resource<Periodo>> periodoLiveData;
 
-    public QrTokenRepository(AppController appController) {
+    public CameraActivityRepository(AppController appController) {
         this.appController = appController;
         QrTokenDatabase db = QrTokenDatabase.getDatabase(appController);
         mDao = db.qrTokenDAO();
-        mAllPendingTokenQrs = mDao.loadAllPendingQrTokens();
-    }
 
-    public LiveData<List<QrToken>> getmAllPendingTokenQrs (){
-        return mAllPendingTokenQrs;
     }
 
     public void insert (QrToken qrToken) {
@@ -35,7 +27,6 @@ public class QrTokenRepository {
     }
 
     private static class insertAsyncTask extends AsyncTask<QrToken, Void, Void> {
-
         private QrTokenDAO mAsyncTaskDao;
         insertAsyncTask(QrTokenDAO dao) {
             mAsyncTaskDao = dao;
@@ -64,27 +55,8 @@ public class QrTokenRepository {
     }
 
     public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
-
-        QrTokenDataSource dataSource = new QrTokenDataSource(appController);
-
-        LiveData<Resource<Periodo>> periodoLiveData = dataSource.postToApi(qrToken);
-
-        if (periodoLiveData.getValue().status == Status.SUCCESS){
-            // API is working and user is connected to internet
-            List<QrToken> pendingQrTokens = getmAllPendingTokenQrs().getValue();
-            for (QrToken qrToken1:pendingQrTokens) {
-                delete(qrToken1);
-                //postQrToken(qrToken1);
-                //todo post qr token with alternative post
-                System.out.println("Alternative post " + qrToken1.getMTimestamp());
-            }
-        } else {
-            if (periodoLiveData.getValue().status == Status.FAILED){
-                // add QrToken to be sent to API later
-                insert(qrToken);
-            }
-        }
-
+        CameraActivityDataSource dataSource = new CameraActivityDataSource(appController);
+        periodoLiveData = dataSource.postToApi(qrToken);
         return periodoLiveData;
     }
 

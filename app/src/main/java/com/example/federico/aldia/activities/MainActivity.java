@@ -1,6 +1,5 @@
 package com.example.federico.aldia.activities;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,40 +21,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.network.AppController;
-import com.example.federico.aldia.network.NoConnectivityException;
-import com.example.federico.aldia.notifications.NotificationUtils;
-import com.example.federico.aldia.notifications.ReminderUtilities;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
-import com.example.federico.aldia.network.APIInterface;
-import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.utils.Utils;
 import com.example.federico.aldia.viewmodel.MainActivityViewModel;
-import com.example.federico.aldia.viewmodel.QrTokenViewModel;
-import com.example.federico.aldia.viewmodel.ShiftsViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,7 +70,6 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     SharedPreferences prefs;
 
-    private CompositeDisposable mCompositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,77 +93,39 @@ public class MainActivity extends AppCompatActivity
         Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
-        mCompositeDisposable = new CompositeDisposable();
-        //obtenerUltimaLiquidacion();
        // ReminderUtilities.scheduleShiftEndReminder(this);
 
         long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
 
         MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this),comercioId);
         MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
-        mainActivityViewModel.getLastPayment().observe(this, new android.arch.lifecycle.Observer<Liquidacion>() {
-            @Override
-            public void onChanged(@Nullable Liquidacion liquidacion) {
-
-                actualizarUI(liquidacion);
-
+        mainActivityViewModel.getLastPayment().observe(this, liquidacion -> updateUI(liquidacion));
+        mainActivityViewModel.getNetworkState().observe(this, networkState -> {
+            switch (networkState.getStatus()){
+                case RUNNING: //todo show progress bar;
+                case FAILED: //todo hide progress bar
+                    Log.e(TAG, networkState.getMsg());
+                case SUCCESS: tryToPostPendingQrCodes(mainActivityViewModel);//todo try submitting from DB
+                   default: //todo
             }
         });
-
     }
 
-    /*-------------------------------------- Llamada Obtener Ultima Liquidacion --------------------------------------------***/
-
-//    private void obtenerUltimaLiquidacion() {
-//        //todo composite disposable
-//        final String nombreLlamada = "getUltimaLiquidacion";
-//        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
-//        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-//
-//        Observable<Liquidacion> observable = mService.getUltimaLiquidacion(comercioId);
-//        observable.subscribeOn(Schedulers.io())
-//                .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
-//                    @Override
-//                    public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
-//                        return objectObservable.delay(30, TimeUnit.SECONDS);
-//                    }
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<Liquidacion>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        mCompositeDisposable.add(d);
-//                    }
-//
-//                    @Override
-//                    public void onNext(Liquidacion ultimaLiquidacion) {
-//                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-//                        if (ultimaLiquidacion!=null){
-//                            actualizarUI(ultimaLiquidacion);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-//                        if (e instanceof NoConnectivityException) {
-//                            e.printStackTrace();
-//                            Toast.makeText(getBaseContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
-//                        } else {
-//                            Toast.makeText(getBaseContext(), "Error de Servidor", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//    }
+    public void tryToPostPendingQrCodes(MainActivityViewModel mainActivityViewModel){
+        mainActivityViewModel.postPendingQRCodes().observe(this, qrTokens -> {
+            if (qrTokens.size()>0){
+                for (QrToken qrToken: qrTokens){
+                    mainActivityViewModel.postSingleQRToken(qrToken);
+                }
+            } else {
+                System.out.println(qrTokens.size());
+            }
+        });
+    }
 
     /*-------------------------------------- Actualizar UI --------------------------------------------***/
 
-    private void actualizarUI(Liquidacion ultimaLiquidacion) {
+    private void updateUI(Liquidacion ultimaLiquidacion) {
 
         if (ultimaLiquidacion != null) {
 
@@ -254,12 +197,11 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.viewHoursData)
     public void pasarAPeriodos() {
-//        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
-//        startActivity(pasarAPeriodos);
+
+        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
+        startActivity(pasarAPeriodos);
 
         //ReminderUtilities.scheduleShiftEndReminder(this);
-
-
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 
@@ -283,7 +225,6 @@ public class MainActivity extends AppCompatActivity
             } else {
                 if (resultCode == RESULT_CANCELED) {
                     Log.i(TAG, "Result CANCELED");
-
                 }
             }
         }
@@ -370,7 +311,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
@@ -406,7 +346,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        mCompositeDisposable.dispose();
+        //mCompositeDisposable.dispose();
         super.onDestroy();
     }
 }

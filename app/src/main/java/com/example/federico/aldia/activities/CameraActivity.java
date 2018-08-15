@@ -2,7 +2,6 @@ package com.example.federico.aldia.activities;
 
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -27,11 +26,8 @@ import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
-import com.example.federico.aldia.model.TokenQR;
 import com.example.federico.aldia.network.APIInterface;
-import com.example.federico.aldia.network.RetrofitClient;
-import com.example.federico.aldia.viewmodel.QrTokenViewModel;
-import com.example.federico.aldia.viewmodel.ShiftsViewModel;
+import com.example.federico.aldia.viewmodel.CameraActivityViewModel;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -39,10 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class CameraActivity extends AppCompatActivity implements QRDetectedListener{
@@ -97,26 +89,9 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
 
 
 
-            QrTokenViewModel.Factory factory = new QrTokenViewModel.Factory(AppController.get(this), qrToken);
-
-            QrTokenViewModel qrTokenViewModel = ViewModelProviders.of(this,factory).get(QrTokenViewModel.class);
-
-
-            qrTokenViewModel.getmAllPendingQrTokens().observe(this, new android.arch.lifecycle.Observer<List<QrToken>>() {
-                @Override
-                public void onChanged(@Nullable List<QrToken> qrTokens) {
-
-                    int i =0;
-                    for (QrToken qr : qrTokens) {
-                        i++;
-                        System.out.println(i+ " = " + qr.getMToken());
-                        System.out.println(i+ " = " + qr.getMToken());
-                    }
-                }
-            });
-
-
-            qrTokenViewModel.postQrTokenToServer(qrToken).observe(this, new Observer<Resource<Periodo>>() {
+            CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
+            CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this,factory).get(CameraActivityViewModel.class);
+            cameraActivityViewModel.postQrTokenToServer(qrToken).observe(this, new Observer<Resource<Periodo>>() {
                 @Override
                 public void onChanged(@Nullable Resource<Periodo> periodoResource) {
                     final String nombreLlamada = "postNewPeriodo";
@@ -125,6 +100,9 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                     if (periodoResource.status == Status.FAILED) {
 
                         Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+
+                        cameraActivityViewModel.insert(qrToken);
+
 
                         Intent returnIntent = getIntent();
                         setResult(Activity.RESULT_CANCELED, returnIntent);
