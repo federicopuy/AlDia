@@ -1,12 +1,16 @@
-package com.example.federico.aldia;
+package com.example.federico.aldia.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
+import com.example.federico.aldia.R;
 import com.example.federico.aldia.activities.SignInActivity;
 import com.example.federico.aldia.utils.Constants;
 
@@ -20,10 +24,10 @@ public class ScanWidgetProvider extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.scan_widget_provider);
 
+        SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String textToDisplay = prefs.getString(Constants.KEY_INTENT_WIDGET, "");
 
-//        CharSequence widgetText = context.getString(R.string.appwidget_text);
-//        // Construct the RemoteViews object
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setTextViewText(R.id.appwidget_text, textToDisplay);
 
 
         Intent intent = new Intent(context, SignInActivity.class);

@@ -38,7 +38,6 @@ public class CameraActivityDataSource {
 
     public LiveData<Resource<Periodo>> postToApi (QrToken qrToken) {
 
-        final String callName = "postNewPeriodo";
         TokenQR tokenQR = new TokenQR(qrToken.getMToken());
         final MutableLiveData<Resource<Periodo>> data = new MutableLiveData<>();
 
@@ -48,10 +47,8 @@ public class CameraActivityDataSource {
                     public void onResponse(Call<Periodo> call, Response<Periodo> response) {
                         if (response.isSuccessful()) {
                             try {
-
                                 Periodo periodoEscaneado = response.body();
                                 data.setValue(new Resource<Periodo>(Status.SUCCESS, periodoEscaneado));
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -60,16 +57,12 @@ public class CameraActivityDataSource {
                             data.setValue(new Resource<Periodo>(Status.FAILED, null));
                         }
                     }
-
-
                     @Override
                     public void onFailure(Call<Periodo> call, Throwable t) {
                         //todo log
                         data.setValue(new Resource<Periodo>(Status.FAILED, null));
                     }
                 });
-
-
         return data;
     }
 }

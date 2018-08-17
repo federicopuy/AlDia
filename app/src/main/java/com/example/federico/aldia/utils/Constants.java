@@ -23,6 +23,7 @@ public class Constants {
 
     public static final String KEY_COMERCIO_ID = "comercioID";
     public static final String KEY_COMERCIO_NOMBRE = "comercioNombre";
+    public static final String KEY_INTENT_WIDGET = "keyIntentWidget";
 
 
 

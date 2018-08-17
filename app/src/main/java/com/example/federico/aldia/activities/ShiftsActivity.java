@@ -14,6 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -67,77 +73,37 @@ public class ShiftsActivity extends AppCompatActivity {
             id = prefs.getLong(Constants.KEY_COMERCIO_ID, 0); //buscar por id de comercio
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
         }
-
-        //obtenerPeriodos(tipoBusqueda, id);
-
+        
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
+        //https://proandroiddev.com/enter-animation-using-recyclerview-and-layoutanimation-part-1-list-75a874a5d213
+        int resId = R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+
+        //Observer
         ShiftsViewModel.Factory factory = new ShiftsViewModel.Factory(AppController.get(this), tipoBusqueda, id);
         ShiftsViewModel shiftsViewModel = ViewModelProviders.of(this, factory).get(ShiftsViewModel.class);
         shiftsViewModel.getShiftsList().observe(this, new Observer<List<Periodo>>() {
             @Override
             public void onChanged(@Nullable List<Periodo> periodos) {
-                ShiftAdapter mAdapter = new ShiftAdapter(periodos, ShiftsActivity.this);
-                mRecyclerView.setAdapter(mAdapter);
+                if (periodos.size()<1){
+                    tvSinPeriodos.setVisibility(View.VISIBLE);
+                } else {
+                    ShiftAdapter mAdapter = new ShiftAdapter(periodos, ShiftsActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.setLayoutAnimation(animation);
+                }
             }
         });
 
     }
 
-    /*-------------------------------------- Obtener Periodos --------------------------------------------***/
-//
-//    private void obtenerPeriodos(String tipoBusqueda, long id) {
-//
-//        final String nombreLlamada = "getPeriodos";
-//        progressBar.setVisibility(View.VISIBLE);
-//        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-//        Call<List<Periodo>> callGetPeriodos = mService.getPeriodos(tipoBusqueda, id);
-//        callGetPeriodos.enqueue(new Callback<List<Periodo>>() {
-//            @Override
-//            public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
-//                Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-//                progressBar.setVisibility(View.INVISIBLE);
-//                if (response.isSuccessful()) {
-//                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-//                    try {
-//                        List<Periodo> listaPeriodos = response.body();
-//                        assert listaPeriodos != null;
-//                        if (listaPeriodos.size()<1){
-//                            tvSinPeriodos.setVisibility(View.VISIBLE);
-//                        }else {
-//                            ShiftAdapter mAdapter = new ShiftAdapter(listaPeriodos, ShiftsActivity.this);
-//                            mRecyclerView.setAdapter(mAdapter);
-//                            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                                    DividerItemDecoration.VERTICAL);
-//                            mRecyclerView.addItemDecoration(dividerItemDecoration);
-//                        }
-//                    } catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//
-//                } else {
-//                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-//                    try {
-//                        Log.e(TAG, response.errorBody().string());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Periodo>> call, Throwable t) {
-//                progressBar.setVisibility(View.INVISIBLE);
-//                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-//            }
-//        });
-//
-//    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

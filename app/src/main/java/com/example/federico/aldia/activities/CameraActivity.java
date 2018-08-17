@@ -1,12 +1,16 @@
 package com.example.federico.aldia.activities;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,10 +28,13 @@ import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
+import com.example.federico.aldia.notifications.ReminderUtilities;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.network.APIInterface;
+import com.example.federico.aldia.utils.Utils;
 import com.example.federico.aldia.viewmodel.CameraActivityViewModel;
+import com.example.federico.aldia.widget.ScanWidgetProvider;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -91,45 +98,57 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
 
             CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
             CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this,factory).get(CameraActivityViewModel.class);
-            cameraActivityViewModel.postQrTokenToServer(qrToken).observe(this, new Observer<Resource<Periodo>>() {
-                @Override
-                public void onChanged(@Nullable Resource<Periodo> periodoResource) {
-                    final String nombreLlamada = "postNewPeriodo";
+            cameraActivityViewModel.postQrTokenToServer().observe(this, periodoResource -> {
+                final String nombreLlamada = "postNewPeriodo";
+
+                if (periodoResource.status == Status.FAILED) {
+
+                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
+
+                    cameraActivityViewModel.insert(qrToken);
 
 
-                    if (periodoResource.status == Status.FAILED) {
-
-                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-
-                        cameraActivityViewModel.insert(qrToken);
+                    Intent returnIntent = getIntent();
+                    setResult(Activity.RESULT_CANCELED, returnIntent);
+                    finish();
 
 
-                        Intent returnIntent = getIntent();
-                        setResult(Activity.RESULT_CANCELED, returnIntent);
+                } else {
+                    if (periodoResource.status == Status.SUCCESS) {
+                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
+
+
+                        Periodo periodoEscaneado = periodoResource.data;
+
+                        //Widget
+                        String endOfTime = Utils.getEndOfShiftTime(periodoEscaneado.getCategoria().getHorasTrabajo());
+                        //copied from https://stackoverflow.com/questions/4424723/android-appwidget-wont-update-from-activity
+                        SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        prefs.edit().putString(Constants.KEY_INTENT_WIDGET, endOfTime).apply();
+
+                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, ScanWidgetProvider.class));
+                        if (appWidgetIds.length > 0) {
+                            new ScanWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
+                        }
+
+                        //Scheduled Notification
+                        ReminderUtilities.scheduleShiftEndReminder(this, Utils.minutesTillEndOfShift(periodoEscaneado.getCategoria().getHorasTrabajo()));
+
+                        Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
+                        Gson gsonPeriodo = new Gson();
+                        pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
+                        pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                        startActivity(pasarAIngresoEgreso);
                         finish();
 
 
                     } else {
-                        if (periodoResource.status == Status.SUCCESS) {
-                            Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-
-
-                            Periodo periodoEscaneado = periodoResource.data;
-                            Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
-                            Gson gsonPeriodo = new Gson();
-                            pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
-                            pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                            startActivity(pasarAIngresoEgreso);
-                            finish();
-
-
-                        } else {
-                            //todo show progress bar
-                        }
+                        //todo show progress bar
                     }
-
-
                 }
+
+
             });
 
         }

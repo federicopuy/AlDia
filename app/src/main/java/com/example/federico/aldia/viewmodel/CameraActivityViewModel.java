@@ -27,7 +27,7 @@ public class CameraActivityViewModel extends AndroidViewModel {
         mRepository.insert(qrToken);
     }
 
-    public LiveData<Resource<Periodo>> postQrTokenToServer (QrToken qrToken){
+    public LiveData<Resource<Periodo>> postQrTokenToServer (){
         return scannedShift;
     }
 

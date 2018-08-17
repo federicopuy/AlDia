@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity
         Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
 
         createNavDrawer(toolbar);
-       // ReminderUtilities.scheduleShiftEndReminder(this);
 
         long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
 
@@ -201,7 +200,6 @@ public class MainActivity extends AppCompatActivity
         Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
         startActivity(pasarAPeriodos);
 
-        //ReminderUtilities.scheduleShiftEndReminder(this);
     }
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 

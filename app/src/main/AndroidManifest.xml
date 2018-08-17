@@ -22,7 +22,9 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionAndStatusBar"></activity>
+            android:theme="@style/AppTheme.NoActionAndStatusBar">
+
+        </activity>
         <activity
             android:name=".activities.SignInActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -51,7 +53,7 @@
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionAndStatusBar" />
 
-        <receiver android:name=".ScanWidgetProvider">
+        <receiver android:name=".widget.ScanWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
