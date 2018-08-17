@@ -19,7 +19,6 @@ public class CameraActivityRepository {
         this.appController = appController;
         QrTokenDatabase db = QrTokenDatabase.getDatabase(appController);
         mDao = db.qrTokenDAO();
-
     }
 
     public void insert (QrToken qrToken) {
@@ -59,5 +58,4 @@ public class CameraActivityRepository {
         periodoLiveData = dataSource.postToApi(qrToken);
         return periodoLiveData;
     }
-
 }

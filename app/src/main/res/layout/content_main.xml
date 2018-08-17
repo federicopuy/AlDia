@@ -25,14 +25,12 @@
         app:layout_constraintTop_toBottomOf="@+id/puestoTv"
         tools:text="Cocinero 8hs" />
 
-
     <TextView
         android:id="@+id/tvRecaudado"
         style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recaudaciontv"
         tools:text="$3650,87" />
-
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -83,7 +81,6 @@
                 app:layout_constraintStart_toEndOf="@+id/verticalLine"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <TextView
                 android:id="@+id/tvHorasExtra"
                 style="@style/textViewDatosCard"
@@ -94,8 +91,6 @@
                 tools:text="2:16" />
 
         </android.support.constraint.ConstraintLayout>
-
-
     </android.support.v7.widget.CardView>
 
     <TextView
@@ -112,15 +107,12 @@
         app:layout_constraintTop_toBottomOf="@+id/ultimaLiquidaciontv"
         tools:text="3 de marzo de 2018" />
 
-
     <TextView
         android:id="@+id/recaudaciontv"
         style="@style/textViewTitulosChicos"
         android:text="@string/monto_recaudado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
-
-
 
     <TextView
         android:id="@+id/puestoTv"
@@ -129,11 +121,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
-
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 
 </android.support.constraint.ConstraintLayout>
     ></android.support.v4.widget.NestedScrollView>

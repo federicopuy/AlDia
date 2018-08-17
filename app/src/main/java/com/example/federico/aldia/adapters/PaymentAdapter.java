@@ -20,13 +20,13 @@ import butterknife.ButterKnife;
 public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHolder> {
 
     final private PaymentAdapter.ListItemClickListener mOnClickListener;
-    private List<Liquidacion> listaLiquidaciones;
+    private List<Liquidacion> paymentsList;
     private Context mContext;
 
     public PaymentAdapter(Context context, PaymentAdapter.ListItemClickListener listener) {
         this.mContext = context;
         mOnClickListener = listener;
-        listaLiquidaciones = new ArrayList<>();
+        paymentsList = new ArrayList<>();
     }
 
     public void addItems(List<Liquidacion> listaLiquidaciones) {
@@ -36,8 +36,8 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
     }
 
     void addItem(Liquidacion l) {
-        listaLiquidaciones.add(l);
-        notifyItemInserted(listaLiquidaciones.size() - 1);
+        paymentsList.add(l);
+        notifyItemInserted(paymentsList.size() - 1);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Liquidacion liquidacion = listaLiquidaciones.get(position);
+        Liquidacion liquidacion = paymentsList.get(position);
 
         if (!(liquidacion.getCategoria().getTipoCategoria().equals("FIJO"))) {
             holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
@@ -85,7 +85,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return listaLiquidaciones.size();
+        return paymentsList.size();
     }
 
     public interface ListItemClickListener {
@@ -116,7 +116,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            Liquidacion liquidacionClickeada = listaLiquidaciones.get(clickedPosition);
+            Liquidacion liquidacionClickeada = paymentsList.get(clickedPosition);
             mOnClickListener.onListItemClick(clickedPosition, liquidacionClickeada);
         }
     }

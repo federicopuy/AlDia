@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.activities.barcode.BarcodeScanningProcessor;
@@ -28,6 +30,7 @@ import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
+import com.example.federico.aldia.notifications.NotificationUtils;
 import com.example.federico.aldia.notifications.ReminderUtilities;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
@@ -43,6 +46,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class CameraActivity extends AppCompatActivity implements QRDetectedListener{
 
@@ -53,17 +59,16 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
     private GraphicOverlay graphicOverlay;
     private String selectedModel = BARCODE_DETECTION;
     private static final int PERMISSION_REQUESTS = 1;
-    private APIInterface mService;
     int i = 1;
-
-
     private static final String TAG = "CameraActivity";
-
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
+        ButterKnife.bind(this);
 
         preview = findViewById(R.id.firePreview);
         if (preview == null) {
@@ -75,14 +80,11 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         }
 
         if (allPermissionsGranted()) {
-
             createCameraSource(BARCODE_DETECTION);
             startCameraSource();
-
         } else {
             getRuntimePermissions();
         }
-
     }
 
     @Override
@@ -94,128 +96,63 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
             Date currentTime = Calendar.getInstance().getTime();
             QrToken qrToken = new QrToken(rawValue, currentTime.toString());
 
-
-
             CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
-            CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this,factory).get(CameraActivityViewModel.class);
+            CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this, factory).get(CameraActivityViewModel.class);
             cameraActivityViewModel.postQrTokenToServer().observe(this, periodoResource -> {
-                final String nombreLlamada = "postNewPeriodo";
+                switch (periodoResource.status) {
 
-                if (periodoResource.status == Status.FAILED) {
+                    case FAILED:
+                        cameraActivityViewModel.insert(qrToken);
+                        Intent returnIntent = getIntent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
+                        finish();
 
-                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-
-                    cameraActivityViewModel.insert(qrToken);
-
-
-                    Intent returnIntent = getIntent();
-                    setResult(Activity.RESULT_CANCELED, returnIntent);
-                    finish();
-
-
-                } else {
-                    if (periodoResource.status == Status.SUCCESS) {
-                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-
-
-                        Periodo periodoEscaneado = periodoResource.data;
-
-                        //Widget
-                        String endOfTime = Utils.getEndOfShiftTime(periodoEscaneado.getCategoria().getHorasTrabajo());
-                        //copied from https://stackoverflow.com/questions/4424723/android-appwidget-wont-update-from-activity
-                        SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        prefs.edit().putString(Constants.KEY_INTENT_WIDGET, endOfTime).apply();
-
-                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-                        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, ScanWidgetProvider.class));
-                        if (appWidgetIds.length > 0) {
-                            new ScanWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
-                        }
-
-                        //Scheduled Notification
-                        ReminderUtilities.scheduleShiftEndReminder(this, Utils.minutesTillEndOfShift(periodoEscaneado.getCategoria().getHorasTrabajo()));
-
+                    case SUCCESS:
+                        Periodo scannedShiftInfo = periodoResource.data;
+                        setUpWidget(scannedShiftInfo);
+                        scheduleNotification(scannedShiftInfo);
                         Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
                         Gson gsonPeriodo = new Gson();
-                        pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
+                        pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(scannedShiftInfo));
                         pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                         startActivity(pasarAIngresoEgreso);
                         finish();
 
+                    case RUNNING:
+                        progressBar.setVisibility(View.VISIBLE);
 
-                    } else {
-                        //todo show progress bar
-                    }
+                    default: finish();
                 }
-
-
             });
+        }
+    }
+    public void setUpWidget(Periodo scannedShiftInfo){
 
+        String endOfTime = Utils.getEndOfShiftTime(scannedShiftInfo.getCategoria().getHorasTrabajo());
+        //copied from https://stackoverflow.com/questions/4424723/android-appwidget-wont-update-from-activity
+        SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefs.edit().putString(Constants.KEY_INTENT_WIDGET, endOfTime).apply();
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, ScanWidgetProvider.class));
+        if (appWidgetIds.length > 0) {
+            new ScanWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
         }
 
 
-//
-//
-//
-//            final String nombreLlamada = "postNewPeriodo";
-//            mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-//            TokenQR tokenQR = new TokenQR(rawValue);
-//            Call<Periodo> postNewPeriodo = mService.newPeriodo(tokenQR);
-//            postNewPeriodo.enqueue(new Callback<Periodo>() {
-//                @Override
-//                public void onResponse(Call<Periodo> call, Response<Periodo> response) {
-//
-//                    Log.i(TAG, getString(R.string.on_response) + nombreLlamada);
-//
-//                    if (response.isSuccessful()) {
-//
-//                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-//                        try {
-//
-//                            Periodo periodoEscaneado = response.body();
-//                            Intent pasarAIngresoEgreso = new Intent(CameraActivity.this, EntryExitActivity.class);
-//                            Gson gsonPeriodo = new Gson();
-//                            pasarAIngresoEgreso.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(periodoEscaneado));
-//                            pasarAIngresoEgreso.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-//                            startActivity(pasarAIngresoEgreso);
-//                            finish();
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    } else {
-//
-//                        Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-//                        try {
-//                            Log.e(TAG, response.errorBody().string());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        Intent returnIntent = getIntent();
-//                        setResult(Activity.RESULT_CANCELED, returnIntent);
-//                        finish();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<Periodo> call, Throwable t) {
-//
-//                    Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-//                    System.out.println("Message " + t.getMessage());
-//                    Intent returnIntent = getIntent();
-//                    setResult(Activity.RESULT_CANCELED, returnIntent);
-//                    finish();
-//                }
-//            });
-//
-//
-//        }
 
     }
 
-
-
+    public void scheduleNotification(Periodo scannedShiftInfo){
+        //check if user is entering work or exiting.
+        //if entering, schedule notification.
+        //if exiting, cancel pending notification
+        if (scannedShiftInfo.getHoraFin()!=null){
+            NotificationUtils.clearAllNotifications(this);
+            } else {
+            ReminderUtilities.scheduleShiftEndReminder(this, Utils.minutesTillEndOfShift(scannedShiftInfo.getCategoria().getHorasTrabajo()));
+        }
+    }
     private void createCameraSource(String model) {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {

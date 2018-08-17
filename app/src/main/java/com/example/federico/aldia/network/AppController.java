@@ -8,7 +8,6 @@ public class AppController extends Application {
     private APIInterface apiInterface;
     private static Context context;
 
-
     @Override
     public void onCreate() {
         super.onCreate();

@@ -1,5 +1,6 @@
 package com.example.federico.aldia.activities;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,10 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,7 +24,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
@@ -68,8 +75,9 @@ public class MainActivity extends AppCompatActivity
     TextView horasExtratv;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     SharedPreferences prefs;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +97,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String nombreComercio = prefs.getString(Constants.KEY_COMERCIO_NOMBRE, "");
-        Objects.requireNonNull(getSupportActionBar()).setTitle(nombreComercio);
+        String businessName = prefs.getString(Constants.KEY_COMERCIO_NOMBRE, "");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(businessName);
 
         createNavDrawer(toolbar);
 
@@ -98,13 +106,17 @@ public class MainActivity extends AppCompatActivity
 
         MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this),comercioId);
         MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
-        mainActivityViewModel.getLastPayment().observe(this, liquidacion -> updateUI(liquidacion));
+        mainActivityViewModel.getLastPayment().observe(this, this::updateUI);
         mainActivityViewModel.getNetworkState().observe(this, networkState -> {
             switch (networkState.getStatus()){
-                case RUNNING: //todo show progress bar;
-                case FAILED: //todo hide progress bar
+                case RUNNING: progressBar.setVisibility(View.VISIBLE);
+
+                case FAILED: progressBar.setVisibility(View.INVISIBLE);
                     Log.e(TAG, networkState.getMsg());
-                case SUCCESS: tryToPostPendingQrCodes(mainActivityViewModel);//todo try submitting from DB
+
+                case SUCCESS: progressBar.setVisibility(View.INVISIBLE);
+                    tryToPostPendingQrCodes(mainActivityViewModel);//todo try submitting from DB
+
                    default: //todo
             }
         });
@@ -125,25 +137,20 @@ public class MainActivity extends AppCompatActivity
     /*-------------------------------------- Actualizar UI --------------------------------------------***/
 
     private void updateUI(Liquidacion ultimaLiquidacion) {
-
         if (ultimaLiquidacion != null) {
-
             try {
                 tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
                 tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")) {
                 Log.d(TAG, "Employee fijo");
                 recaudaciontv.setText(R.string.sueldo_mensual);
-
                 try {
                     tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto()));
                 } catch (NullPointerException n) {
@@ -152,24 +159,20 @@ public class MainActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 horasRegularestv.setText(R.string.dias_trabajo);
                 try {
                     tvHorasRegulares.setText(ultimaLiquidacion.getCategoria().getDiasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 horasExtratv.setText(R.string.hours_per_shift);
                 try {
                     tvHorasExtra.setText(ultimaLiquidacion.getCategoria().getHorasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             } else {
                 Log.d(TAG, "Employee por Horas");
-
                 try {
                     tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
                 } catch (NullPointerException n) {
@@ -178,13 +181,11 @@ public class MainActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 try {
                     tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 try {
                     tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
                 } catch (Exception e) {
@@ -197,10 +198,17 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.viewHoursData)
     public void pasarAPeriodos() {
 
-        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
+        Intent pasarAPeriodos = new Intent(MainActivity.this, ProfileActivity.class);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+            this.startActivity(pasarAPeriodos,bundle);
+        }
+
         startActivity(pasarAPeriodos);
 
     }
+
     /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
 
     @OnClick(R.id.fabEscanearQR)
@@ -209,7 +217,10 @@ public class MainActivity extends AppCompatActivity
         if (!allPermissionsGranted()) {
             getRuntimePermissions();
         }
+
         Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
+
+
         startActivityForResult(pasarACamara, REQUEST_CODE);
     }
 
@@ -342,9 +353,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        //mCompositeDisposable.dispose();
-        super.onDestroy();
-    }
 }

@@ -11,15 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,20 +23,14 @@ import com.example.federico.aldia.R;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Periodo;
-import com.example.federico.aldia.network.APIInterface;
-import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.network.URLs;
 import com.example.federico.aldia.viewmodel.ShiftsViewModel;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ShiftsActivity extends AppCompatActivity {
 
@@ -60,20 +49,23 @@ public class ShiftsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+
+
+
         Intent comesFromIntent = getIntent();
         long id;
         String tipoBusqueda = "";
 
         if (comesFromIntent.hasExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO)){
             id = comesFromIntent.getLongExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO, 0); //busca por id de liquidacion
-            tipoBusqueda = URLs.SEARCH_METHOD_BY_LIQUIDACION;
+            tipoBusqueda = URLs.SEARCH_METHOD_BY_PAYMENT_ID;
 
         } else {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             id = prefs.getLong(Constants.KEY_COMERCIO_ID, 0); //buscar por id de comercio
-            tipoBusqueda = URLs.SEARCH_METHOD_LAST_LIQUIDACION;
+            tipoBusqueda = URLs.SEARCH_METHOD_LAST_PAYMENT;
         }
-        
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -103,6 +95,7 @@ public class ShiftsActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

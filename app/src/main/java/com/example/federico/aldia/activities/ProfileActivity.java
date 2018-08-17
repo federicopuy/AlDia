@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Employee;
-import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 
 import java.io.IOException;
@@ -45,16 +44,15 @@ public class ProfileActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
-        obtenerDatosEmpleado();
+        getEmployeeInfo();
 
     }
 
-    private void obtenerDatosEmpleado() {
+    private void getEmployeeInfo() {
         progressBar.setVisibility(View.VISIBLE);
-        final String nombreLlamada = "callGetDatosEmpleado";
-        APIInterface mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
-        Call<Employee> callGetDatosEmpleado = mService.getDatosEmpleado();
-        callGetDatosEmpleado.enqueue(new Callback<Employee>() {
+        final String nombreLlamada = "callGetEmployeeInfo";
+
+        RetrofitClient.getClientVM().getEmployeeData().enqueue(new Callback<Employee>() {
 
             @Override
             public void onResponse(Call<Employee> call, Response<Employee> response) {
@@ -63,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
                     Employee employee = response.body();
-                    actualizarUI(employee);
+                    updateUi(employee);
 
                 } else {
                     Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
@@ -83,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void actualizarUI(Employee employee) {
+    private void updateUi(Employee employee) {
 
         try{
             tvNombreValue.setText(employee.getNombre());

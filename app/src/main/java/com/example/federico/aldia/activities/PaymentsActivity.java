@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,7 +20,6 @@ import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.AllPayments;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
-import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.utils.PaginationScrollListener;
 
@@ -47,7 +48,8 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
     private boolean isLoading = false;
 
     RecyclerView.LayoutManager mLayoutManager;
-    APIInterface mService;
+    RecyclerView mRecyclerView;
+    LayoutAnimationController animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +57,19 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
         setContentView(R.layout.activity_liquidaciones);
         ButterKnife.bind(this);
 
+
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        RecyclerView mRecyclerView = findViewById(R.id.liquidaciones_recycler_view);
+         mRecyclerView = findViewById(R.id.liquidaciones_recycler_view);
 
         mAdapter = new PaymentAdapter(PaymentsActivity.this, this);
         mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //https://proandroiddev.com/enter-animation-using-recyclerview-and-layoutanimation-part-1-list-75a874a5d213
+        int resId = R.anim.layout_animation_fall_down;
+        animation = AnimationUtils.loadLayoutAnimation(this, resId);
 
         mRecyclerView.addOnScrollListener(new PaginationScrollListener((LinearLayoutManager) mLayoutManager) {
             @Override
@@ -92,7 +100,6 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
             }
         });
 
-        mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
         loadFirstPage();
     }
 
@@ -104,9 +111,8 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
         long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
         progressBar.setVisibility(View.VISIBLE);
 
-        Call<AllPayments> callGetLiquidaciones = mService.getAllLiquidaciones(comercioId, pageNumber, size);
-
-        callGetLiquidaciones.enqueue(new Callback<AllPayments>() {
+        RetrofitClient.getClientVM().getAllPayments(comercioId, pageNumber, size)
+        .enqueue(new Callback<AllPayments>() {
 
             @Override
             public void onResponse(Call<AllPayments> call, Response<AllPayments> response) {
@@ -119,6 +125,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
                     AllPayments allPayments = response.body();
                     List<Liquidacion> listaLiquidaciones = allPayments.getLiquidacion();
                     mAdapter.addItems(listaLiquidaciones);
+                    mRecyclerView.setLayoutAnimation(animation);
 
                     if (!(pageNumber <= allPayments.getTotalPages())) {
                         isLastPage = true;
@@ -144,8 +151,8 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
         long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
         progressBar.setVisibility(View.VISIBLE);
 
-        Call<AllPayments> callGetLiquidaciones = mService.getAllLiquidaciones(comercioId, pageNumber, size);
-        callGetLiquidaciones.enqueue(new Callback<AllPayments>() {
+        RetrofitClient.getClientVM().getAllPayments(comercioId, pageNumber, size)
+        .enqueue(new Callback<AllPayments>() {
             @Override
             public void onResponse(Call<AllPayments> call, Response<AllPayments> response) {
                 progressBar.setVisibility(View.INVISIBLE);

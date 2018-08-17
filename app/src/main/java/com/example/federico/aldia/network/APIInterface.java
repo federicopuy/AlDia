@@ -10,7 +10,6 @@ import com.example.federico.aldia.model.TokenRetro;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -25,26 +24,26 @@ public interface APIInterface {
     @POST(URLs.AUTHENTICATE)
     Call<String> loginUser(@Body TokenRetro token);
 
-    @GET(URLs.COMERCIOS)
-    Call<List<Business>>getComercios();
+    @GET(URLs.BUSINESSES)
+    Call<List<Business>> getBusinesses();
 
-    @GET(URLs.LIQUIDACIONES + "/" + URLs.ONE + "/{userId}")
-   Call<Liquidacion>getUltimaLiquidacion(@Path("userId") long userId);
+    @GET(URLs.PAYMENTS + "/" + URLs.ONE + "/{userId}")
+   Call<Liquidacion> getLastPayment(@Path("userId") long userId);
 
-    @GET(URLs.LIQUIDACIONES + "/" + URLs.ALL + "/{userId}")
-    Call<AllPayments>getAllLiquidaciones(@Path("userId") long userId,
-                                         @Query("page") long page,
-                                         @Query("size") int size);
+    @GET(URLs.PAYMENTS + "/" + URLs.ALL + "/{userId}")
+    Call<AllPayments> getAllPayments(@Path("userId") long userId,
+                                     @Query("page") long page,
+                                     @Query("size") int size);
 
     @Headers("Liquidacion-Type: application/json")
-    @POST(URLs.PERIODOS + "/" + URLs.NEW)
+    @POST(URLs.SHIFTS + "/" + URLs.NEW)
     Call<Periodo> newPeriodo(@Body TokenQR tokenQR);
 
-    @GET(URLs.PERIODOS + "/{method}" + "/{id}")
-    Call<List<Periodo>>getPeriodos(@Path("method") String tipoBusqueda,
-                             @Path("id") long id);
+    @GET(URLs.SHIFTS + "/{method}" + "/{id}")
+    Call<List<Periodo>> getShifts(@Path("method") String tipoBusqueda,
+                                  @Path("id") long id);
 
-    @GET(URLs.EMPLEADOS + "/" + URLs.GET_EMPLEADO)
-    Call<Employee>getDatosEmpleado();
+    @GET(URLs.EMPLOYEES + "/" + URLs.GET_EMPLOYEE)
+    Call<Employee> getEmployeeData();
 
 }

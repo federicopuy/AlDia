@@ -18,7 +18,6 @@ import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Business;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.TokenRetro;
-import com.example.federico.aldia.network.APIInterface;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -53,7 +52,6 @@ public class SignInActivity extends AppCompatActivity implements
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
     SharedPreferences prefs;
-    APIInterface mService;
     String tokenFirebase = "";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -208,10 +206,10 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void servicioEnviarToken(final FirebaseUser user) {
         final String nombreLlamada = "postToken";
-        mService = RetrofitClient.getClient(getApplicationContext()).create(APIInterface.class);
+
         TokenRetro tokenRetro = new TokenRetro(tokenFirebase);
-        Call<String> authenticationCall = mService.loginUser(tokenRetro);
-        authenticationCall.enqueue(new Callback<String>() {
+        RetrofitClient.getClientVM().loginUser(tokenRetro)
+        .enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
@@ -277,9 +275,9 @@ public class SignInActivity extends AppCompatActivity implements
     private void obtenerComercios(final FirebaseUser user) {
 
         final String nombreLlamada = "obtenerComercios";
-        Call<List<Business>> obtenerComerciosEmpleado = mService.getComercios();
-        obtenerComerciosEmpleado.enqueue(new Callback<List<Business>>() {
 
+        RetrofitClient.getClientVM().getBusinesses()
+                .enqueue(new Callback<List<Business>>() {
             @Override
             public void onResponse(Call<List<Business>> call, Response<List<Business>> response) {
                 progressBar.setVisibility(View.INVISIBLE);

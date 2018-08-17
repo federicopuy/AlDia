@@ -25,7 +25,7 @@ public class LastPaymentDataSource {
         final MutableLiveData<Liquidacion> data = new MutableLiveData<>();
         networkState.postValue(NetworkState.LOADING);
 
-        appController.getApiInterface().getUltimaLiquidacion(businessId)
+        appController.getApiInterface().getLastPayment(businessId)
                 .enqueue(new Callback<Liquidacion>() {
                     @Override
                     public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
