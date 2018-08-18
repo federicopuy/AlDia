@@ -198,13 +198,7 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.viewHoursData)
     public void pasarAPeriodos() {
 
-        Intent pasarAPeriodos = new Intent(MainActivity.this, ProfileActivity.class);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-            this.startActivity(pasarAPeriodos,bundle);
-        }
-
+        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
         startActivity(pasarAPeriodos);
 
     }
@@ -219,8 +213,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
-
-
         startActivityForResult(pasarACamara, REQUEST_CODE);
     }
 
