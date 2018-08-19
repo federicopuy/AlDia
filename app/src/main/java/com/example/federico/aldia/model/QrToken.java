@@ -13,21 +13,21 @@ public class QrToken {
     private int id;
 
     @NonNull
-    private String mToken;
+    private String idToken;
 
     @NonNull
-    private String mTimestamp;
+    private String hora;
 
     @Ignore
-    public QrToken(String mToken, String mTimestamp) {
-        this.mToken = mToken;
-        this.mTimestamp = mTimestamp;
+    public QrToken(String idToken, String hora) {
+        this.idToken = idToken;
+        this.hora = hora;
     }
 
-    public QrToken(int id, String mToken, String mTimestamp) {
+    public QrToken(int id, String idToken, String hora) {
         this.id = id;
-        this.mToken = mToken;
-        this.mTimestamp = mTimestamp;
+        this.idToken = idToken;
+        this.hora = hora;
     }
 
     public int getId() {
@@ -38,19 +38,19 @@ public class QrToken {
         this.id = id;
     }
 
-    public String getMToken() {
-        return mToken;
+    public String getIdToken() {
+        return idToken;
     }
 
-    public void setmToken(String mToken) {
-        this.mToken = mToken;
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
     }
 
-    public String getMTimestamp() {
-        return mTimestamp;
+    public String getHora() {
+        return hora;
     }
 
-    public void setmTimestamp(String mTimestamp) {
-        this.mTimestamp = mTimestamp;
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 }

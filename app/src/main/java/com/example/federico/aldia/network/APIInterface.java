@@ -5,6 +5,7 @@ import com.example.federico.aldia.model.Business;
 import com.example.federico.aldia.model.Employee;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
+import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.TokenQR;
 import com.example.federico.aldia.model.TokenRetro;
 
@@ -45,5 +46,9 @@ public interface APIInterface {
 
     @GET(URLs.EMPLOYEES + "/" + URLs.GET_EMPLOYEE)
     Call<Employee> getEmployeeData();
+
+    @Headers("Liquidacion-Type: application/json")
+    @POST(URLs.SHIFTS + "/" + URLs.REGISTER_PERIOD_OFFLINE)
+    Call<Periodo> newShiftOffline(@Body QrToken qrToken);
 
 }

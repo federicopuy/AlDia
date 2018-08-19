@@ -3,8 +3,9 @@ package com.example.federico.aldia.db;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.example.federico.aldia.datasource.LastPaymentDataSource;
+import com.example.federico.aldia.datasource.MainActivityDataSource;
 import com.example.federico.aldia.model.Liquidacion;
+import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
@@ -19,15 +20,15 @@ public class MainActivityRepository {
     AppController appController;
     private LiveData<Liquidacion> lastPayment;
     private LiveData<NetworkState> networkState;
-
+    MainActivityDataSource mainActivityDataSource;
 
     public MainActivityRepository(AppController appController, long businessId) {
         this.appController = appController;
         QrTokenDatabase db = QrTokenDatabase.getDatabase(appController);
         mDao = db.qrTokenDAO();
-        LastPaymentDataSource lastPaymentDataSource = new LastPaymentDataSource(appController);
-        lastPayment = lastPaymentDataSource.getLastPayment(businessId);
-        networkState = lastPaymentDataSource.getNetworkState();
+        mainActivityDataSource = new MainActivityDataSource(appController);
+        lastPayment = mainActivityDataSource.getLastPayment(businessId);
+        networkState = mainActivityDataSource.getNetworkState();
     }
 
     public LiveData<List<QrToken>> getmAllPendingTokenQrs() {
@@ -60,14 +61,8 @@ public class MainActivityRepository {
         return networkState;
     }
 
-    public void postPendingQRCode(QrToken pendingQrToken) {
-        // todo llamada post
-        Resource<QrToken> dummyResource = new Resource<>(Status.SUCCESS, pendingQrToken);
-
-        if (dummyResource.status == Status.SUCCESS) {
-            delete(pendingQrToken);
-        }
+    public LiveData<Resource<Periodo>> postPendingQRCode(QrToken pendingQrToken) {
+        LiveData<Resource<Periodo>> resourceLiveData = mainActivityDataSource.postSingleQr(pendingQrToken);
+        return resourceLiveData;
     }
-
-
 }

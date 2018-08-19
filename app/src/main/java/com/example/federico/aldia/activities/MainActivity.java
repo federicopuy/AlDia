@@ -1,11 +1,13 @@
 package com.example.federico.aldia.activities;
 
 import android.app.ActivityOptions;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Network;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -30,8 +32,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
+import com.example.federico.aldia.model.Resource;
+import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
+import com.example.federico.aldia.network.NetworkState;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.utils.Utils;
@@ -110,6 +116,7 @@ public class MainActivity extends AppCompatActivity
         mainActivityViewModel.getNetworkState().observe(this, networkState -> {
             switch (networkState.getStatus()){
                 case RUNNING: progressBar.setVisibility(View.VISIBLE);
+                dummyQr(mainActivityViewModel);
 
                 case FAILED: progressBar.setVisibility(View.INVISIBLE);
                     Log.e(TAG, networkState.getMsg());
@@ -125,13 +132,77 @@ public class MainActivity extends AppCompatActivity
     public void tryToPostPendingQrCodes(MainActivityViewModel mainActivityViewModel){
         mainActivityViewModel.postPendingQRCodes().observe(this, qrTokens -> {
             if (qrTokens.size()>0){
-                for (QrToken qrToken: qrTokens){
-                    mainActivityViewModel.postSingleQRToken(qrToken);
-                }
+
+                postTokens(qrTokens, mainActivityViewModel);
+
             } else {
                 System.out.println(qrTokens.size());
             }
         });
+
+    }
+
+    public void dummyQr(MainActivityViewModel mainActivityViewModel){
+
+        QrToken qr1 = new QrToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhBbGRpYSI6IlJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTM0NzIxNzY2fQ.f0P0wH3Iu6p4gRSRc-CIR05YqoLEEZFSr3v06ZhpbCveNw9GYb02_yPsJuDS4QXdnX5wGYGRy3pdd6dzWTyTYg",
+                "2018-08-18T21:23:44.344Z");
+        QrToken qr2 = new QrToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhBbGRpYSI6IlJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTM0NjM1Njk2fQ.sBunpglJcV6rtD632HIzgLG1wypQZ2yiWc_BOtT2XW9oi3V-Khilz3ppXSLUc5KwWQkgZD4wD4jTMrFyodEqNw",
+                "2018-08-18T21:40:24.544Z");
+
+                List<QrToken> list = new ArrayList<>();
+        list.add(qr1);
+        list.add(qr2);
+        postTokens(list, mainActivityViewModel);
+
+    }
+
+    public void postTokens(List<QrToken> qrTokens, MainActivityViewModel mainActivityViewModel){
+
+
+      for (QrToken qr: qrTokens) {
+          mainActivityViewModel.getQrTokenLive().observe(this, new Observer<Resource<Periodo>>() {
+              @Override
+              public void onChanged(@Nullable Resource<Periodo> periodoResource) {
+                  if (periodoResource.status == Status.FAILED) {
+
+                      System.out.println("FAILED");
+
+                  } else {
+
+                      //mainActivityViewModel.deleteQrToken(qr);
+                      mainActivityViewModel.setQrToken(qr);
+                  }
+
+              }
+          });
+
+
+      }
+
+
+
+
+
+        for (QrToken qrToken: qrTokens) {
+          
+            mainActivityViewModel.setQrToken(qrToken);
+
+            mainActivityViewModel.getQrTokenLive().observe(this, new Observer<Resource<Periodo>>() {
+                @Override
+                public void onChanged(@Nullable Resource<Periodo> periodoResource) {
+                    if (periodoResource.status == Status.FAILED) {
+
+                        System.out.println("FAILED");
+
+                    } else {
+
+                        mainActivityViewModel.deleteQrToken(qrToken);
+                    }
+
+                }
+            });
+
+        }
     }
 
     /*-------------------------------------- Actualizar UI --------------------------------------------***/

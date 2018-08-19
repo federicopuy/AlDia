@@ -1,19 +1,20 @@
 package com.example.federico.aldia.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.example.federico.aldia.datasource.LastPaymentDataSource;
-import com.example.federico.aldia.datasource.ShiftsDataSource;
 import com.example.federico.aldia.db.MainActivityRepository;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
+import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.network.NetworkState;
 
@@ -26,6 +27,8 @@ public class MainActivityViewModel extends ViewModel {
     private LiveData<NetworkState> networkState;
     MainActivityRepository mRepository;
     LiveData<List<QrToken>> pendingQrTokens;
+   public MutableLiveData<QrToken> qrTokenLiveData = new MutableLiveData<QrToken>();
+    LiveData<Resource<Periodo>> qrTokenLive;
 
     public MainActivityViewModel(AppController appController, long businessId) {
         this.appController = appController;
@@ -47,8 +50,32 @@ public class MainActivityViewModel extends ViewModel {
         return pendingQrTokens;
     }
 
-    public void postSingleQRToken(QrToken qrToken){
-        mRepository.postPendingQRCode(qrToken);
+//    public void postSingleQRToken(QrToken qrToken){
+//        LiveData<Resource<Periodo>> resourceLiveData = mRepository.postPendingQRCode(qrToken);
+//
+//        // todo llamada post
+//        Resource<QrToken> dummyResource = new Resource<>(Status.SUCCESS, pendingQrToken);
+//
+//        if (dummyResource.status == Status.SUCCESS) {
+//            delete(pendingQrToken);
+//        }
+//
+//    }
+
+    public LiveData<Resource<Periodo>> getQrTokenLive(){
+        qrTokenLive = Transformations.switchMap(qrTokenLiveData, qrToken ->
+                mRepository.postPendingQRCode(qrToken));
+        return qrTokenLive;
+    }
+
+
+
+    public void setQrToken(QrToken qrToken){
+        this.qrTokenLiveData.setValue(qrToken);
+    }
+
+    public void deleteQrToken (QrToken qrToken){
+        mRepository.delete(qrToken);
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {

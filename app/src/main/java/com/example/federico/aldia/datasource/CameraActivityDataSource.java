@@ -38,7 +38,7 @@ public class CameraActivityDataSource {
 
     public LiveData<Resource<Periodo>> postToApi (QrToken qrToken) {
 
-        TokenQR tokenQR = new TokenQR(qrToken.getMToken());
+        TokenQR tokenQR = new TokenQR(qrToken.getIdToken());
         final MutableLiveData<Resource<Periodo>> data = new MutableLiveData<>();
 
         appController.getApiInterface().newPeriodo(tokenQR)

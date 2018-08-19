@@ -4,19 +4,25 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import com.example.federico.aldia.model.Liquidacion;
+import com.example.federico.aldia.model.Periodo;
+import com.example.federico.aldia.model.QrToken;
+import com.example.federico.aldia.model.Resource;
+import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.network.NetworkState;
+
+import java.time.Instant;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LastPaymentDataSource {
+public class MainActivityDataSource {
 
     private AppController appController;
     private MutableLiveData networkState;
 
-    public LastPaymentDataSource(AppController appController) {
+    public MainActivityDataSource(AppController appController) {
         this.appController = appController;
         networkState = new MutableLiveData();
     }
@@ -44,6 +50,36 @@ public class LastPaymentDataSource {
                     }
                 });
         return data;
+    }
+
+    public LiveData<Resource<Periodo>> postSingleQr(QrToken qrToken){
+        final MutableLiveData<Resource<Periodo>> data = new MutableLiveData<>();
+
+        appController.getApiInterface().newShiftOffline(qrToken)
+                .enqueue(new Callback<Periodo>() {
+                    @Override
+                    public void onResponse(Call<Periodo> call, Response<Periodo> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                Periodo periodoEscaneado = response.body();
+                                data.setValue(new Resource<Periodo>(Status.SUCCESS, periodoEscaneado));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                                //todo log
+                                data.setValue(new Resource<Periodo>(Status.FAILED, null));
+                            }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Periodo> call, Throwable t) {
+                        data.setValue(new Resource<Periodo>(Status.FAILED, null));
+                    }
+                });
+
+        return data;
+
     }
 
     public MutableLiveData getNetworkState() {
