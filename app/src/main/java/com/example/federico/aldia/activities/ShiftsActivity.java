@@ -49,9 +49,6 @@ public class ShiftsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-
-
-
         Intent comesFromIntent = getIntent();
         long id;
         String tipoBusqueda = "";
@@ -62,7 +59,7 @@ public class ShiftsActivity extends AppCompatActivity {
 
         } else {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            id = prefs.getLong(Constants.KEY_COMERCIO_ID, 0); //buscar por id de comercio
+            id = prefs.getLong(Constants.KEY_BUSINESS_ID, 0); //buscar por id de comercio
             tipoBusqueda = URLs.SEARCH_METHOD_LAST_PAYMENT;
         }
 
@@ -93,9 +90,7 @@ public class ShiftsActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

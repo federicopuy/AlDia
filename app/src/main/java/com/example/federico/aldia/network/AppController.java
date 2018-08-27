@@ -24,7 +24,7 @@ public class AppController extends Application {
 
     public APIInterface getApiInterface() {
         if(apiInterface == null) {
-            apiInterface = RetrofitClient.getClientVM();
+            apiInterface = RetrofitClient.getClient();
         }
         return apiInterface;
     }

@@ -77,13 +77,10 @@ public class MainActivityDataSource {
                         data.setValue(new Resource<Periodo>(Status.FAILED, null));
                     }
                 });
-
         return data;
-
     }
 
     public MutableLiveData getNetworkState() {
         return networkState;
     }
-
 }

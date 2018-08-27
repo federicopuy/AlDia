@@ -35,6 +35,10 @@ public class MainActivityRepository {
         return mDao.loadAllPendingQrTokens();
     }
 
+    public LiveData<Resource<Periodo>> postTokenToServer(QrToken qrToken){
+        return mainActivityDataSource.postSingleQr(qrToken);
+    }
+
     public void delete(QrToken qrToken) {
         new deleteAsyncTast(mDao).execute(qrToken);
     }
@@ -61,8 +65,4 @@ public class MainActivityRepository {
         return networkState;
     }
 
-    public LiveData<Resource<Periodo>> postPendingQRCode(QrToken pendingQrToken) {
-        LiveData<Resource<Periodo>> resourceLiveData = mainActivityDataSource.postSingleQr(pendingQrToken);
-        return resourceLiveData;
-    }
 }

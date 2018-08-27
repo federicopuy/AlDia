@@ -37,22 +37,6 @@ public class CameraActivityRepository {
         }
     }
 
-    public void delete (QrToken qrToken) {
-        new deleteAsyncTast(mDao).execute(qrToken);
-    }
-
-    private static class deleteAsyncTast extends AsyncTask<QrToken, Void, Void> {
-        private QrTokenDAO mAsyncTaskDao;
-        deleteAsyncTast(QrTokenDAO dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected Void doInBackground(final QrToken... params) {
-            mAsyncTaskDao.deleteQrToken(params[0]);
-            return null;
-        }
-    }
-
     public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
         CameraActivityDataSource dataSource = new CameraActivityDataSource(appController);
         periodoLiveData = dataSource.postToApi(qrToken);

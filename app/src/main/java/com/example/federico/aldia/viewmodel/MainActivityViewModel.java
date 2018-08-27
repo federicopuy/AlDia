@@ -29,6 +29,7 @@ public class MainActivityViewModel extends ViewModel {
     LiveData<List<QrToken>> pendingQrTokens;
    public MutableLiveData<QrToken> qrTokenLiveData = new MutableLiveData<QrToken>();
     LiveData<Resource<Periodo>> qrTokenLive;
+    MutableLiveData<QrToken> qrTokenMutableLiveData = new MutableLiveData<>();
 
     public MainActivityViewModel(AppController appController, long businessId) {
         this.appController = appController;
@@ -46,32 +47,17 @@ public class MainActivityViewModel extends ViewModel {
         return networkState;
     }
 
-    public LiveData<List<QrToken>> postPendingQRCodes(){
+    public LiveData<List<QrToken>> getPendingQrCodes(){
         return pendingQrTokens;
     }
 
-//    public void postSingleQRToken(QrToken qrToken){
-//        LiveData<Resource<Periodo>> resourceLiveData = mRepository.postPendingQRCode(qrToken);
-//
-//        // todo llamada post
-//        Resource<QrToken> dummyResource = new Resource<>(Status.SUCCESS, pendingQrToken);
-//
-//        if (dummyResource.status == Status.SUCCESS) {
-//            delete(pendingQrToken);
-//        }
-//
-//    }
+    public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
 
-    public LiveData<Resource<Periodo>> getQrTokenLive(){
-        qrTokenLive = Transformations.switchMap(qrTokenLiveData, qrToken ->
-                mRepository.postPendingQRCode(qrToken));
-        return qrTokenLive;
+        return  mRepository.postTokenToServer(qrToken);
     }
 
-
-
-    public void setQrToken(QrToken qrToken){
-        this.qrTokenLiveData.setValue(qrToken);
+    public void setQrTokenMutableLiveData(QrToken qrToken) {
+        this.qrTokenMutableLiveData.setValue(qrToken);
     }
 
     public void deleteQrToken (QrToken qrToken){

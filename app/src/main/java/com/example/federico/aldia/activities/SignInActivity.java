@@ -85,7 +85,7 @@ public class SignInActivity extends AppCompatActivity implements
         //todo implementar en main
         super.onStart();
         Intent intentCerrarSesion = getIntent();
-        if (intentCerrarSesion.hasExtra(Constants.KEY_INTENT_CERRAR_SESION)){
+        if (intentCerrarSesion.hasExtra(Constants.KEY_INTENT_SIGN_OUT)){
             signOut();
         }
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -169,7 +169,7 @@ public class SignInActivity extends AppCompatActivity implements
         progressBar.setVisibility(View.VISIBLE);
         if (user != null) {
             try {
-                prefs.edit().putString(Constants.KEY_NOMBRE_USER, user.getDisplayName()).apply();
+                prefs.edit().putString(Constants.KEY_USER_NAME, user.getDisplayName()).apply();
                 prefs.edit().putString(Constants.KEY_EMAIL_USER, user.getEmail()).apply();
                 prefs.edit().putString(Constants.KEY_PHOTO_USER, Objects.requireNonNull(user.getPhotoUrl()).toString()).apply();
             } catch (Exception e) {
@@ -208,7 +208,7 @@ public class SignInActivity extends AppCompatActivity implements
         final String nombreLlamada = "postToken";
 
         TokenRetro tokenRetro = new TokenRetro(tokenFirebase);
-        RetrofitClient.getClientVM().loginUser(tokenRetro)
+        RetrofitClient.getClient().loginUser(tokenRetro)
         .enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -276,7 +276,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         final String nombreLlamada = "obtenerComercios";
 
-        RetrofitClient.getClientVM().getBusinesses()
+        RetrofitClient.getClient().getBusinesses()
                 .enqueue(new Callback<List<Business>>() {
             @Override
             public void onResponse(Call<List<Business>> call, Response<List<Business>> response) {
@@ -331,8 +331,8 @@ public class SignInActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int which) {
 
                 Business selectedBusiness = businessesList.get(which);
-                prefs.edit().putLong(Constants.KEY_COMERCIO_ID, selectedBusiness.getUserId()).apply();
-                prefs.edit().putString(Constants.KEY_COMERCIO_NOMBRE, selectedBusiness.getUserComercio()).apply();
+                prefs.edit().putLong(Constants.KEY_BUSINESS_ID, selectedBusiness.getUserId()).apply();
+                prefs.edit().putString(Constants.KEY_BUSINESS_NAME, selectedBusiness.getUserComercio()).apply();
                 Intent pasarAMainActivity = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(pasarAMainActivity);
 

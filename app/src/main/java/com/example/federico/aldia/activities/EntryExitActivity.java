@@ -84,7 +84,7 @@ public class EntryExitActivity extends AppCompatActivity {
         }
 
         @OnClick(R.id.fabAceptarIngresoEgreso)
-        public void volverAMain () {
+        public void backToMainActivity () {
             Intent returnIntent = getIntent();
             setResult(Activity.RESULT_OK, returnIntent);
             finish();

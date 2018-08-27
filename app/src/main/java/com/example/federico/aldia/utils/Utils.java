@@ -5,7 +5,11 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.federico.aldia.R;
+import com.example.federico.aldia.model.QrToken;
+
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -71,15 +75,20 @@ public class Utils {
 
     public static String obtenerMontoFormateado(Double monto){
 
-        //todo faltan dos decimales
+        //todo faltan dos decimales y error
 
-        String montoFormateado = "Error";
         try {
-            montoFormateado = "$ " + String.format("%.2f", monto);
+            if (monto!=0.0) {
+                return "$ " + String.format("%.2f", monto);
+            } else {
+                return "$0.00";
+
+            }
         } catch (Exception e){
             e.printStackTrace();
+            return "$0.00";
+
         }
-        return montoFormateado;
     }
 
     public static String getEndOfShiftTime(Integer hoursOfWork){
@@ -98,6 +107,18 @@ public class Utils {
         return (int) minutesTillEnd;
     }
 
+    public static String currentTimeToInstant(){
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Instant timestamp = currentTime.toInstant();
+            return String.valueOf(timestamp);
+        } else {
+            return "";
+        }
+
+    }
 
 
 }

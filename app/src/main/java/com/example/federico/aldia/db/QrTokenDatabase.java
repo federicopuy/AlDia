@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.example.federico.aldia.model.QrToken;
 
-@Database(entities = {QrToken.class}, version = 1, exportSchema = false)
+@Database(entities = {QrToken.class}, version = 2, exportSchema = false)
 public abstract class QrTokenDatabase extends RoomDatabase {
 
     private static QrTokenDatabase INSTANCE;

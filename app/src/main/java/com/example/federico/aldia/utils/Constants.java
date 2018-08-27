@@ -4,10 +4,8 @@ public class Constants {
 
 
     public static final String KEY_TOKEN_FIREBASE = "keyTokenFirebase";
-
     public static final String KEY_TOKEN_JWT = "keyTokenJwt";
-
-    public static final String KEY_NOMBRE_USER = "keyNombreUser";
+    public static final String KEY_USER_NAME = "keyNombreUser";
 
     public static final String KEY_EMAIL_USER = "keyEmailUser";
 
@@ -19,10 +17,10 @@ public class Constants {
 
 
     public static final String KEY_INTENT_LIQUIDACION_PERIODO = "keyIntentObtenerPeriodoDeLiquidacion";
-    public static final String KEY_INTENT_CERRAR_SESION = "keyIntentCerrarSesion";
+    public static final String KEY_INTENT_SIGN_OUT = "keyIntentCerrarSesion";
 
-    public static final String KEY_COMERCIO_ID = "comercioID";
-    public static final String KEY_COMERCIO_NOMBRE = "comercioNombre";
+    public static final String KEY_BUSINESS_ID = "comercioID";
+    public static final String KEY_BUSINESS_NAME = "comercioNombre";
     public static final String KEY_INTENT_WIDGET = "keyIntentWidget";
 
 

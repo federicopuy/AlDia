@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         final String nombreLlamada = "callGetEmployeeInfo";
 
-        RetrofitClient.getClientVM().getEmployeeData().enqueue(new Callback<Employee>() {
+        RetrofitClient.getClient().getEmployeeData().enqueue(new Callback<Employee>() {
 
             @Override
             public void onResponse(Call<Employee> call, Response<Employee> response) {

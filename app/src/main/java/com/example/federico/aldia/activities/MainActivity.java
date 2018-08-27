@@ -1,22 +1,16 @@
 package com.example.federico.aldia.activities;
 
-import android.app.ActivityOptions;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Network;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,7 +20,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,6 +44,9 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,32 +54,20 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "Main Activity";
     private static final int PERMISSION_REQUESTS = 1;
     private static final int REQUEST_CODE = 2;
-
-    @BindView(R.id.fabEscanearQR)
-    FloatingActionButton fabEscanearQR;
-    @BindView(R.id.content_view_main)
-    View content_view;
-    @BindView(R.id.tvRecaudado)
-    TextView tvRecaudado;
-    @BindView(R.id.tvHorasRegulares)
-    TextView tvHorasRegulares;
-    @BindView(R.id.tvHorasExtra)
-    TextView tvHorasExtra;
-    @BindView(R.id.tvFechaUltimaLiquidacion)
-    TextView tvFechaUltimaLiquidacion;
-    @BindView(R.id.tvCategoria)
-    TextView tvCategoria;
-    @BindView(R.id.recaudaciontv)
-    TextView recaudaciontv;
-    @BindView(R.id.horasRegularestv)
-    TextView horasRegularestv;
-    @BindView(R.id.horasExtratv)
-    TextView horasExtratv;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    @BindView(R.id.fabEscanearQR) FloatingActionButton fabEscanearQR;
+    @BindView(R.id.content_view_main) View content_view;
+    @BindView(R.id.tvRecaudado) TextView tvRecaudado;
+    @BindView(R.id.tvHorasRegulares) TextView tvHorasRegulares;
+    @BindView(R.id.tvHorasExtra) TextView tvHorasExtra;
+    @BindView(R.id.tvFechaUltimaLiquidacion) TextView tvFechaUltimaLiquidacion;
+    @BindView(R.id.tvCategoria) TextView tvCategoria;
+    @BindView(R.id.recaudaciontv) TextView recaudaciontv;
+    @BindView(R.id.horasRegularestv) TextView horasRegularestv;
+    @BindView(R.id.horasExtratv) TextView horasExtratv;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
     SharedPreferences prefs;
+    MainActivityViewModel mainActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,171 +78,122 @@ public class MainActivity extends AppCompatActivity
 
         Intent comesFromIntent = getIntent();
         if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)) {
-            Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
-
-            if (!allPermissionsGranted()) {
-                getRuntimePermissions();
-            }
-            startActivityForResult(pasarACamara, REQUEST_CODE);
+            /*
+            Means that the user clicked the camera button in widget,
+             so it should navigate directly to the camera.
+             */
+            goToCamera();
         }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String businessName = prefs.getString(Constants.KEY_COMERCIO_NOMBRE, "");
+        String businessName = prefs.getString(Constants.KEY_BUSINESS_NAME, "");
         Objects.requireNonNull(getSupportActionBar()).setTitle(businessName);
 
         createNavDrawer(toolbar);
 
-        long comercioId = prefs.getLong(Constants.KEY_COMERCIO_ID, 0);
+        long businessId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
 
-        MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this),comercioId);
-        MainActivityViewModel mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+        //ViewModel creation
+        MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this), businessId);
+        mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+
+        //todo chequear que no haya pending qr codes. SI llega a escanear uno nuevo no me va a dejar mandar el viejo.
         mainActivityViewModel.getLastPayment().observe(this, this::updateUI);
+
         mainActivityViewModel.getNetworkState().observe(this, networkState -> {
-            switch (networkState.getStatus()){
-                case RUNNING: progressBar.setVisibility(View.VISIBLE);
-                dummyQr(mainActivityViewModel);
-
-                case FAILED: progressBar.setVisibility(View.INVISIBLE);
-                    Log.e(TAG, networkState.getMsg());
-
-                case SUCCESS: progressBar.setVisibility(View.INVISIBLE);
-                    tryToPostPendingQrCodes(mainActivityViewModel);//todo try submitting from DB
-
-                   default: //todo
-            }
-        });
-    }
-
-    public void tryToPostPendingQrCodes(MainActivityViewModel mainActivityViewModel){
-        mainActivityViewModel.postPendingQRCodes().observe(this, qrTokens -> {
-            if (qrTokens.size()>0){
-
-                postTokens(qrTokens, mainActivityViewModel);
-
+            if ((networkState != null ? networkState.getStatus() : null) == NetworkState.Status.RUNNING) {
+                progressBar.setVisibility(View.VISIBLE);
             } else {
-                System.out.println(qrTokens.size());
+                if (networkState.getStatus() == NetworkState.Status.FAILED) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Log.e(TAG, networkState.getMsg());
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    //If no errors when getting information,
+                    // check if there are any Qr codes saved in the DB
+                    // and post them to the server.
+                    tryToPostPendingQrCodes();
+                }
             }
         });
+    }
+    /**
+     Retrieves pending tokens from the DB
+     */
+    public void tryToPostPendingQrCodes() {
 
+        mainActivityViewModel.getPendingQrCodes().observe(this, qrTokens -> {
+            assert qrTokens != null;
+            if (qrTokens.size() > 0) {
+                postSingleToken(qrTokens.get(0));
+            } else {
+                Log.d(TAG, "No tokens pending to be posted to server");
+            }
+        });
     }
 
-    public void dummyQr(MainActivityViewModel mainActivityViewModel){
+    public void postSingleToken(QrToken qrToken){
+        mainActivityViewModel.postQrToken(qrToken).observe(this, new Observer<Resource<Periodo>>() {
+            @Override
+            public void onChanged(@Nullable Resource<Periodo> periodoResource) {
 
-        QrToken qr1 = new QrToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhBbGRpYSI6IlJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTM0NzIxNzY2fQ.f0P0wH3Iu6p4gRSRc-CIR05YqoLEEZFSr3v06ZhpbCveNw9GYb02_yPsJuDS4QXdnX5wGYGRy3pdd6dzWTyTYg",
-                "2018-08-18T21:23:44.344Z");
-        QrToken qr2 = new QrToken("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhBbGRpYSI6IlJPTEVfQURNSU4sUk9MRV9VU0VSIiwiZXhwIjoxNTM0NjM1Njk2fQ.sBunpglJcV6rtD632HIzgLG1wypQZ2yiWc_BOtT2XW9oi3V-Khilz3ppXSLUc5KwWQkgZD4wD4jTMrFyodEqNw",
-                "2018-08-18T21:40:24.544Z");
-
-                List<QrToken> list = new ArrayList<>();
-        list.add(qr1);
-        list.add(qr2);
-        postTokens(list, mainActivityViewModel);
-
-    }
-
-    public void postTokens(List<QrToken> qrTokens, MainActivityViewModel mainActivityViewModel){
-
-
-      for (QrToken qr: qrTokens) {
-          mainActivityViewModel.getQrTokenLive().observe(this, new Observer<Resource<Periodo>>() {
-              @Override
-              public void onChanged(@Nullable Resource<Periodo> periodoResource) {
-                  if (periodoResource.status == Status.FAILED) {
-
-                      System.out.println("FAILED");
-
-                  } else {
-
-                      //mainActivityViewModel.deleteQrToken(qr);
-                      mainActivityViewModel.setQrToken(qr);
-                  }
-
-              }
-          });
-
-
-      }
-
-
-
-
-
-        for (QrToken qrToken: qrTokens) {
-          
-            mainActivityViewModel.setQrToken(qrToken);
-
-            mainActivityViewModel.getQrTokenLive().observe(this, new Observer<Resource<Periodo>>() {
-                @Override
-                public void onChanged(@Nullable Resource<Periodo> periodoResource) {
-                    if (periodoResource.status == Status.FAILED) {
-
-                        System.out.println("FAILED");
-
-                    } else {
-
-                        mainActivityViewModel.deleteQrToken(qrToken);
-                    }
-
+                if (periodoResource.status == Status.SUCCESS) {
+                    //if successful, delete token from DB. This will trigger the .getPendingQrCodes observer
+                    // once again.
+                    mainActivityViewModel.deleteQrToken(qrToken);
                 }
-            });
-
-        }
+                //todo else
+            }
+        });
     }
 
-    /*-------------------------------------- Actualizar UI --------------------------------------------***/
-
-    private void updateUI(Liquidacion ultimaLiquidacion) {
-        if (ultimaLiquidacion != null) {
+    private void updateUI(Liquidacion lastPayment) {
+        if (lastPayment != null) {
             try {
-                tvCategoria.setText(ultimaLiquidacion.getCategoria().getNombre());
+                tvCategoria.setText(lastPayment.getCategoria().getNombre());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(ultimaLiquidacion.getFecha()));
+                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(lastPayment.getFecha()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (ultimaLiquidacion.getCategoria().getTipoCategoria().equals("FIJO")) {
+            if (lastPayment.getCategoria().getTipoCategoria().equals("FIJO")) {
+                //todo sacar empleado fijo
                 Log.d(TAG, "Employee fijo");
                 recaudaciontv.setText(R.string.sueldo_mensual);
                 try {
-                    tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getCategoria().getMonto()));
-                } catch (NullPointerException n) {
-                    n.printStackTrace();
-                    tvRecaudado.setText(R.string.null_money_value);
+                    tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getCategoria().getMonto()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 horasRegularestv.setText(R.string.dias_trabajo);
                 try {
-                    tvHorasRegulares.setText(ultimaLiquidacion.getCategoria().getDiasTrabajo().toString());
+                    tvHorasRegulares.setText(lastPayment.getCategoria().getDiasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 horasExtratv.setText(R.string.hours_per_shift);
                 try {
-                    tvHorasExtra.setText(ultimaLiquidacion.getCategoria().getHorasTrabajo().toString());
+                    tvHorasExtra.setText(lastPayment.getCategoria().getHorasTrabajo().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 Log.d(TAG, "Employee por Horas");
                 try {
-                    tvRecaudado.setText(Utils.obtenerMontoFormateado(ultimaLiquidacion.getMontoTotal()));
-                } catch (NullPointerException n) {
-                    n.printStackTrace();
-                    tvRecaudado.setText(R.string.null_money_value);
+                    tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getMontoTotal()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    tvHorasRegulares.setText(ultimaLiquidacion.getHorasTotReg().toString());
+                    tvHorasRegulares.setText(lastPayment.getHorasTotReg().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    tvHorasExtra.setText(ultimaLiquidacion.getHorasTotExt().toString());
+                    tvHorasExtra.setText(lastPayment.getHorasTotExt().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -267,33 +202,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.viewHoursData)
-    public void pasarAPeriodos() {
-
-        Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
-        startActivity(pasarAPeriodos);
-
+    public void goToShifts() {
+        Intent intentToShifts = new Intent(MainActivity.this, ShiftsActivity.class);
+        startActivity(intentToShifts);
     }
 
-    /*-------------------------------------- On Click Escanear QR --------------------------------------------***/
-
+    /**
+     On Click for Camera button.
+     */
     @OnClick(R.id.fabEscanearQR)
-    public void pasarACamara() {
-
+    public void goToCamera() {
         if (!allPermissionsGranted()) {
             getRuntimePermissions();
         }
-
-        Intent pasarACamara = new Intent(MainActivity.this, CameraActivity.class);
-        startActivityForResult(pasarACamara, REQUEST_CODE);
+        Intent intentToCamera = new Intent(MainActivity.this, CameraActivity.class);
+        startActivityForResult(intentToCamera, REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-             //   obtenerUltimaLiquidacion();
-            //todo check this
+                //   obtenerUltimaLiquidacion();
+                //todo check this
             } else {
                 if (resultCode == RESULT_CANCELED) {
                     Log.i(TAG, "Result CANCELED");
@@ -362,7 +293,7 @@ public class MainActivity extends AppCompatActivity
         ImageView imageViewNavDrawer = header.findViewById(R.id.imageViewNavDrawer);
 
         try {
-            tvNavUserName.setText(prefs.getString(Constants.KEY_NOMBRE_USER, ""));
+            tvNavUserName.setText(prefs.getString(Constants.KEY_USER_NAME, ""));
             tvNavUserMail.setText(prefs.getString(Constants.KEY_EMAIL_USER, ""));
             String imagenUsuario = prefs.getString(Constants.KEY_PHOTO_USER, "");
             if (!imagenUsuario.equals("")) {
@@ -407,7 +338,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_cerrar_sesion) {
             Intent pasarASignIn = new Intent(MainActivity.this, SignInActivity.class);
-            pasarASignIn.putExtra(Constants.KEY_INTENT_CERRAR_SESION, "");
+            pasarASignIn.putExtra(Constants.KEY_INTENT_SIGN_OUT, "");
             startActivity(pasarASignIn);
         }
 
