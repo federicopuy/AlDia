@@ -1,6 +1,7 @@
 package com.example.federico.aldia.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
@@ -22,46 +23,45 @@ import java.util.List;
 
 public class MainActivityViewModel extends ViewModel {
 
-    private AppController appController;
-    private LiveData<Liquidacion> lastPayment;
-    private LiveData<NetworkState> networkState;
-    MainActivityRepository mRepository;
-    LiveData<List<QrToken>> pendingQrTokens;
-   public MutableLiveData<QrToken> qrTokenLiveData = new MutableLiveData<QrToken>();
-    LiveData<Resource<Periodo>> qrTokenLive;
-    MutableLiveData<QrToken> qrTokenMutableLiveData = new MutableLiveData<>();
+    private LiveData<Resource<Liquidacion>> lastPayment;
+    private MainActivityRepository mRepository;
+    private LiveData<List<QrToken>> pendingQrTokens;
+    private MediatorLiveData<Resource<Liquidacion>> mediatorLiveData;
 
-    public MainActivityViewModel(AppController appController, long businessId) {
-        this.appController = appController;
+    MainActivityViewModel(AppController appController, long businessId) {
         mRepository = new MainActivityRepository(appController, businessId);
         lastPayment = mRepository.getLastPayment(businessId);
-        networkState = mRepository.getNetworkState();
         pendingQrTokens = mRepository.getmAllPendingTokenQrs();
+        mediatorLiveData = new MediatorLiveData<>();
+        init();
     }
 
-    public LiveData<Liquidacion> getLastPayment() {
-        return lastPayment;
+    private void init() {
+        mediatorLiveData.addSource(lastPayment, liquidacionResource -> mediatorLiveData.setValue(liquidacionResource));
     }
 
-    public LiveData<NetworkState> getNetworkState() {
-        return networkState;
-    }
-
-    public LiveData<List<QrToken>> getPendingQrCodes(){
+    public LiveData<List<QrToken>> getPendingQrCodes() {
         return pendingQrTokens;
     }
 
-    public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
-
-        return  mRepository.postTokenToServer(qrToken);
+    public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken) {
+        return mRepository.postTokenToServer(qrToken);
     }
 
-    public void setQrTokenMutableLiveData(QrToken qrToken) {
-        this.qrTokenMutableLiveData.setValue(qrToken);
-    }
-
-    public void deleteQrToken (QrToken qrToken){
+    public void deleteQrToken(QrToken qrToken) {
         mRepository.delete(qrToken);
+    }
+
+    public MediatorLiveData<Resource<Liquidacion>> getMediatorLiveData() {
+        return mediatorLiveData;
+    }
+
+    //copied from https://medium.com/@_AB/mediatorlivedata-practice-and-usage-6dddcebf6a0
+    //https://medium.com/@BladeCoder/to-implement-a-manual-refresh-without-modifying-your-existing-livedata-logic-i-suggest-that-your-7db1b8414c0e
+    public void refresh(long businessId) {
+        mediatorLiveData.removeSource(lastPayment);
+        lastPayment = mRepository.getLastPayment(businessId);
+        mediatorLiveData.addSource(lastPayment, liquidacionResource -> mediatorLiveData.setValue(liquidacionResource));
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {

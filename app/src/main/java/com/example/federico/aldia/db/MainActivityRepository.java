@@ -1,6 +1,7 @@
 package com.example.federico.aldia.db;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import com.example.federico.aldia.datasource.MainActivityDataSource;
@@ -18,7 +19,7 @@ public class MainActivityRepository {
 
     private QrTokenDAO mDao;
     AppController appController;
-    private LiveData<Liquidacion> lastPayment;
+    private LiveData<Resource<Liquidacion>> lastPayment;
     private LiveData<NetworkState> networkState;
     MainActivityDataSource mainActivityDataSource;
 
@@ -27,8 +28,7 @@ public class MainActivityRepository {
         QrTokenDatabase db = QrTokenDatabase.getDatabase(appController);
         mDao = db.qrTokenDAO();
         mainActivityDataSource = new MainActivityDataSource(appController);
-        lastPayment = mainActivityDataSource.getLastPayment(businessId);
-        networkState = mainActivityDataSource.getNetworkState();
+       // lastPayment = mainActivityDataSource.getLastPayment(businessId);
     }
 
     public LiveData<List<QrToken>> getmAllPendingTokenQrs() {
@@ -57,12 +57,8 @@ public class MainActivityRepository {
         }
     }
 
-    public LiveData<Liquidacion> getLastPayment(long businessId) {
-        return lastPayment;
-    }
-
-    public LiveData<NetworkState> getNetworkState() {
-        return networkState;
+    public LiveData<Resource<Liquidacion>> getLastPayment(long businessId) {
+        return mainActivityDataSource.getLastPayment(businessId);
     }
 
 }

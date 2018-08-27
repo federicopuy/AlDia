@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,7 +31,6 @@ import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
-import com.example.federico.aldia.network.NetworkState;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.utils.Utils;
@@ -44,9 +44,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,24 +96,32 @@ public class MainActivity extends AppCompatActivity
         mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
         //todo chequear que no haya pending qr codes. SI llega a escanear uno nuevo no me va a dejar mandar el viejo.
-        mainActivityViewModel.getLastPayment().observe(this, this::updateUI);
 
-        mainActivityViewModel.getNetworkState().observe(this, networkState -> {
-            if ((networkState != null ? networkState.getStatus() : null) == NetworkState.Status.RUNNING) {
-                progressBar.setVisibility(View.VISIBLE);
-            } else {
-                if (networkState.getStatus() == NetworkState.Status.FAILED) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Log.e(TAG, networkState.getMsg());
+        mainActivityViewModel.getMediatorLiveData().observe(this, new Observer<Resource<Liquidacion>>() {
+            @Override
+            public void onChanged(@Nullable Resource<Liquidacion> liquidacionResource) {
+
+                assert liquidacionResource != null;
+                if (liquidacionResource.status == Status.RUNNING) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
-                    //If no errors when getting information,
-                    // check if there are any Qr codes saved in the DB
-                    // and post them to the server.
+                    if (liquidacionResource.status == Status.SUCCESS) {
+                        updateUI(liquidacionResource.data);
+                        //If no errors when getting information,
+                     //check if there are any Qr codes saved in the DB
+                      //and post them to the server.
                     tryToPostPendingQrCodes();
+
+                    } else {
+                        System.out.println("FAILED");
+                    }
                 }
             }
         });
+
+
     }
     /**
      Retrieves pending tokens from the DB
@@ -204,7 +210,9 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.viewHoursData)
     public void goToShifts() {
         Intent intentToShifts = new Intent(MainActivity.this, ShiftsActivity.class);
-        startActivity(intentToShifts);
+
+            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+            startActivity(intentToShifts, bundle);
     }
 
     /**
@@ -216,15 +224,17 @@ public class MainActivity extends AppCompatActivity
             getRuntimePermissions();
         }
         Intent intentToCamera = new Intent(MainActivity.this, CameraActivity.class);
-        startActivityForResult(intentToCamera, REQUEST_CODE);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+        startActivityForResult(intentToCamera, REQUEST_CODE, bundle);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                //   obtenerUltimaLiquidacion();
-                //todo check this
+                long businessId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
+                mainActivityViewModel.refresh(businessId);
+
             } else {
                 if (resultCode == RESULT_CANCELED) {
                     Log.i(TAG, "Result CANCELED");
@@ -324,22 +334,23 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
         if (id == R.id.nav_mi_perfil) {
             Intent pasarAMiPerfil = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(pasarAMiPerfil);
+            startActivity(pasarAMiPerfil, bundle);
 
         } else if (id == R.id.nav_periodos) {
             Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
-            startActivity(pasarAPeriodos);
+            startActivity(pasarAPeriodos, bundle);
 
         } else if (id == R.id.nav_liquidaciones) {
             Intent pasarALiquidaciones = new Intent(MainActivity.this, PaymentsActivity.class);
-            startActivity(pasarALiquidaciones);
+            startActivity(pasarALiquidaciones, bundle);
 
         } else if (id == R.id.nav_cerrar_sesion) {
             Intent pasarASignIn = new Intent(MainActivity.this, SignInActivity.class);
             pasarASignIn.putExtra(Constants.KEY_INTENT_SIGN_OUT, "");
-            startActivity(pasarASignIn);
+            startActivity(pasarASignIn, bundle);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -1,6 +1,5 @@
 package com.example.federico.aldia.model;
 
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 

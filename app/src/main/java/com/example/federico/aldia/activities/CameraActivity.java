@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -114,7 +115,8 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         Gson gsonPeriodo = new Gson();
                         intentToEntryExit.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(scannedShiftInfo));
                         intentToEntryExit.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                        startActivity(intentToEntryExit);
+                        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+                        startActivity(intentToEntryExit, bundle);
                         finish();
                     } else {
                         progressBar.setVisibility(View.VISIBLE);

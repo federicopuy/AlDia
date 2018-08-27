@@ -20,33 +20,32 @@ import retrofit2.Response;
 public class MainActivityDataSource {
 
     private AppController appController;
-    private MutableLiveData networkState;
 
     public MainActivityDataSource(AppController appController) {
         this.appController = appController;
-        networkState = new MutableLiveData();
     }
 
-    public LiveData<Liquidacion> getLastPayment(long businessId) {
-        final MutableLiveData<Liquidacion> data = new MutableLiveData<>();
-        networkState.postValue(NetworkState.LOADING);
+    public LiveData<Resource<Liquidacion>> getLastPayment(long businessId) {
+        final MutableLiveData<Resource<Liquidacion>> data = new MutableLiveData<>();
+
+        data.postValue(new Resource<>(Status.RUNNING, null));
+
 
         appController.getApiInterface().getLastPayment(businessId)
                 .enqueue(new Callback<Liquidacion>() {
                     @Override
                     public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
                         if (response.isSuccessful()) {
-                            data.setValue(response.body());
-                            networkState.postValue(NetworkState.LOADED);
+                            Liquidacion lastPayment = response.body();
+                            data.postValue(new Resource<Liquidacion>(Status.SUCCESS, lastPayment));
                         } else {
-                            networkState.postValue(new NetworkState(NetworkState.Status.FAILED, response.message()));
+                            data.postValue(new Resource<>(Status.FAILED,null));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Liquidacion> call, Throwable t) {
                         String errorMessage = t == null ? "unknown error" : t.getMessage();
-                        networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
                     }
                 });
         return data;
@@ -78,9 +77,5 @@ public class MainActivityDataSource {
                     }
                 });
         return data;
-    }
-
-    public MutableLiveData getNetworkState() {
-        return networkState;
     }
 }
