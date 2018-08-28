@@ -12,13 +12,12 @@ import com.example.federico.aldia.network.AppController;
 public class CameraActivityRepository {
 
     private QrTokenDAO mDao;
-    AppController appController;
-    LiveData<Resource<Periodo>> periodoLiveData;
+    private CameraActivityDataSource dataSource;
 
     public CameraActivityRepository(AppController appController) {
-        this.appController = appController;
         QrTokenDatabase db = QrTokenDatabase.getDatabase(appController);
         mDao = db.qrTokenDAO();
+        dataSource = new CameraActivityDataSource(appController);
     }
 
     public void insert (QrToken qrToken) {
@@ -38,8 +37,6 @@ public class CameraActivityRepository {
     }
 
     public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
-        CameraActivityDataSource dataSource = new CameraActivityDataSource(appController);
-        periodoLiveData = dataSource.postToApi(qrToken);
-        return periodoLiveData;
+        return dataSource.postToApi(qrToken);
     }
 }

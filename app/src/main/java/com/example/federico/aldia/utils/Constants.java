@@ -16,7 +16,7 @@ public class Constants {
     public static final String KEY_INTENT_WIDGET_BUTTON = "keyIntentWidgetButton";
 
 
-    public static final String KEY_INTENT_LIQUIDACION_PERIODO = "keyIntentObtenerPeriodoDeLiquidacion";
+    public static final String KEY_INTENT_PAYMENT_INFO = "keyIntentObtenerPeriodoDeLiquidacion";
     public static final String KEY_INTENT_SIGN_OUT = "keyIntentCerrarSesion";
 
     public static final String KEY_BUSINESS_ID = "comercioID";

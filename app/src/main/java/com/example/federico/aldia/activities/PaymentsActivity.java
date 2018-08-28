@@ -2,10 +2,10 @@ package com.example.federico.aldia.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,12 +15,12 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.federico.aldia.adapters.PaymentAdapter;
 import com.example.federico.aldia.R;
+import com.example.federico.aldia.adapters.PaymentAdapter;
 import com.example.federico.aldia.model.AllPayments;
-import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.network.RetrofitClient;
+import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.utils.PaginationScrollListener;
 
 import java.util.List;
@@ -35,7 +35,7 @@ import retrofit2.Response;
 public class PaymentsActivity extends AppCompatActivity implements PaymentAdapter.ListItemClickListener {
 
 
-    private static final String TAG = "Liquidaciones Activity";
+    private static final String TAG = "Payments Activity";
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.tvSinLiquidaciones)
@@ -71,12 +71,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
             protected void loadMoreItems() {
                 isLoading = true;
                 pageNumber += 1;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadNextPage();
-                    }
-                }, 1000);
+                new Handler().postDelayed(() -> loadNextPage(), 1000);
             }
 
             @Override
@@ -181,7 +176,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
     @Override
     public void onListItemClick(int clickedItemIndex, Liquidacion clickedPayment) {
         Intent intentToShiftsList = new Intent(PaymentsActivity.this, ShiftsActivity.class);
-        intentToShiftsList.putExtra(Constants.KEY_INTENT_LIQUIDACION_PERIODO, clickedPayment.getId());
+        intentToShiftsList.putExtra(Constants.KEY_INTENT_PAYMENT_INFO, clickedPayment.getId());
         startActivity(intentToShiftsList);
     }
 

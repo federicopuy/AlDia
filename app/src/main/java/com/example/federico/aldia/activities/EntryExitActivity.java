@@ -50,7 +50,6 @@ public class EntryExitActivity extends AppCompatActivity {
             Intent returnIntent = getIntent();
             setResult(Activity.RESULT_CANCELED, returnIntent);
             finish();
-
         } else {
             //check if employee is exiting or entering
             if (shift.getHoraFin() != null) {
@@ -61,7 +60,6 @@ public class EntryExitActivity extends AppCompatActivity {
                 tvHoraEgreso.setVisibility(View.VISIBLE);
                 tvHoraEgreso.setText(Utils.obtenerHora(shift.getHoraFin()));
                 horaEgresoTv.setVisibility(View.VISIBLE);
-
             } else {
                 //employee is entering
                 textViewIngresoEgreso.setText(R.string.Ingreso);
@@ -72,21 +70,21 @@ public class EntryExitActivity extends AppCompatActivity {
         }
     }
 
-        private Periodo getShiftFromIntent () {
-            Intent intent = getIntent();
-            Periodo shiftFromIntent = null;
-            if (intent.hasExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO)) {
-                String JsonObject = intent.getStringExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO);
-                Gson gson = new Gson();
-                shiftFromIntent = gson.fromJson(JsonObject, Periodo.class);
-            }
-            return shiftFromIntent;
+    private Periodo getShiftFromIntent() {
+        Intent intent = getIntent();
+        Periodo shiftFromIntent = null;
+        if (intent.hasExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO)) {
+            String JsonObject = intent.getStringExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO);
+            Gson gson = new Gson();
+            shiftFromIntent = gson.fromJson(JsonObject, Periodo.class);
         }
-
-        @OnClick(R.id.fabAceptarIngresoEgreso)
-        public void backToMainActivity () {
-            Intent returnIntent = getIntent();
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
-        }
+        return shiftFromIntent;
     }
+
+    @OnClick(R.id.fabAceptarIngresoEgreso)
+    public void backToMainActivity() {
+        Intent returnIntent = getIntent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+}

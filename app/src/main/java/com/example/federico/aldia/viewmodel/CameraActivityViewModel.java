@@ -17,7 +17,7 @@ public class CameraActivityViewModel extends AndroidViewModel {
     private CameraActivityRepository mRepository;
     private LiveData<Resource<Periodo>> scannedShift;
 
-    public CameraActivityViewModel(AppController appController, QrToken qrToken) {
+    CameraActivityViewModel(AppController appController, QrToken qrToken) {
         super(appController);
         mRepository = new CameraActivityRepository(appController);
         scannedShift = mRepository.postQrToken(qrToken);
@@ -35,7 +35,6 @@ public class CameraActivityViewModel extends AndroidViewModel {
         @NonNull
         private final AppController appController;
         private final QrToken qrToken;
-
 
         public Factory(@NonNull AppController appController, QrToken qrToken) {
             this.appController = appController;

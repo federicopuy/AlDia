@@ -9,9 +9,6 @@ import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
-import com.example.federico.aldia.network.NetworkState;
-
-import java.time.Instant;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,25 +24,23 @@ public class MainActivityDataSource {
 
     public LiveData<Resource<Liquidacion>> getLastPayment(long businessId) {
         final MutableLiveData<Resource<Liquidacion>> data = new MutableLiveData<>();
-
-        data.postValue(new Resource<>(Status.RUNNING, null));
-
+        data.postValue(new Resource<>(Status.RUNNING));
 
         appController.getApiInterface().getLastPayment(businessId)
                 .enqueue(new Callback<Liquidacion>() {
                     @Override
                     public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
                         if (response.isSuccessful()) {
-                            Liquidacion lastPayment = response.body();
-                            data.postValue(new Resource<Liquidacion>(Status.SUCCESS, lastPayment));
+                            data.postValue(new Resource<>(Status.SUCCESS, response.body()));
                         } else {
-                            data.postValue(new Resource<>(Status.FAILED,null));
+                            data.postValue(new Resource<>(Status.FAILED, response.message()));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Liquidacion> call, Throwable t) {
                         String errorMessage = t == null ? "unknown error" : t.getMessage();
+                        data.postValue(new Resource<>(Status.FAILED, errorMessage));
                     }
                 });
         return data;
@@ -59,21 +54,16 @@ public class MainActivityDataSource {
                     @Override
                     public void onResponse(Call<Periodo> call, Response<Periodo> response) {
                         if (response.isSuccessful()) {
-                            try {
-                                Periodo periodoEscaneado = response.body();
-                                data.setValue(new Resource<Periodo>(Status.SUCCESS, periodoEscaneado));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            data.setValue(new Resource<>(Status.SUCCESS, response.body()));
                         } else {
-                                //todo log
-                                data.setValue(new Resource<Periodo>(Status.FAILED, null));
-                            }
+                            data.postValue(new Resource<>(Status.FAILED, response.message()));
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<Periodo> call, Throwable t) {
-                        data.setValue(new Resource<Periodo>(Status.FAILED, null));
+                        String errorMessage = t == null ? "unknown error" : t.getMessage();
+                        data.postValue(new Resource<>(Status.FAILED, errorMessage));
                     }
                 });
         return data;

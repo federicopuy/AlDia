@@ -19,6 +19,6 @@ public class URLs {
     public static final String SHIFTS = "periodos";
     public static final String NEW = "new";
     public static final String SEARCH_METHOD_BY_PAYMENT_ID = "findByLiquidacion";
-    public static final String SEARCH_METHOD_LAST_PAYMENT = "withoutLiquidacion";
+    public static final String SEARCH_METHOD_PENDING_TO_BE_PAID = "withoutLiquidacion";
   public static final String REGISTER_PERIOD_OFFLINE = "registrarPeriodo";
 }

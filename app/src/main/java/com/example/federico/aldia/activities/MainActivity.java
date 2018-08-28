@@ -1,6 +1,5 @@
 package com.example.federico.aldia.activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,31 +7,28 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.Periodo;
+import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.QrToken;
-import com.example.federico.aldia.model.Resource;
 import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.utils.Constants;
-import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.utils.Utils;
 import com.example.federico.aldia.viewmodel.MainActivityViewModel;
 import com.squareup.picasso.Picasso;
@@ -52,18 +48,30 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "Main Activity";
     private static final int PERMISSION_REQUESTS = 1;
     private static final int REQUEST_CODE = 2;
-    @BindView(R.id.fabEscanearQR) FloatingActionButton fabEscanearQR;
-    @BindView(R.id.content_view_main) View content_view;
-    @BindView(R.id.tvRecaudado) TextView tvRecaudado;
-    @BindView(R.id.tvHorasRegulares) TextView tvHorasRegulares;
-    @BindView(R.id.tvHorasExtra) TextView tvHorasExtra;
-    @BindView(R.id.tvFechaUltimaLiquidacion) TextView tvFechaUltimaLiquidacion;
-    @BindView(R.id.tvCategoria) TextView tvCategoria;
-    @BindView(R.id.recaudaciontv) TextView recaudaciontv;
-    @BindView(R.id.horasRegularestv) TextView horasRegularestv;
-    @BindView(R.id.horasExtratv) TextView horasExtratv;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.fabEscanearQR)
+    FloatingActionButton fabEscanearQR;
+    @BindView(R.id.content_view_main)
+    View content_view;
+    @BindView(R.id.tvRecaudado)
+    TextView tvRecaudado;
+    @BindView(R.id.tvHorasRegulares)
+    TextView tvHorasRegulares;
+    @BindView(R.id.tvHorasExtra)
+    TextView tvHorasExtra;
+    @BindView(R.id.tvFechaUltimaLiquidacion)
+    TextView tvFechaUltimaLiquidacion;
+    @BindView(R.id.tvCategoria)
+    TextView tvCategoria;
+    @BindView(R.id.recaudaciontv)
+    TextView recaudaciontv;
+    @BindView(R.id.horasRegularestv)
+    TextView horasRegularestv;
+    @BindView(R.id.horasExtratv)
+    TextView horasExtratv;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     SharedPreferences prefs;
     MainActivityViewModel mainActivityViewModel;
 
@@ -91,40 +99,34 @@ public class MainActivity extends AppCompatActivity
 
         long businessId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
 
-        //ViewModel creation
         MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this), businessId);
         mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
         //todo chequear que no haya pending qr codes. SI llega a escanear uno nuevo no me va a dejar mandar el viejo.
-
-        mainActivityViewModel.getMediatorLiveData().observe(this, new Observer<Resource<Liquidacion>>() {
-            @Override
-            public void onChanged(@Nullable Resource<Liquidacion> liquidacionResource) {
-
-                assert liquidacionResource != null;
-                if (liquidacionResource.status == Status.RUNNING) {
+        mainActivityViewModel.getMediatorLiveData().observe(this, liquidacionResource -> {
+            assert liquidacionResource != null;
+            switch (liquidacionResource.status) {
+                case RUNNING:
                     progressBar.setVisibility(View.VISIBLE);
-
-                } else {
+                    break;
+                case SUCCESS:
                     progressBar.setVisibility(View.INVISIBLE);
-                    if (liquidacionResource.status == Status.SUCCESS) {
-                        updateUI(liquidacionResource.data);
-                        //If no errors when getting information,
-                     //check if there are any Qr codes saved in the DB
-                      //and post them to the server.
+                    updateUI(liquidacionResource.data);
+                    //If no errors when getting information,
+                    //check if there are any Qr codes saved in the DB
+                    //and post them to the server.
                     tryToPostPendingQrCodes();
-
-                    } else {
-                        System.out.println("FAILED");
-                    }
-                }
+                    break;
+                case FAILED:
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Log.e(TAG, liquidacionResource.msg);
+                    break;
             }
         });
-
-
     }
+
     /**
-     Retrieves pending tokens from the DB
+     * Retrieves pending tokens from the DB
      */
     public void tryToPostPendingQrCodes() {
 
@@ -138,17 +140,16 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void postSingleToken(QrToken qrToken){
-        mainActivityViewModel.postQrToken(qrToken).observe(this, new Observer<Resource<Periodo>>() {
-            @Override
-            public void onChanged(@Nullable Resource<Periodo> periodoResource) {
-
-                if (periodoResource.status == Status.SUCCESS) {
-                    //if successful, delete token from DB. This will trigger the .getPendingQrCodes observer
-                    // once again.
-                    mainActivityViewModel.deleteQrToken(qrToken);
-                }
-                //todo else
+    /**
+     * If posting is successful, deletes token from DB. This will trigger the .getPendingQrCodes observer
+     * with the next token.
+     * If not successful, pending QrTokens will remain in the DB, waiting to be posted
+     */
+    public void postSingleToken(QrToken qrToken) {
+        mainActivityViewModel.postQrToken(qrToken).observe(this, periodoResource -> {
+            assert periodoResource != null;
+            if (periodoResource.status == Status.SUCCESS) {
+                mainActivityViewModel.deleteQrToken(qrToken);
             }
         });
     }
@@ -165,58 +166,38 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (lastPayment.getCategoria().getTipoCategoria().equals("FIJO")) {
-                //todo sacar empleado fijo
-                Log.d(TAG, "Employee fijo");
-                recaudaciontv.setText(R.string.sueldo_mensual);
-                try {
-                    tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getCategoria().getMonto()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                horasRegularestv.setText(R.string.dias_trabajo);
-                try {
-                    tvHorasRegulares.setText(lastPayment.getCategoria().getDiasTrabajo().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                horasExtratv.setText(R.string.hours_per_shift);
-                try {
-                    tvHorasExtra.setText(lastPayment.getCategoria().getHorasTrabajo().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Log.d(TAG, "Employee por Horas");
-                try {
-                    tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getMontoTotal()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    tvHorasRegulares.setText(lastPayment.getHorasTotReg().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    tvHorasExtra.setText(lastPayment.getHorasTotExt().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getMontoTotal()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            try {
+                tvHorasRegulares.setText(lastPayment.getHorasTotReg().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                tvHorasExtra.setText(lastPayment.getHorasTotExt().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
+    /**
+     * On Click for View showing pending hours to be paid
+     */
     @OnClick(R.id.viewHoursData)
     public void goToShifts() {
         Intent intentToShifts = new Intent(MainActivity.this, ShiftsActivity.class);
 
-            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-            startActivity(intentToShifts, bundle);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+        startActivity(intentToShifts, bundle);
     }
 
     /**
-     On Click for Camera button.
+     * On Click for Camera button.
      */
     @OnClick(R.id.fabEscanearQR)
     public void goToCamera() {
@@ -225,9 +206,12 @@ public class MainActivity extends AppCompatActivity
         }
         Intent intentToCamera = new Intent(MainActivity.this, CameraActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-        startActivityForResult(intentToCamera, REQUEST_CODE, bundle);
+        ActivityCompat.startActivityForResult(MainActivity.this, intentToCamera, REQUEST_CODE, bundle);
     }
 
+    /**
+     * Refreshes the view if the Qr scan succeeded.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {

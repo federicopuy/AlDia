@@ -24,11 +24,11 @@ import butterknife.ButterKnife;
 
 public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> {
 
-    private List<Periodo> listaPeriodos;
+    private List<Periodo> shiftsList;
     private Context mContext;
 
-    public ShiftAdapter(List<Periodo> listaPeriodos, Context context) {
-        this.listaPeriodos = listaPeriodos;
+    public ShiftAdapter(List<Periodo> shiftsList, Context context) {
+        this.shiftsList = shiftsList;
         this.mContext = context;
     }
 
@@ -42,55 +42,42 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ShiftAdapter.ViewHolder holder, int position) {
 
-        Periodo periodo = listaPeriodos.get(position);
+        Periodo shift = shiftsList.get(position);
 
         try {
-            holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(periodo.getHoraInicio()));
+            holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(shift.getHoraInicio()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (periodo.getEliminado()) {
+        // If for some reason the employer deletes the shift via the web app,
+        // shift is shown to the employee in grey color.
+        if (shift.getEliminado()) {
             holder.imageEliminado.setVisibility(View.VISIBLE);
             holder.tvHoraIngresoEgreso.setTextColor(mContext.getResources().getColor(R.color.color_grey));
             holder.tvfecha.setTextColor(mContext.getResources().getColor(R.color.color_grey));
             holder.tvhorasRegularesTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
             holder.tvhorasExtraTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
-        }
-
-        if (!(periodo.getCategoria().getTipoCategoria().equals("FIJO"))) {
-
+        } else {
             try {
-                String horaIngresoEgreso = Utils.obtenerHora(periodo.getHoraInicio())
-                        + " - " + Utils.obtenerHora(periodo.getHoraFin());
+                String horaIngresoEgreso = Utils.obtenerHora(shift.getHoraInicio())
+                        + " - " + Utils.obtenerHora(shift.getHoraFin());
                 holder.tvHoraIngresoEgreso.setText(horaIngresoEgreso);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
-                holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMontoRegular(periodo.getHorasReg(), periodo.getCategoria().getMonto()));
-                holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMontoExtra(periodo.getHorasExt(), periodo.getCategoria().getMonto()));
+                holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMontoRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
+                holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMontoExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-
-        } else{
-            holder.tvhorasRegularesText.setText(R.string.hora_entrada);
-            holder.tvhorasExtraText.setText(R.string.hora_salida);
-            holder.tvhorasRegularesTotales.setText(Utils.obtenerHora(periodo.getHoraInicio()));
-            holder.tvhorasExtraTotales.setText(Utils.obtenerHora(periodo.getHoraFin()));
-            if (periodo.getInasistencia()) {
-                holder.tvHoraIngresoEgreso.setText(R.string.inasistencia);
-            }else {
-                holder.tvHoraIngresoEgreso.setVisibility(View.INVISIBLE);
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return listaPeriodos.size();
+        return shiftsList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -118,7 +105,6 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
 
         @Override
         public void onClick(View view) {
-
             if (view.getId() == imageEliminado.getId()) {
                 Toast.makeText(view.getContext(), R.string.periodo_eliminado, Toast.LENGTH_LONG).show();
             }

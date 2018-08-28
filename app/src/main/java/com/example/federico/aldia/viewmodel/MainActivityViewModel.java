@@ -2,22 +2,16 @@ package com.example.federico.aldia.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.example.federico.aldia.db.MainActivityRepository;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
-import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
-import com.example.federico.aldia.network.NetworkState;
 
 import java.util.List;
 
@@ -33,10 +27,6 @@ public class MainActivityViewModel extends ViewModel {
         lastPayment = mRepository.getLastPayment(businessId);
         pendingQrTokens = mRepository.getmAllPendingTokenQrs();
         mediatorLiveData = new MediatorLiveData<>();
-        init();
-    }
-
-    private void init() {
         mediatorLiveData.addSource(lastPayment, liquidacionResource -> mediatorLiveData.setValue(liquidacionResource));
     }
 

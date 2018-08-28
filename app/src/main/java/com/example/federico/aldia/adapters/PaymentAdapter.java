@@ -35,7 +35,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
         }
     }
 
-    void addItem(Liquidacion l) {
+    private void addItem(Liquidacion l) {
         paymentsList.add(l);
         notifyItemInserted(paymentsList.size() - 1);
     }
@@ -52,23 +52,21 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
 
         Liquidacion liquidacion = paymentsList.get(position);
 
-        if (!(liquidacion.getCategoria().getTipoCategoria().equals("FIJO"))) {
-            holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
-            holder.tvHorasExtraText.setVisibility(View.VISIBLE);
-            holder.tvHorasExtraTotales.setVisibility(View.VISIBLE);
-            holder.tvHorasRegularesTotales.setVisibility(View.VISIBLE);
+        holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
+        holder.tvHorasExtraText.setVisibility(View.VISIBLE);
+        holder.tvHorasExtraTotales.setVisibility(View.VISIBLE);
+        holder.tvHorasRegularesTotales.setVisibility(View.VISIBLE);
 
-            String horasRegulares = "";
-            String horasExtra = "";
-            try {
-                horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";
-                horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            holder.tvHorasRegularesTotales.setText(horasRegulares);
-            holder.tvHorasExtraTotales.setText(horasExtra);
+        String horasRegulares = "";
+        String horasExtra = "";
+        try {
+            horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";
+            horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        holder.tvHorasRegularesTotales.setText(horasRegulares);
+        holder.tvHorasExtraTotales.setText(horasExtra);
 
         try {
             holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(liquidacion.getFecha()));

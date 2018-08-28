@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,13 +25,12 @@ import com.example.federico.aldia.activities.barcode.CameraSource;
 import com.example.federico.aldia.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldia.activities.barcode.GraphicOverlay;
 import com.example.federico.aldia.activities.barcode.QRDetectedListener;
+import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
-import com.example.federico.aldia.model.Status;
 import com.example.federico.aldia.network.AppController;
 import com.example.federico.aldia.notifications.NotificationUtils;
 import com.example.federico.aldia.notifications.ReminderUtilities;
 import com.example.federico.aldia.utils.Constants;
-import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.utils.Utils;
 import com.example.federico.aldia.viewmodel.CameraActivityViewModel;
 import com.example.federico.aldia.widget.ScanWidgetProvider;
@@ -39,8 +38,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,15 +47,16 @@ import butterknife.ButterKnife;
 public class CameraActivity extends AppCompatActivity implements QRDetectedListener {
 
     private static final String BARCODE_DETECTION = "Barcode Detection";
-
     private CameraSource cameraSource = null;
-    private CameraSourcePreview preview;
-    private GraphicOverlay graphicOverlay;
     private static final int PERMISSION_REQUESTS = 1;
     int amountOfQrCodesScanned = 1;
     private static final String TAG = "CameraActivity";
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.firePreview)
+    CameraSourcePreview preview;
+    @BindView(R.id.fireFaceOverlay)
+    GraphicOverlay graphicOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +64,12 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         setContentView(R.layout.activity_camara);
         ButterKnife.bind(this);
 
-        preview = findViewById(R.id.firePreview);
         if (preview == null) {
             Log.d(TAG, "Preview is null");
         }
-        graphicOverlay = findViewById(R.id.fireFaceOverlay);
         if (graphicOverlay == null) {
             Log.d(TAG, "graphicOverlay is null");
         }
-
         if (allPermissionsGranted()) {
             createCameraSource(BARCODE_DETECTION);
             startCameraSource();
@@ -85,29 +80,36 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
 
     @Override
     public void QRDetected(String rawValue) {
-
         if (amountOfQrCodesScanned == 1) {
             amountOfQrCodesScanned++;
 
-            //Create a QrToken object with the Qr Code(String rawValue) and current time.
+            /*
+             * Create a QrToken object with the Qr Code(String rawValue) and current time.
+             */
             QrToken qrToken = new QrToken(rawValue, Utils.currentTimeToInstant());
 
-            //ViewModel creation
+            /*
+             * ViewModel creation
+             */
             CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
             CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this, factory).get(CameraActivityViewModel.class);
 
-            //Observer to post Qr Token to API
+            /*
+             * Observer to post Qr Token to API
+             * If posting to the server fails, possibly due to lack of connectivity or an error in the server,
+             * the QrToken is saved in the App DB to be posted later.
+             */
             cameraActivityViewModel.postQrTokenToServer().observe(this, periodoResource -> {
-                if (periodoResource.status == Status.FAILED) {
-                    //If posting to the server, possibily due to lack of connectivity or an error in
-                    // the server, the QrToken is saved in the App DB to be posted later.
-                    cameraActivityViewModel.insert(qrToken);
-                    Intent returnIntent = getIntent();
-                    setResult(Activity.RESULT_CANCELED, returnIntent);
-                    finish();
-
-                } else {
-                    if (periodoResource.status == Status.SUCCESS) {
+                assert periodoResource != null;
+                switch (periodoResource.status) {
+                    case FAILED:
+                        Log.e(TAG, periodoResource.msg);
+                        cameraActivityViewModel.insert(qrToken);
+                        Intent returnIntent = getIntent();
+                        setResult(Activity.RESULT_CANCELED, returnIntent);
+                        finish();
+                        break;
+                    case SUCCESS:
                         Periodo scannedShiftInfo = periodoResource.data;
                         setUpWidget(scannedShiftInfo);
                         scheduleNotification(scannedShiftInfo);
@@ -118,9 +120,10 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                         startActivity(intentToEntryExit, bundle);
                         finish();
-                    } else {
+                        break;
+                    case RUNNING:
                         progressBar.setVisibility(View.VISIBLE);
-                    }
+                        break;
                 }
             });
         }
@@ -144,12 +147,12 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         }
     }
 
-    /** check if user is entering work or exiting.
-     if entering, schedule notification.
-     if exiting, cancel pending notification
+    /**
+     * check if user is entering work or exiting.
+     * if entering, schedule notification.
+     * if exiting, cancel pending notification
      */
     public void scheduleNotification(Periodo scannedShiftInfo) {
-
         if (scannedShiftInfo.getHoraFin() != null) {
             NotificationUtils.clearAllNotifications(this);
         } else {
