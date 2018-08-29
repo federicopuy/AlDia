@@ -3,7 +3,6 @@ package com.example.federico.aldia.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,25 +22,25 @@ import butterknife.OnClick;
 public class EntryExitActivity extends AppCompatActivity {
 
     private static final String TAG = "Entry Exit Activity";
-    @BindView(R.id.textViewIngresoEgreso)
-    TextView textViewIngresoEgreso;
-    @BindView(R.id.fabAceptarIngresoEgreso)
-    FloatingActionButton fabAceptarIngresoEgreso;
-    @BindView(R.id.tvNombreComercio)
-    TextView tvNombreComercio;
-    @BindView(R.id.tvHoraIngreso)
-    TextView tvHoraIngreso;
-    @BindView(R.id.tvHoraEgreso)
-    TextView tvHoraEgreso;
-    @BindView(R.id.tvCategoria)
-    TextView tvCategoria;
-    @BindView(R.id.horaEgresoTv)
-    TextView horaEgresoTv;
+    @BindView(R.id.tvEntryExit)
+    TextView tvEntryExit;
+    @BindView(R.id.tvBusinessName)
+    TextView tvBusinessName;
+    @BindView(R.id.tvEntryHour)
+    TextView tvEntryHour;
+    @BindView(R.id.tvExitHour)
+    TextView tvExitHour;
+    @BindView(R.id.tvCategory)
+    TextView tvCategory;
+    @BindView(R.id.exitHourTv)
+    TextView exitHourTv;
+    @BindView(R.id.appBarEntryExit)
+    View appBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ingreso_egreso);
+        setContentView(R.layout.activity_entry_exit);
         ButterKnife.bind(this);
         Periodo shift = getShiftFromIntent();
 
@@ -54,34 +53,33 @@ public class EntryExitActivity extends AppCompatActivity {
             //check if employee is exiting or entering
             if (shift.getHoraFin() != null) {
                 //employee is exiting
-                View appBar = findViewById(R.id.appBarIngresoEgreso);
                 appBar.setBackground(ContextCompat.getDrawable(EntryExitActivity.this, R.drawable.salida_background));
-                textViewIngresoEgreso.setText(R.string.salida);
-                tvHoraEgreso.setVisibility(View.VISIBLE);
-                tvHoraEgreso.setText(Utils.obtenerHora(shift.getHoraFin()));
-                horaEgresoTv.setVisibility(View.VISIBLE);
+                tvEntryExit.setText(R.string.salida);
+                tvExitHour.setVisibility(View.VISIBLE);
+                tvExitHour.setText(Utils.getHour(shift.getHoraFin()));
+                exitHourTv.setVisibility(View.VISIBLE);
             } else {
                 //employee is entering
-                textViewIngresoEgreso.setText(R.string.Ingreso);
+                tvEntryExit.setText(R.string.Ingreso);
             }
-            tvCategoria.setText(shift.getCategoria().getNombre());
-            tvNombreComercio.setText(shift.getUser());
-            tvHoraIngreso.setText(Utils.obtenerHora(shift.getHoraInicio()));
+            tvCategory.setText(shift.getCategoria().getNombre());
+            tvBusinessName.setText(shift.getUser());
+            tvEntryHour.setText(Utils.getHour(shift.getHoraInicio()));
         }
     }
 
     private Periodo getShiftFromIntent() {
         Intent intent = getIntent();
         Periodo shiftFromIntent = null;
-        if (intent.hasExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO)) {
-            String JsonObject = intent.getStringExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO);
+        if (intent.hasExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT)) {
+            String JsonObject = intent.getStringExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT);
             Gson gson = new Gson();
             shiftFromIntent = gson.fromJson(JsonObject, Periodo.class);
         }
         return shiftFromIntent;
     }
 
-    @OnClick(R.id.fabAceptarIngresoEgreso)
+    @OnClick(R.id.fabAccept)
     public void backToMainActivity() {
         Intent returnIntent = getIntent();
         setResult(Activity.RESULT_OK, returnIntent);

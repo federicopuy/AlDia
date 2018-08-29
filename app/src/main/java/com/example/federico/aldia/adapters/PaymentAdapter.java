@@ -1,6 +1,7 @@
 package com.example.federico.aldia.adapters;
 
-import android.content.Context;
+import android.arch.paging.PagedListAdapter;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,101 +12,75 @@ import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHolder> {
+public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.ViewHolder> {
 
     final private PaymentAdapter.ListItemClickListener mOnClickListener;
-    private List<Liquidacion> paymentsList;
-    private Context mContext;
 
-    public PaymentAdapter(Context context, PaymentAdapter.ListItemClickListener listener) {
-        this.mContext = context;
+    public PaymentAdapter(PaymentAdapter.ListItemClickListener listener) {
+        super(Liquidacion.DIFF_CALLBACK);
         mOnClickListener = listener;
-        paymentsList = new ArrayList<>();
     }
+    //todo selectable item
 
-    public void addItems(List<Liquidacion> listaLiquidaciones) {
-        for (Liquidacion l : listaLiquidaciones) {
-            addItem(l);
-        }
-    }
-
-    private void addItem(Liquidacion l) {
-        paymentsList.add(l);
-        notifyItemInserted(paymentsList.size() - 1);
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.each_payment, viewGroup, false);
+        return new PaymentViewHolder(view);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.cada_liquidacion, parent, false);
-        return new ViewHolder(view);
-    }
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+        PaymentViewHolder viewHolder = (PaymentViewHolder) holder;
+        Liquidacion liquidacion = getItem(position);
 
-        Liquidacion liquidacion = paymentsList.get(position);
 
-        holder.tvHorasRegularesText.setVisibility(View.VISIBLE);
-        holder.tvHorasExtraText.setVisibility(View.VISIBLE);
-        holder.tvHorasExtraTotales.setVisibility(View.VISIBLE);
-        holder.tvHorasRegularesTotales.setVisibility(View.VISIBLE);
-
-        String horasRegulares = "";
-        String horasExtra = "";
+        String regularHours = "";
+        String extraHours = "";
         try {
-            horasRegulares = liquidacion.getHorasTotReg().toString() + " hs";
-            horasExtra = liquidacion.getHorasTotExt().toString() + " hs";
+            regularHours = liquidacion.getHorasTotReg().toString() + " hs";
+            extraHours = liquidacion.getHorasTotExt().toString() + " hs";
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.tvHorasRegularesTotales.setText(horasRegulares);
-        holder.tvHorasExtraTotales.setText(horasExtra);
+        viewHolder.tvRegularHoursValue.setText(regularHours);
+        viewHolder.tvExtraHoursValue.setText(extraHours);
 
         try {
-            holder.tvFechaLiquidacion.setText(Utils.obtenerFechaFormateada(liquidacion.getFecha()));
+            viewHolder.tvPaymentDate.setText(Utils.getDateAndHour(liquidacion.getFecha()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            holder.tvRecaudacionTotalLiquidacion.setText(Utils.obtenerMontoFormateado(liquidacion.getMontoTotal()));
+            viewHolder.tvTotalMoney.setText(Utils.getFormattedAmount(liquidacion.getMontoTotal()));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return paymentsList.size();
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex, Liquidacion liquidacionClickeada);
+        void onListItemClick(View view);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class PaymentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.tvRecaudacionTotalLiquidacion)
-        TextView tvRecaudacionTotalLiquidacion;
-        @BindView(R.id.tvFechaLiquidacion)
-        TextView tvFechaLiquidacion;
-        @BindView(R.id.tvHorasRegularesTotales)
-        TextView tvHorasRegularesTotales;
-        @BindView(R.id.tvHorasExtraTotales)
-        TextView tvHorasExtraTotales;
-        @BindView(R.id.tvHorasRegularesText)
-        TextView tvHorasRegularesText;
-        @BindView(R.id.tvHorasExtraText)
-        TextView tvHorasExtraText;
+        @BindView(R.id.tvTotalMoney)
+        TextView tvTotalMoney;
+        @BindView(R.id.tvPaymentDate)
+        TextView tvPaymentDate;
+        @BindView(R.id.tvRegularHoursValue)
+        TextView tvRegularHoursValue;
+        @BindView(R.id.tvExtraHoursValue)
+        TextView tvExtraHoursValue;
 
-        public ViewHolder(View itemView) {
+
+        public PaymentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -114,8 +89,8 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            Liquidacion liquidacionClickeada = paymentsList.get(clickedPosition);
-            mOnClickListener.onListItemClick(clickedPosition, liquidacionClickeada);
+            view.setTag(getCurrentList().get(clickedPosition));
+            mOnClickListener.onListItemClick(view);
         }
     }
 

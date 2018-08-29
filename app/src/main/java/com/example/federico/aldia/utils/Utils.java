@@ -5,62 +5,75 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.example.federico.aldia.R;
-import com.example.federico.aldia.model.QrToken;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
 
-    public static String obtenerFechaFormateada (String fechaTimestamp){
-        String fechaHora = "";
+    public static String getDateAndHour(String fechaTimestamp) {
+        //todo a las
+        String dateAndHour = "";
         try{
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fechaTimestamp.replace("T"," "));
-            String fecha = new SimpleDateFormat("dd-MM-yyyy").format(date);
-            String hora = new SimpleDateFormat("HH:mm").format(date);
-            fechaHora = fecha + " a las " + hora;
+            dateAndHour = getDate(fechaTimestamp) + " a las " + getHour(fechaTimestamp);
         }catch (Exception e){
             e.printStackTrace();
         }
-            return fechaHora;
+        return dateAndHour;
     }
 
-    public static String obtenerSoloFechaFormateada (String fechaTimestamp){
+    public static String getDate(String fechaTimestamp) {
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        localDateFormat.setTimeZone(getTimeZone());
+        return localDateFormat.format(formatDateinGMT(fechaTimestamp));
+    }
 
-        String fecha = "";
-        try{
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fechaTimestamp.replace("T"," "));
-            fecha = new SimpleDateFormat("dd-MM-yyyy").format(date);
-        }catch (Exception e){
+    public static String getHour(String fechaTimestamp) {
+        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        localDateFormat.setTimeZone(getTimeZone());
+        return localDateFormat.format(formatDateinGMT(fechaTimestamp));
+    }
+
+    public static String getEndOfShiftTime(Integer hoursOfWork) {
+        Date currentTime = Calendar.getInstance().getTime();
+        long workingHoursInMillis = TimeUnit.HOURS.toMillis(hoursOfWork);
+        long finishWorkDateInMillis = currentTime.getTime() + workingHoursInMillis;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(finishWorkDateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
+    private static TimeZone getTimeZone() {
+        return Calendar.getInstance().getTimeZone();
+    }
+
+    //https://stackoverflow.com/questions/5422089/date-timezone-conversion-in-java
+    public static Date formatDateinGMT(String timestamp) {
+        SimpleDateFormat sdfgmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        sdfgmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date inptdate = null;
+        try {
+            inptdate = sdfgmt.parse((timestamp.replace("T", " ")));
+        } catch (ParseException e) {
             e.printStackTrace();
         }
-        return fecha;
+        return inptdate;
     }
 
-    public static String obtenerHoraYMontoRegular(long horas, double montoXHora){
-        double montoTotal = horas * montoXHora;
-        return horas + " hs - " + obtenerMontoFormateado(montoTotal);
+    public static String getTimeAndMoneyRegular(long hours, double moneyXHour) {
+        double total = hours * moneyXHour;
+        return hours + " hs - " + getFormattedAmount(total);
     }
 
-    public static String obtenerHoraYMontoExtra(long horas, double montoXHora){
-        double montoTotal = horas * montoXHora * 2;
-        return horas + " hs - " + obtenerMontoFormateado(montoTotal);
-    }
-
-    public static String obtenerHora(String fechaTimestamp){
-        String hora = "";
-        try{
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(fechaTimestamp.replace("T"," "));
-            hora = new SimpleDateFormat("HH:mm").format(date);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return hora;
+    public static String getTimeAndMoneyExtra(long hours, double moneyXHour) {
+        double total = hours * moneyXHour * 2;
+        return hours + " hs - " + getFormattedAmount(total);
     }
 
     public static boolean isPermissionGranted(Context context, String permission) {
@@ -73,32 +86,18 @@ public class Utils {
         return false;
     }
 
-    public static String obtenerMontoFormateado(Double monto){
-
+    public static String getFormattedAmount(Double monto) {
         //todo faltan dos decimales y error
-
         try {
             if (monto!=0.0) {
                 return "$ " + String.format("%.2f", monto);
             } else {
                 return "$0.00";
-
             }
         } catch (Exception e){
             e.printStackTrace();
             return "$0.00";
-
         }
-    }
-
-    public static String getEndOfShiftTime(Integer hoursOfWork){
-        Date currentTime = Calendar.getInstance().getTime();
-        long workingHoursInMillis = TimeUnit.HOURS.toMillis(hoursOfWork);
-        long finishWorkDateInMillis = currentTime.getTime() + workingHoursInMillis;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(finishWorkDateInMillis);
-        return formatter.format(calendar.getTime());
     }
 
     public static int minutesTillEndOfShift(Integer hoursOfWork) {
@@ -108,17 +107,12 @@ public class Utils {
     }
 
     public static String currentTimeToInstant(){
-
         Date currentTime = Calendar.getInstance().getTime();
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Instant timestamp = currentTime.toInstant();
             return String.valueOf(timestamp);
         } else {
             return "";
         }
-
     }
-
-
 }

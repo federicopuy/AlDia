@@ -26,14 +26,6 @@
 
     </com.example.federico.aldia.activities.barcode.CameraSourcePreview>
 
-    <TextView android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="80dp"
-        android:textColor="#FFF"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

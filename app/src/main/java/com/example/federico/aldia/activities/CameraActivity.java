@@ -115,7 +115,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         scheduleNotification(scannedShiftInfo);
                         Intent intentToEntryExit = new Intent(CameraActivity.this, EntryExitActivity.class);
                         Gson gsonPeriodo = new Gson();
-                        intentToEntryExit.putExtra(Constants.KEY_INTENT_PERIODO_INGRESO_EGRESO, gsonPeriodo.toJson(scannedShiftInfo));
+                        intentToEntryExit.putExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT, gsonPeriodo.toJson(scannedShiftInfo));
                         intentToEntryExit.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                         startActivity(intentToEntryExit, bundle);

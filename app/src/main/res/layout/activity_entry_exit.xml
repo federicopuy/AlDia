@@ -9,7 +9,7 @@
     tools:context="com.example.federico.aldia.activities.EntryExitActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarIngresoEgreso"
+        android:id="@+id/appBarEntryExit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:background="@drawable/ingreso_background"
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <TextView
-            android:id="@+id/textViewIngresoEgreso"
+            android:id="@+id/tvEntryExit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAceptarIngresoEgreso"
+        android:id="@+id/fabAccept"
         style="@style/fab"
         android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_done_white_36px" />
@@ -47,58 +47,56 @@
             tools:context="com.example.federico.aldia.activities.EntryExitActivity">
 
             <TextView
-                android:id="@+id/tvNombreComercio"
+                android:id="@+id/tvBusinessName"
                 style="@style/textViewDatosMain"
                 android:layout_marginTop="30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Chajuco Bar" />
+                tools:text="Wendy's" />
 
             <TextView
-                android:id="@+id/puestoTv"
+                android:id="@+id/positionTv"
                 style="@style/textViewTitulosChicos"
                 android:text="@string/puesto"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvNombreComercio" />
+                app:layout_constraintTop_toBottomOf="@+id/tvBusinessName" />
 
             <TextView
-                android:id="@+id/tvCategoria"
+                android:id="@+id/tvCategory"
                 style="@style/textViewDatosMain"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/puestoTv"
-                tools:text="Cocinero 8hs" />
+                app:layout_constraintTop_toBottomOf="@+id/positionTv"
+                tools:text="Cook 8hs" />
 
             <TextView
                 android:id="@+id/horaIngresoTv"
                 style="@style/textViewTitulosChicos"
                 android:text="@string/hora_entrada"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+                app:layout_constraintTop_toBottomOf="@+id/tvCategory" />
 
             <TextView
-                android:id="@+id/tvHoraIngreso"
+                android:id="@+id/tvEntryHour"
                 style="@style/textViewDatosMain"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/horaIngresoTv"
                 tools:text="19:22" />
 
             <TextView
-                android:id="@+id/horaEgresoTv"
+                android:id="@+id/exitHourTv"
                 style="@style/textViewTitulosChicos"
                 android:text="@string/hora_salida"
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvHoraIngreso" />
+                app:layout_constraintTop_toBottomOf="@+id/tvEntryHour" />
 
             <TextView
-                android:id="@+id/tvHoraEgreso"
+                android:id="@+id/tvExitHour"
                 style="@style/textViewDatosMain"
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horaEgresoTv"
+                app:layout_constraintTop_toBottomOf="@+id/exitHourTv"
                 tools:text="21:23" />
-
-
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 

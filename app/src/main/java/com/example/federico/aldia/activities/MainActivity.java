@@ -162,12 +162,12 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             try {
-                tvFechaUltimaLiquidacion.setText(Utils.obtenerFechaFormateada(lastPayment.getFecha()));
+                tvFechaUltimaLiquidacion.setText(Utils.getDateAndHour(lastPayment.getFecha()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvRecaudado.setText(Utils.obtenerMontoFormateado(lastPayment.getMontoTotal()));
+                tvRecaudado.setText(Utils.getFormattedAmount(lastPayment.getMontoTotal()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

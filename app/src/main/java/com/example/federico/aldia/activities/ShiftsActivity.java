@@ -34,16 +34,16 @@ public class ShiftsActivity extends AppCompatActivity {
     private static final String TAG = "Periodos Activity";
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.tvSinPeriodos)
-    TextView tvSinPeriodos;
-    @BindView(R.id.periodos_recycler_view)
+    @BindView(R.id.tvNoShiftsToDisplay)
+    TextView tvNoShiftsToDisplay;
+    @BindView(R.id.shifts_recycler_view)
     RecyclerView mRecyclerView;
     long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_periodos);
+        setContentView(R.layout.activity_shifts);
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
@@ -73,7 +73,7 @@ public class ShiftsActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     assert shiftsList.data != null;
                     if (shiftsList.data.size() < 1) {
-                        tvSinPeriodos.setVisibility(View.VISIBLE);
+                        tvNoShiftsToDisplay.setVisibility(View.VISIBLE);
                     } else {
                         ShiftAdapter mAdapter = new ShiftAdapter(shiftsList.data, ShiftsActivity.this);
                         mRecyclerView.setAdapter(mAdapter);

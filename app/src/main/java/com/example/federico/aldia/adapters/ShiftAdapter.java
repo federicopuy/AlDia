@@ -45,7 +45,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         Periodo shift = shiftsList.get(position);
 
         try {
-            holder.tvfecha.setText(Utils.obtenerSoloFechaFormateada(shift.getHoraInicio()));
+            holder.tvfecha.setText(Utils.getDate(shift.getHoraInicio()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,15 +60,15 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
             holder.tvhorasExtraTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
         } else {
             try {
-                String horaIngresoEgreso = Utils.obtenerHora(shift.getHoraInicio())
-                        + " - " + Utils.obtenerHora(shift.getHoraFin());
+                String horaIngresoEgreso = Utils.getHour(shift.getHoraInicio())
+                        + " - " + Utils.getHour(shift.getHoraFin());
                 holder.tvHoraIngresoEgreso.setText(horaIngresoEgreso);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                holder.tvhorasRegularesTotales.setText(Utils.obtenerHoraYMontoRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
-                holder.tvhorasExtraTotales.setText(Utils.obtenerHoraYMontoExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
+                holder.tvhorasRegularesTotales.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
+                holder.tvhorasExtraTotales.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

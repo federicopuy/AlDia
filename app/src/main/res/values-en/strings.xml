@@ -33,8 +33,8 @@
     <string name="dni">DNI</string>
     <string name="tel_fono">Phone</string>
     <string name="email">Email</string>
-    <string name="no_existen_per_odos_para_mostrar">No shifts to show</string>
-    <string name="no_existen_liquidaciones_para_mostrar">No payments to show</string>
+    <string name="no_existen_per_odos_para_mostrar">No shifts to display</string>
+    <string name="no_existen_liquidaciones_para_mostrar">No payments to display</string>
     <string name="periodo_eliminado">Shift deleted by Administrator</string>
     <string name="sueldo_mensual">Monthly Salary</string>
     <string name="hora_entrada">Entry Hour</string>

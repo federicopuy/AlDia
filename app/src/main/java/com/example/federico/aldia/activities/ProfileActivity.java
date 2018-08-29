@@ -22,23 +22,23 @@ import retrofit2.Response;
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "Employee Activity";
-    @BindView(R.id.tvNombreValue)
-    TextView tvNombreValue;
-    @BindView(R.id.tvDireccionValue)
-    TextView tvDireccionValue;
+    @BindView(R.id.tvNameValue)
+    TextView tvNameValue;
+    @BindView(R.id.tvAddressValue)
+    TextView tvAddressValue;
     @BindView(R.id.tvEmailValue)
     TextView tvEmailValue;
     @BindView(R.id.tvDNIValue)
     TextView tvDNIValue;
-    @BindView(R.id.tvTelefonoValue)
-    TextView tvTelefonoValue;
+    @BindView(R.id.tvPhoneValue)
+    TextView tvPhoneValue;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mi_perfil);
+        setContentView(R.layout.activity_profile);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
         getEmployeeInfo();
@@ -72,11 +72,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateUi(Employee employee) {
         try {
-            tvNombreValue.setText(employee.getNombre());
+            tvNameValue.setText(employee.getNombre());
             tvEmailValue.setText(employee.getEmail());
             tvDNIValue.setText(employee.getDni());
-            tvTelefonoValue.setText(employee.getTelefono());
-            tvDireccionValue.setText(employee.getDireccion());
+            tvPhoneValue.setText(employee.getTelefono());
+            tvAddressValue.setText(employee.getDireccion());
         } catch (NullPointerException n) {
             n.printStackTrace();
         }

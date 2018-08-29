@@ -1,5 +1,8 @@
 package com.example.federico.aldia.model;
 
+import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -111,4 +114,24 @@ public class Liquidacion {
         this.montoTotal = montoTotal;
     }
 
+    public static DiffUtil.ItemCallback<Liquidacion> DIFF_CALLBACK = new DiffUtil.ItemCallback<Liquidacion>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Liquidacion oldItem, @NonNull Liquidacion newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Liquidacion oldItem, @NonNull Liquidacion newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+
+        Liquidacion payment = (Liquidacion) obj;
+        return payment.id == this.id;
+    }
 }

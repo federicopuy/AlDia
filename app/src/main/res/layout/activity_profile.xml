@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ProfileActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvNameText"
+            style="@style/textViewsMiPerfilText"
+            android:layout_marginTop="50dp"
+            android:text="@string/nombre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvNameValue"
+            style="@style/textViewsMiPerfilValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNameText"
+            tools:text="Federico" />
+
+        <TextView
+            android:id="@+id/tvAddressText"
+            style="@style/textViewsMiPerfilText"
+            android:text="@string/direccion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNameValue" />
+
+        <TextView
+            android:id="@+id/tvAddressValue"
+            style="@style/textViewsMiPerfilValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddressText"
+            tools:text="9 de Julio 1100" />
+
+        <TextView
+            android:id="@+id/tvEmailText"
+            style="@style/textViewsMiPerfilText"
+            android:text="@string/email"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddressValue" />
+
+        <TextView
+            android:id="@+id/tvEmailValue"
+            style="@style/textViewsMiPerfilValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmailText"
+            tools:text="federicopuy@gmail.com" />
+
+        <TextView
+            android:id="@+id/tvDNIText"
+            style="@style/textViewsMiPerfilText"
+            android:text="@string/dni"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmailValue" />
+
+        <TextView
+            android:id="@+id/tvDNIValue"
+            style="@style/textViewsMiPerfilValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDNIText"
+            tools:text="36417243" />
+
+        <TextView
+            android:id="@+id/tvPhoneText"
+            style="@style/textViewsMiPerfilText"
+            android:text="@string/tel_fono"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDNIValue" />
+
+        <TextView
+            android:id="@+id/tvPhoneValue"
+            style="@style/textViewsMiPerfilValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPhoneText"
+            tools:text="261-26361323" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
