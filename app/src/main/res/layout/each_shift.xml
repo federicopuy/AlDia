@@ -12,7 +12,7 @@
             android:layout_height="130dp">
 
             <TextView
-                android:id="@+id/tvFecha"
+                android:id="@+id/tvDate"
                 style="@style/textViewsTitulosLiquidacion"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintStart_toStartOf="parent"
@@ -20,50 +20,50 @@
                 tools:text="10/03/18" />
 
             <TextView
-                android:id="@+id/tvHoraIngresoEgreso"
+                android:id="@+id/tvEntryExitHour"
                 style="@style/textViewsFechaLiquidacion"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="10:00 - 12:00" />
 
             <TextView
-                android:id="@+id/tvHorasRegularesText"
+                android:id="@+id/tvRegularHoursText"
                 style="@style/textViewsTitulosChicosLiquidacion"
                 android:layout_marginTop="@dimen/liquidacion_top_bottom"
                 android:text="@string/horas_regulares"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvFecha"
+                app:layout_constraintStart_toEndOf="@+id/tvDate"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvHorasRegularesTotales"
+                android:id="@+id/tvRegularHoursValue"
                 style="@style/textViewsValoresLiquidacion"
                 android:layout_marginTop="@dimen/liquidacion_separacion"
-                app:layout_constraintBottom_toBottomOf="@+id/tvFecha"
-                app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesText"
-                app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesText"
-                app:layout_constraintTop_toBottomOf="@+id/tvHorasRegularesText"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDate"
+                app:layout_constraintEnd_toEndOf="@+id/tvRegularHoursText"
+                app:layout_constraintStart_toStartOf="@+id/tvRegularHoursText"
+                app:layout_constraintTop_toBottomOf="@+id/tvRegularHoursText"
                 tools:text="5hs - $30.00" />
 
             <TextView
-                android:id="@+id/tvHorasExtraText"
+                android:id="@+id/tvExtraHoursText"
                 style="@style/textViewsTitulosChicosLiquidacion"
                 android:text="@string/horas_extra"
-                app:layout_constraintBottom_toTopOf="@+id/tvHorasExtraTotales"
-                app:layout_constraintEnd_toEndOf="@+id/tvHorasRegularesTotales"
-                app:layout_constraintStart_toStartOf="@+id/tvHorasRegularesTotales" />
+                app:layout_constraintBottom_toTopOf="@+id/tvExtraHoursValue"
+                app:layout_constraintEnd_toEndOf="@+id/tvRegularHoursValue"
+                app:layout_constraintStart_toStartOf="@+id/tvRegularHoursValue" />
 
             <TextView
-                android:id="@+id/tvHorasExtraTotales"
+                android:id="@+id/tvExtraHoursValue"
                 style="@style/textViewsValoresLiquidacion"
                 android:layout_marginBottom="@dimen/liquidacion_top_bottom"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/tvHorasExtraText"
-                app:layout_constraintStart_toStartOf="@+id/tvHorasExtraText"
+                app:layout_constraintEnd_toEndOf="@+id/tvExtraHoursText"
+                app:layout_constraintStart_toStartOf="@+id/tvExtraHoursText"
                 tools:text="2hs - $60.00" />
 
             <ImageButton
-                android:id="@+id/imageEliminado"
+                android:id="@+id/deletedImage"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@null"
@@ -73,8 +73,9 @@
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvHorasRegularesTotales"
+                android:contentDescription="@string/deleted_shift"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvRegularHoursValue"
                 app:srcCompat="@drawable/ic_round_error_24px" />
 
         </android.support.constraint.ConstraintLayout>

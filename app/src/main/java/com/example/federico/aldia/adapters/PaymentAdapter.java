@@ -23,7 +23,6 @@ public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.V
         super(Liquidacion.DIFF_CALLBACK);
         mOnClickListener = listener;
     }
-    //todo selectable item
 
     @NonNull
     @Override
@@ -52,7 +51,7 @@ public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.V
         viewHolder.tvExtraHoursValue.setText(extraHours);
 
         try {
-            viewHolder.tvPaymentDate.setText(Utils.getDateAndHour(liquidacion.getFecha()));
+            viewHolder.tvPaymentDate.setText((Utils.getDate(liquidacion.getFecha())) + " - " + Utils.getHour(liquidacion.getFecha()));
         } catch (Exception e) {
             e.printStackTrace();
         }

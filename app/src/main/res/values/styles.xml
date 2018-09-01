@@ -49,16 +49,6 @@
 
     <!-- Activity -->
 
-    <style name="textViewsTitulos" parent="textViewsBasic">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">32sp</item>
-        <item name="android:layout_marginTop">44dp</item>
-        <item name="android:layout_marginStart">80dp</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
     <style name="textViewDatosMain" parent="textViewsBasic">
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginTop">0dp</item>
@@ -125,48 +115,6 @@
     </style>
 
     <!-- Cada Periodo -->
-
-    <style name="textViewFechaPeriodo" parent="TextAppearance.AppCompat">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginBottom">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginStart">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
-        <item name="android:textSize">18dp</item>
-    </style>
-
-    <style name="textViewHorariosPeriodo" parent="TextAppearance.AppCompat">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginBottom">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginStart">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
-        <item name="android:textSize">18dp</item>
-    </style>
-
-    <style name="textViewsPeriodo" parent="TextAppearance.AppCompat">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginBottom">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginStart">@dimen/lista_periodos_margin</item>
-        <item name="android:layout_marginEnd">@dimen/lista_periodos_margin</item>
-        <item name="android:textSize">18dp</item>
-    </style>
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/color_grey</item>
-    </style>
 
     <style name="fab" parent="TextAppearance.AppCompat">
         <item name="android:layout_height">@dimen/fab_height</item>

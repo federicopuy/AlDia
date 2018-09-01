@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.example.federico.aldia.model.Status;
-
 import java.util.Objects;
 
 public class NetworkState {

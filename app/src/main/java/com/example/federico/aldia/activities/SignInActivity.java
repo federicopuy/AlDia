@@ -1,14 +1,13 @@
 package com.example.federico.aldia.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,27 +15,22 @@ import android.widget.ProgressBar;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Business;
-import com.example.federico.aldia.utils.Constants;
-import com.example.federico.aldia.model.TokenRetro;
+import com.example.federico.aldia.model.FirebaseToken;
 import com.example.federico.aldia.network.RetrofitClient;
+import com.example.federico.aldia.utils.Constants;
+import com.example.federico.aldia.utils.Utils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,10 +76,9 @@ public class SignInActivity extends AppCompatActivity implements
 
     @Override
     public void onStart() {
-        //todo implementar en main
         super.onStart();
-        Intent intentCerrarSesion = getIntent();
-        if (intentCerrarSesion.hasExtra(Constants.KEY_INTENT_SIGN_OUT)){
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.KEY_INTENT_SIGN_OUT)) {
             signOut();
         }
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -113,34 +106,28 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
-    /*-------------------------------------- Autenticacion con Google --------------------------------------------***/
-
-
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         progressBar.setVisibility(View.VISIBLE);
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        updateUI(null);
                     }
                 });
     }
     // [END auth_with_google]
 
-    /*-------------------------------------- Sign IN y Sign Out --------------------------------------------***/
+    /*-------------------------------------- Sign IN and Sign Out --------------------------------------------***/
 
 
     private void signIn() {
@@ -154,12 +141,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         // Google sign out
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
+                task -> updateUI(null));
     }
 
     /*-------------------------------------- Update UI --------------------------------------------***/
@@ -179,21 +161,18 @@ public class SignInActivity extends AppCompatActivity implements
             }
 
             user.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                tokenFirebase = task.getResult().getToken();
-                                Log.d(TAG, "Token Firebase " + tokenFirebase);
-                                prefs.edit().putString(Constants.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
-                                if (!tokenFirebase.equals("")) {
-                                    servicioEnviarToken(user);
-                                }
-                            } else {
-                                Snackbar.make(findViewById(R.id.sign_in), R.string.error_autenticacion, Snackbar.LENGTH_SHORT).show();
-                                signInButton.setVisibility(View.VISIBLE);
-
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            tokenFirebase = task.getResult().getToken();
+                            Log.d(TAG, "Token Firebase " + tokenFirebase);
+                            prefs.edit().putString(Constants.KEY_TOKEN_FIREBASE, tokenFirebase).apply();
+                            if (!tokenFirebase.equals("")) {
+                                getJwtTokenFromServer(user);
                             }
+                        } else {
+                            Snackbar.make(findViewById(R.id.sign_in), R.string.error_autenticacion, Snackbar.LENGTH_SHORT).show();
+                            signInButton.setVisibility(View.VISIBLE);
+
                         }
                     });
         } else {
@@ -202,144 +181,139 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
-    /*-------------------------------------- servicioEnviarToken --------------------------------------------***/
+    /*-------------------------------------- getJwtTokenFromServer --------------------------------------------***/
 
-    private void servicioEnviarToken(final FirebaseUser user) {
-        final String nombreLlamada = "postToken";
+    private void getJwtTokenFromServer(final FirebaseUser user) {
 
-        TokenRetro tokenRetro = new TokenRetro(tokenFirebase);
-        RetrofitClient.getClient().loginUser(tokenRetro)
-        .enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()) {
-                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    String tokenJWT = "";
-                    System.out.println(call.toString());
-                    try {
-                        JSONObject root = new JSONObject(response.body());
-                        String bearer = root.getString("id_token");
-                        tokenJWT = "Bearer " + bearer;
-                        System.out.println("JWT" + tokenJWT);
-                        prefs.edit().putString(Constants.KEY_TOKEN_JWT, tokenJWT).apply();
-                        Log.i(TAG, "Token JWT: " + tokenJWT);
-
-                        Intent comesFromIntent = getIntent();
-                        if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)){
-
-                            Intent goToCameraDirectly = new Intent(SignInActivity.this, MainActivity.class);
-                            goToCameraDirectly.putExtra(Constants.KEY_INTENT_WIDGET_BUTTON,"");
-                            startActivity(goToCameraDirectly);
-
+        FirebaseToken firebaseToken = new FirebaseToken(tokenFirebase);
+        RetrofitClient.getClient().loginUser(firebaseToken)
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (response.isSuccessful()) {
+                            Log.i(TAG, getString(R.string.is_successful) + call);
+                            String tokenJWT = Utils.getJwtTokenFormatted(response.body());
+                            prefs.edit().putString(Constants.KEY_TOKEN_JWT, tokenJWT).apply();
+                            Log.i(TAG, "Token JWT: " + tokenJWT);
+                            Intent comesFromIntent = getIntent();
+                            if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)) {
+                                Intent goToCameraDirectly = new Intent(SignInActivity.this, MainActivity.class);
+                                goToCameraDirectly.putExtra(Constants.KEY_INTENT_WIDGET_BUTTON, "");
+                                startActivity(goToCameraDirectly);
+                            } else {
+                                getBusinessesWhereUserWorks(user);
+                            }
                         } else {
-                            obtenerComercios(user);
+                            signInButton.setVisibility(View.VISIBLE);
+                            Log.e(TAG, response.message());
+                            showErrorDialog();
                         }
+                    }
 
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e(TAG, "Token NULO");
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
                         signInButton.setVisibility(View.VISIBLE);
-                        Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
-
+                        progressBar.setVisibility(View.INVISIBLE);
+                        try {
+                            Log.e(TAG, t.getMessage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        showErrorDialog();
                     }
-
-                } else {
-                    signInButton.setVisibility(View.VISIBLE);
-                    Log.i(TAG, getString(R.string.is_not_successful) + nombreLlamada);
-                    Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
-                    try {
-                        Log.i(TAG, "Error en API Login " + response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                signInButton.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-                Snackbar.make(findViewById(R.id.sign_in), R.string.error_servidor, Snackbar.LENGTH_SHORT).show();
-                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                try {
-                    Log.e(TAG, t.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                });
     }
 
-    private void obtenerComercios(final FirebaseUser user) {
+    private void showErrorDialog() {
 
-        final String nombreLlamada = "obtenerComercios";
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(SignInActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(SignInActivity.this);
+        }
+        builder.setTitle("Error")
+                .setMessage("There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    Intent intentToCamera = new Intent(SignInActivity.this, CameraActivity.class);
+                    intentToCamera.putExtra(Constants.KEY_INTENT_OFFLINE_SCAN, "");
+                    startActivity(intentToCamera);
+                })
+                .setNegativeButton(android.R.string.no, (dialog, which) -> {
+                    // do nothing
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
+    }
+
+    private void getBusinessesWhereUserWorks(final FirebaseUser user) {
+
+        final String callName = "getBusinesses";
         RetrofitClient.getClient().getBusinesses()
                 .enqueue(new Callback<List<Business>>() {
-            @Override
-            public void onResponse(Call<List<Business>> call, Response<List<Business>> response) {
-                progressBar.setVisibility(View.INVISIBLE);
+                    @Override
+                    public void onResponse(Call<List<Business>> call, Response<List<Business>> response) {
+                        progressBar.setVisibility(View.INVISIBLE);
 
-                if (response.isSuccessful()) {
-                    Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                    List<Business> businessesList;
-                    try {
-                        businessesList = response.body();
-                            assert businessesList != null;
-                            crearDialog(businessesList);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (response.isSuccessful()) {
+                            Log.i(TAG, getString(R.string.is_successful) + callName);
+                            List<Business> businessesList;
+                            try {
+                                businessesList = response.body();
+                                assert businessesList != null;
+                                if (businessesList.size() == 1) {
+                                    intentToMainActivity(businessesList.get(0));
+                                } else {
+                                    createDialogToChoseBusiness(businessesList);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            signInButton.setVisibility(View.VISIBLE);
+                            Log.e(TAG, response.message());
+                            showErrorDialog();
+                        }
                     }
 
-                } else {
-                        Log.i(TAG, getString(R.string.is_successful) + nombreLlamada);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Business>> call, Throwable t) {
-                Log.i(TAG, getString(R.string.on_failure) + nombreLlamada);
-                progressBar.setVisibility(View.INVISIBLE);
-                try {
-                    Log.e(TAG, t.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+                    @Override
+                    public void onFailure(Call<List<Business>> call, Throwable t) {
+                        signInButton.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        try {
+                            Log.e(TAG, t.getMessage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        showErrorDialog();
+                    }
+                });
     }
 
-    private void crearDialog(final List<Business> businessesList) {
+    private void createDialogToChoseBusiness(final List<Business> businessesList) {
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(SignInActivity.this, android.R.layout.select_dialog_item);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(SignInActivity.this, android.R.layout.select_dialog_item);
         for (Business c : businessesList) {
             arrayAdapter.add(c.getUserComercio());
         }
-
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(SignInActivity.this);
         builderSingle.setTitle(R.string.seleccionar_comercio);
-        builderSingle.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                Business selectedBusiness = businessesList.get(which);
-                prefs.edit().putLong(Constants.KEY_BUSINESS_ID, selectedBusiness.getUserId()).apply();
-                prefs.edit().putString(Constants.KEY_BUSINESS_NAME, selectedBusiness.getUserComercio()).apply();
-                Intent pasarAMainActivity = new Intent(SignInActivity.this, MainActivity.class);
-                startActivity(pasarAMainActivity);
-
-            }
+        builderSingle.setNegativeButton(R.string.cancelar, (dialog, which) -> dialog.dismiss());
+        builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+            Business selectedBusiness = businessesList.get(which);
+            intentToMainActivity(selectedBusiness);
         });
         builderSingle.show();
-}
+    }
+
+    private void intentToMainActivity(Business selectedBusiness) {
+        prefs.edit().putLong(Constants.KEY_BUSINESS_ID, selectedBusiness.getUserId()).apply();
+        prefs.edit().putString(Constants.KEY_BUSINESS_NAME, selectedBusiness.getUserComercio()).apply();
+        Intent goToMainActivity = new Intent(SignInActivity.this, MainActivity.class);
+        startActivity(goToMainActivity);
+    }
 
     /*-------------------------------------- On Clicks --------------------------------------------***/
 

@@ -5,6 +5,11 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.federico.aldia.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -16,11 +21,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Utils {
 
-    public static String getDateAndHour(String fechaTimestamp) {
-        //todo a las
+    public static String getDateAndHour(String fechaTimestamp, Context ctx) {
         String dateAndHour = "";
         try{
-            dateAndHour = getDate(fechaTimestamp) + " a las " + getHour(fechaTimestamp);
+            dateAndHour = getDate(fechaTimestamp) + ctx.getString(R.string.at) + getHour(fechaTimestamp);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -43,10 +47,10 @@ public class Utils {
         Date currentTime = Calendar.getInstance().getTime();
         long workingHoursInMillis = TimeUnit.HOURS.toMillis(hoursOfWork);
         long finishWorkDateInMillis = currentTime.getTime() + workingHoursInMillis;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(finishWorkDateInMillis);
-        return formatter.format(calendar.getTime());
+        return "Exit: " + formatter.format(calendar.getTime());
     }
 
     private static TimeZone getTimeZone() {
@@ -54,7 +58,7 @@ public class Utils {
     }
 
     //https://stackoverflow.com/questions/5422089/date-timezone-conversion-in-java
-    public static Date formatDateinGMT(String timestamp) {
+    private static Date formatDateinGMT(String timestamp) {
         SimpleDateFormat sdfgmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         sdfgmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date inptdate = null;
@@ -86,11 +90,10 @@ public class Utils {
         return false;
     }
 
-    public static String getFormattedAmount(Double monto) {
-        //todo faltan dos decimales y error
+    public static String getFormattedAmount(Double total) {
         try {
-            if (monto!=0.0) {
-                return "$ " + String.format("%.2f", monto);
+            if (total != 0.0) {
+                return "$ " + String.format(Locale.getDefault(), "%.2f", total);
             } else {
                 return "$0.00";
             }
@@ -114,5 +117,17 @@ public class Utils {
         } else {
             return "";
         }
+    }
+
+    public static String getJwtTokenFormatted(String response) {
+        String tokenJWT = "";
+        try {
+            JSONObject root = new JSONObject(response);
+            String bearer = root.getString("id_token");
+            tokenJWT = "Bearer " + bearer;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return tokenJWT;
     }
 }

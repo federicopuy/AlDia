@@ -8,7 +8,6 @@
     <dimen name="fab_height">56dp</dimen>
     <dimen name="fab_width">56dp</dimen>
     <dimen name="margin_top_titulos">30dp</dimen>
-    <dimen name="lista_periodos_margin">16dp</dimen>
     <dimen name="liquidacion_top_bottom">16dp</dimen>
     <dimen name="liquidacion_separacion">4dp</dimen>
     <dimen name="app_bar_height">260dp</dimen>
@@ -17,5 +16,4 @@
 Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
-    <dimen name="widget_margin">8dp</dimen>
 </resources>

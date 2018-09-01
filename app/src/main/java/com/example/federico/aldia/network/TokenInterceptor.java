@@ -1,6 +1,5 @@
 package com.example.federico.aldia.network;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -16,7 +15,7 @@ public class TokenInterceptor implements Interceptor {
 
     private static final String Tag = "Token Interceptor";
 
-    public TokenInterceptor( ) {
+    TokenInterceptor() {
     }
 
     @Override

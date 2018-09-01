@@ -1,6 +1,5 @@
 package com.example.federico.aldia.network;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;

@@ -27,7 +27,8 @@ public class MainActivityViewModel extends ViewModel {
         lastPayment = mRepository.getLastPayment(businessId);
         pendingQrTokens = mRepository.getmAllPendingTokenQrs();
         mediatorLiveData = new MediatorLiveData<>();
-        mediatorLiveData.addSource(lastPayment, liquidacionResource -> mediatorLiveData.setValue(liquidacionResource));
+        mediatorLiveData.addSource(lastPayment,
+                liquidacionResource -> mediatorLiveData.setValue(liquidacionResource));
     }
 
     public LiveData<List<QrToken>> getPendingQrCodes() {

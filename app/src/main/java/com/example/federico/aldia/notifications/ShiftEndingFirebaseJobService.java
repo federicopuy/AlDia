@@ -1,14 +1,12 @@
 package com.example.federico.aldia.notifications;
 
 import android.annotation.TargetApi;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.JobParameters;
-import com.firebase.jobdispatcher.JobService;
-import com.firebase.jobdispatcher.RetryStrategy;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class  ShiftEndingFirebaseJobService extends JobService{

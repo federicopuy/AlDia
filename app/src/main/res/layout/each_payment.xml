@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:cardElevation="6dp"
+        android:foreground="?android:attr/selectableItemBackground"
         app:contentPadding="4dp">
 
         <android.support.constraint.ConstraintLayout

@@ -3,11 +3,11 @@ package com.example.federico.aldia.network;
 import com.example.federico.aldia.model.AllPayments;
 import com.example.federico.aldia.model.Business;
 import com.example.federico.aldia.model.Employee;
+import com.example.federico.aldia.model.FirebaseToken;
 import com.example.federico.aldia.model.Liquidacion;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.TokenQR;
-import com.example.federico.aldia.model.TokenRetro;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public interface APIInterface {
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.AUTHENTICATE)
-    Call<String> loginUser(@Body TokenRetro token);
+    Call<String> loginUser(@Body FirebaseToken token);
 
     @GET(URLs.BUSINESSES)
     Call<List<Business>> getBusinesses();

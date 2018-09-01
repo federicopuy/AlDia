@@ -2,14 +2,11 @@
     <string name="app_name">AlDia</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
     <string name="nav_drawer_cerrar_sesion">Exit</string>
     <string name="nav_drawer_mi_perfil">Profile</string>
-    <string name="nav_drawer_periodos">Shifts</string>
     <string name="nav_drawer_sesion">Session</string>
     <string name="nav_drawer_liquidaciones">Payments</string>
     <string name="error_autenticacion">Authentication Error</string>
-    <string name="title_activity_camara">CameraActivity</string>
     <string name="on_response">On Response </string>
     <string name="is_successful">is Successful </string>
     <string name="is_not_successful">is NOT Successful </string>
@@ -25,7 +22,6 @@
     <string name="periodos">Shifts</string>
     <string name="mi_perfil">Profile</string>
     <string name="liquidaciones">Payments</string>
-    <string name="error_servidor">Error when connecting to server</string>
     <string name="seleccionar_comercio">Select Business</string>
     <string name="cancelar">Cancel</string>
     <string name="nombre">Name</string>
@@ -34,17 +30,12 @@
     <string name="tel_fono">Phone</string>
     <string name="email">Email</string>
     <string name="no_existen_per_odos_para_mostrar">No shifts to display</string>
-    <string name="no_existen_liquidaciones_para_mostrar">No payments to display</string>
     <string name="periodo_eliminado">Shift deleted by Administrator</string>
-    <string name="sueldo_mensual">Monthly Salary</string>
     <string name="hora_entrada">Entry Hour</string>
     <string name="hora_salida">Exit Hour</string>
-    <string name="inasistencia">No Attendance</string>
-    <string name="null_money_value">$0.00</string>
-    <string name="dias_trabajo">Working Days</string>
-    <string name="hours_per_shift">Hours per Day</string>
     <string name="shift_ending_notification_title">Shift about to end</string>
     <string name="shift_ending_notification_body">Your shift is about to finish, please remember to scan on leaving</string>
+    <string name="at">\u0020at\u0020</string>
 
 
 </resources>

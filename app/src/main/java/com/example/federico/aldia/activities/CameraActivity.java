@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.activities.barcode.BarcodeScanningProcessor;
@@ -57,12 +58,18 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
     CameraSourcePreview preview;
     @BindView(R.id.fireFaceOverlay)
     GraphicOverlay graphicOverlay;
+    boolean offlineMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camara);
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.KEY_INTENT_OFFLINE_SCAN)) {
+            offlineMode = true;
+        }
 
         if (preview == null) {
             Log.d(TAG, "Preview is null");
@@ -88,11 +95,19 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
              */
             QrToken qrToken = new QrToken(rawValue, Utils.currentTimeToInstant());
 
+
             /*
              * ViewModel creation
              */
             CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
             CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this, factory).get(CameraActivityViewModel.class);
+
+
+            if (offlineMode) {
+                cameraActivityViewModel.insert(qrToken);
+                Toast.makeText(this, "Qr Scanned correctly", Toast.LENGTH_LONG).show();
+                finish();
+            }
 
             /*
              * Observer to post Qr Token to API

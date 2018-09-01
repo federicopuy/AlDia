@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity
         MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this), businessId);
         mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
-        //todo chequear que no haya pending qr codes. SI llega a escanear uno nuevo no me va a dejar mandar el viejo.
         mainActivityViewModel.getMediatorLiveData().observe(this, liquidacionResource -> {
             assert liquidacionResource != null;
             switch (liquidacionResource.status) {
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             try {
-                tvFechaUltimaLiquidacion.setText(Utils.getDateAndHour(lastPayment.getFecha()));
+                tvFechaUltimaLiquidacion.setText(Utils.getDateAndHour(lastPayment.getFecha(), MainActivity.this));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -172,16 +172,15 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             try {
-                tvHorasRegulares.setText(lastPayment.getHorasTotReg().toString());
+                tvHorasRegulares.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotReg().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvHorasExtra.setText(lastPayment.getHorasTotExt().toString());
+                tvHorasExtra.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotExt().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -191,7 +190,6 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.viewHoursData)
     public void goToShifts() {
         Intent intentToShifts = new Intent(MainActivity.this, ShiftsActivity.class);
-
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
         startActivity(intentToShifts, bundle);
     }
@@ -319,22 +317,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-        if (id == R.id.nav_mi_perfil) {
-            Intent pasarAMiPerfil = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(pasarAMiPerfil, bundle);
+        switch (id) {
+            case R.id.nav_mi_perfil:
+                Intent pasarAMiPerfil = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(pasarAMiPerfil, bundle);
 
-        } else if (id == R.id.nav_periodos) {
-            Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
-            startActivity(pasarAPeriodos, bundle);
+                break;
+            case R.id.nav_periodos:
+                Intent pasarAPeriodos = new Intent(MainActivity.this, ShiftsActivity.class);
+                startActivity(pasarAPeriodos, bundle);
 
-        } else if (id == R.id.nav_liquidaciones) {
-            Intent pasarALiquidaciones = new Intent(MainActivity.this, PaymentsActivity.class);
-            startActivity(pasarALiquidaciones, bundle);
+                break;
+            case R.id.nav_liquidaciones:
+                Intent pasarALiquidaciones = new Intent(MainActivity.this, PaymentsActivity.class);
+                startActivity(pasarALiquidaciones, bundle);
 
-        } else if (id == R.id.nav_cerrar_sesion) {
-            Intent pasarASignIn = new Intent(MainActivity.this, SignInActivity.class);
-            pasarASignIn.putExtra(Constants.KEY_INTENT_SIGN_OUT, "");
-            startActivity(pasarASignIn, bundle);
+                break;
+            case R.id.nav_cerrar_sesion:
+                Intent pasarASignIn = new Intent(MainActivity.this, SignInActivity.class);
+                pasarASignIn.putExtra(Constants.KEY_INTENT_SIGN_OUT, "");
+                startActivity(pasarASignIn, bundle);
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

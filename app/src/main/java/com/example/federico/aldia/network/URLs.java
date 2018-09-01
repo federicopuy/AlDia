@@ -5,8 +5,6 @@ public class URLs {
    // private static final String URLBASE = "http://192.168.43.131:";
     private static final String URLBASE = "http://66.97.34.149:";
     private static final String PORT = "8080";
-
-  //  private static final String PORT = "8080";
     private static final String APIURL = "/aldia/api/";
     public static final String APIURLCOMPLETE = URLBASE + PORT + APIURL;
     public static final String AUTHENTICATE = "authenticateApp";

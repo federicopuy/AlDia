@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.example.federico.aldia.R;
-import com.example.federico.aldia.activities.MainActivity;
 import com.example.federico.aldia.activities.SignInActivity;
 
 public class NotificationUtils {
@@ -33,10 +32,9 @@ public class NotificationUtils {
                     NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(mChannel);
         }
-      //todo change icons
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,SHIFT_ENDING_NOTIFICATION_CHANNEL_ID)
                 .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                .setSmallIcon(R.drawable.ic_chevron_white36px)
+                .setSmallIcon(R.drawable.ic_al_dia)
                 .setLargeIcon(largeIcon(context))
                 .setContentTitle(context.getString(R.string.shift_ending_notification_title))
                 .setContentText(context.getString(R.string.shift_ending_notification_body))
@@ -65,8 +63,7 @@ public class NotificationUtils {
 
     private static Bitmap largeIcon(Context context) {
         Resources res = context.getResources();
-        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_icon_dark);
-        return largeIcon;
+        return BitmapFactory.decodeResource(res, R.drawable.ic_al_dia);
     }
 
     public static void clearAllNotifications(Context context) {

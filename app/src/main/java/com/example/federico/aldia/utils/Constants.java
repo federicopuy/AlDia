@@ -13,4 +13,6 @@ public class Constants {
     public static final String KEY_BUSINESS_ID = "businessId";
     public static final String KEY_BUSINESS_NAME = "businessName";
     public static final String KEY_INTENT_WIDGET = "keyIntentWidget";
+    public static final String KEY_INTENT_OFFLINE_SCAN = "keyIntentOfflineScan";
+
 }

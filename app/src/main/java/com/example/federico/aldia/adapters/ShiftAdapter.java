@@ -35,7 +35,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
     @Override
     public ShiftAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.cada_periodo, parent, false);
+        View view = inflater.inflate(R.layout.each_shift, parent, false);
         return new ViewHolder(view);
     }
 
@@ -45,7 +45,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         Periodo shift = shiftsList.get(position);
 
         try {
-            holder.tvfecha.setText(Utils.getDate(shift.getHoraInicio()));
+            holder.tvDate.setText(Utils.getDate(shift.getHoraInicio()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,26 +53,25 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         // If for some reason the employer deletes the shift via the web app,
         // shift is shown to the employee in grey color.
         if (shift.getEliminado()) {
-            holder.imageEliminado.setVisibility(View.VISIBLE);
-            holder.tvHoraIngresoEgreso.setTextColor(mContext.getResources().getColor(R.color.color_grey));
-            holder.tvfecha.setTextColor(mContext.getResources().getColor(R.color.color_grey));
-            holder.tvhorasRegularesTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
-            holder.tvhorasExtraTotales.setTextColor(mContext.getResources().getColor(R.color.color_grey));
-        } else {
+            holder.deletedImage.setVisibility(View.VISIBLE);
+            holder.tvEntryExitHour.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvDate.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvRegularHoursValue.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+            holder.tvExtraHoursValue.setTextColor(mContext.getResources().getColor(R.color.color_grey));
+        }
             try {
                 String horaIngresoEgreso = Utils.getHour(shift.getHoraInicio())
                         + " - " + Utils.getHour(shift.getHoraFin());
-                holder.tvHoraIngresoEgreso.setText(horaIngresoEgreso);
+                holder.tvEntryExitHour.setText(horaIngresoEgreso);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                holder.tvhorasRegularesTotales.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
-                holder.tvhorasExtraTotales.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
+                holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
+                holder.tvExtraHoursValue.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
     }
 
     @Override
@@ -82,30 +81,26 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.tvHoraIngresoEgreso)
-        TextView tvHoraIngresoEgreso;
-        @BindView(R.id.tvFecha)
-        TextView tvfecha;
-        @BindView(R.id.tvHorasRegularesTotales)
-        TextView tvhorasRegularesTotales;
-        @BindView(R.id.tvHorasRegularesText)
-        TextView tvhorasRegularesText;
-        @BindView(R.id.tvHorasExtraTotales)
-        TextView tvhorasExtraTotales;
-        @BindView(R.id.tvHorasExtraText)
-        TextView tvhorasExtraText;
-        @BindView(R.id.imageEliminado)
-        ImageButton imageEliminado;
+        @BindView(R.id.tvEntryExitHour)
+        TextView tvEntryExitHour;
+        @BindView(R.id.tvDate)
+        TextView tvDate;
+        @BindView(R.id.tvRegularHoursValue)
+        TextView tvRegularHoursValue;
+        @BindView(R.id.tvExtraHoursValue)
+        TextView tvExtraHoursValue;
+        @BindView(R.id.deletedImage)
+        ImageButton deletedImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            imageEliminado.setOnClickListener(this);
+            deletedImage.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == imageEliminado.getId()) {
+            if (view.getId() == deletedImage.getId()) {
                 Toast.makeText(view.getContext(), R.string.periodo_eliminado, Toast.LENGTH_LONG).show();
             }
         }

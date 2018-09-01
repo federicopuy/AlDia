@@ -2,7 +2,6 @@ package com.example.federico.aldia.notifications;
 
 import android.content.Context;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
