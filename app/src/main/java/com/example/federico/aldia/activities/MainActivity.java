@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Liquidacion;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case FAILED:
                     progressBar.setVisibility(View.INVISIBLE);
-                    Log.e(TAG, liquidacionResource.msg);
+                    Toast.makeText(this, liquidacionResource.msg, Toast.LENGTH_SHORT).show();
                     break;
             }
         });

@@ -46,7 +46,6 @@ public class ShiftsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shifts);
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
         String searchMethod = getSearchMethod();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);

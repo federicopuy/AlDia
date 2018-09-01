@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -63,6 +64,16 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
         Liquidacion clickedPayment = (Liquidacion) view.getTag();
         intentToShiftsList.putExtra(Constants.KEY_INTENT_PAYMENT_INFO, clickedPayment.getId());
         startActivity(intentToShiftsList);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return (super.onOptionsItemSelected(item));
     }
 
 }

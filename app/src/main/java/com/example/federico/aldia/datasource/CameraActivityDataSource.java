@@ -2,7 +2,9 @@ package com.example.federico.aldia.datasource;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
+import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Periodo;
 import com.example.federico.aldia.model.QrToken;
 import com.example.federico.aldia.model.Resource;
@@ -17,6 +19,7 @@ import retrofit2.Response;
 public class CameraActivityDataSource {
 
     private AppController appController;
+    private static final String TAG = "Camera Activity DS";
 
     public CameraActivityDataSource(AppController appController) {
         this.appController = appController;
@@ -38,7 +41,8 @@ public class CameraActivityDataSource {
                     }
                     @Override
                     public void onFailure(Call<Periodo> call, Throwable t) {
-                        String errorMessage = t == null ? "unknown error" : t.getMessage();
+                        String errorMessage = t == null ? appController.getApplicationContext().getString(R.string.error_servidor) : t.getMessage();
+                        Log.e(TAG, errorMessage);
                         data.postValue(new Resource<>(Status.FAILED, errorMessage));
                     }
                 });

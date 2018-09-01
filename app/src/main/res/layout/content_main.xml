@@ -32,15 +32,25 @@
         app:layout_constraintTop_toBottomOf="@+id/recaudaciontv"
         tools:text="$3650,87" />
 
+    <TextView
+        android:id="@+id/tvDataFromLastPaymentText"
+        style="@style/textViewTitulosChicos"
+        android:text="@string/hours_since_last_payment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFechaUltimaLiquidacion" />
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_top_titulos"
+        android:layout_marginEnd="@dimen/margin_top_titulos"
+        android:layout_marginStart="@dimen/margin_top_titulos"
+        android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/tvFechaUltimaLiquidacion"
-        tools:layout_editor_absoluteX="30dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDataFromLastPaymentText">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/viewHoursData"

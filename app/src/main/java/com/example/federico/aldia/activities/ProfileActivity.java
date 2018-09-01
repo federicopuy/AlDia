@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Employee;
+import com.example.federico.aldia.network.NoConnectivityException;
 import com.example.federico.aldia.network.RetrofitClient;
 
 import java.util.Objects;
@@ -46,18 +48,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getEmployeeInfo() {
         progressBar.setVisibility(View.VISIBLE);
-        final String callName = "callGetEmployeeInfo";
         RetrofitClient.getClient().getEmployeeData().enqueue(new Callback<Employee>() {
             @Override
             public void onResponse(Call<Employee> call, Response<Employee> response) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Log.i(TAG, getString(R.string.on_response) + callName);
-
                 if (response.isSuccessful()) {
-                    Log.i(TAG, getString(R.string.is_successful) + callName);
                     updateUi(response.body());
                 } else {
-                    Log.i(TAG, getString(R.string.is_not_successful) + callName);
                     Log.e(TAG, response.message());
                 }
             }
@@ -65,7 +62,13 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Employee> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Log.i(TAG, getString(R.string.on_failure) + callName);
+                Log.i(TAG, getString(R.string.on_failure) + t.getMessage());
+                if (t instanceof NoConnectivityException) {
+                    t.printStackTrace();
+                    Toast.makeText(getBaseContext(), R.string.error_conexion, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseContext(), R.string.error_servidor, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

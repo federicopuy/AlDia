@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.federico.aldia.R;
 import com.example.federico.aldia.model.Business;
 import com.example.federico.aldia.model.FirebaseToken;
+import com.example.federico.aldia.network.NoConnectivityException;
 import com.example.federico.aldia.network.RetrofitClient;
 import com.example.federico.aldia.utils.Constants;
 import com.example.federico.aldia.utils.Utils;
@@ -214,11 +216,12 @@ public class SignInActivity extends AppCompatActivity implements
                     public void onFailure(Call<String> call, Throwable t) {
                         signInButton.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
-                        try {
-                            Log.e(TAG, t.getMessage());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (t instanceof NoConnectivityException) {
+                            Toast.makeText(SignInActivity.this, getString(R.string.error_conexion), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SignInActivity.this, getString(R.string.error_servidor), Toast.LENGTH_SHORT).show();
                         }
+                        t.printStackTrace();
                         showErrorDialog();
                     }
                 });

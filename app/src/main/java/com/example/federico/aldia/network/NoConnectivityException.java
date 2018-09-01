@@ -6,6 +6,6 @@ public class NoConnectivityException extends IOException {
 
     @Override
     public String getMessage() {
-        return "No connectivity exception";
+        return "Error de Conexión";
     }
 }
