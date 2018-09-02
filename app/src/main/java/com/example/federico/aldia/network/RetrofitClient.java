@@ -1,6 +1,7 @@
 package com.example.federico.aldia.network;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -15,6 +16,7 @@ public class RetrofitClient {
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new ConnectivityInterceptor())
                     .addInterceptor(new TokenInterceptor())
+                    .authenticator(new TokenAuthenticator())
                     .build();
 
             retrofit = new Retrofit.Builder()
