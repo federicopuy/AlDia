@@ -59,19 +59,30 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
             holder.tvRegularHoursValue.setTextColor(mContext.getResources().getColor(R.color.color_grey));
             holder.tvExtraHoursValue.setTextColor(mContext.getResources().getColor(R.color.color_grey));
         }
-            try {
-                String horaIngresoEgreso = Utils.getHour(shift.getHoraInicio())
-                        + " - " + Utils.getHour(shift.getHoraFin());
-                holder.tvEntryExitHour.setText(horaIngresoEgreso);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
-                holder.tvExtraHoursValue.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String entryHour;
+        String exitHour;
+        try {
+            entryHour = Utils.getHour(shift.getHoraInicio());
+        } catch (Exception e) {
+            e.printStackTrace();
+            entryHour = "";
+        }
+        try {
+            exitHour = Utils.getHour(shift.getHoraFin());
+        } catch (Exception e) {
+            e.printStackTrace();
+            exitHour = "";
+        }
+
+        String horaIngresoEgreso = entryHour + " - " + exitHour;
+        holder.tvEntryExitHour.setText(horaIngresoEgreso);
+
+        try {
+            holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
+            holder.tvExtraHoursValue.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

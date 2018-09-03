@@ -60,8 +60,17 @@ public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Liquid
                     public void onResponse(Call<AllPayments> call, Response<AllPayments> response) {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
-                                long nextKey = (params.key == response.body().getTotalElements()) ? null : params.key + 1;
-                                callback.onResult(response.body().getLiquidacion(), nextKey);
+                                //todo check this
+                                long nextKey;
+                                if (!response.body().getLast()) {
+                                    callback.onResult(response.body().getLiquidacion(), null);
+                                } else {
+                                    nextKey = params.key + 1;
+                                    callback.onResult(response.body().getLiquidacion(), nextKey);
+
+                                }
+                                //long nextKey = (params.key == response.body().getTotalElements()) ? null : params.key + 1;
+                                //   callback.onResult(response.body().getLiquidacion(), nextKey);
                             } else {
                                 Log.e(TAG, response.message());
                             }
