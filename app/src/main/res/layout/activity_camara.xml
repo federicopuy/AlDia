@@ -7,7 +7,7 @@
     android:background="#000"
     android:keepScreenOn="true">
 
-    <com.example.federico.aldia.activities.barcode.CameraSourcePreview
+    <com.example.federico.aldiaapp.activities.barcode.CameraSourcePreview
         android:id="@+id/firePreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true">
 
-        <com.example.federico.aldia.activities.barcode.GraphicOverlay
+        <com.example.federico.aldiaapp.activities.barcode.GraphicOverlay
             android:id="@+id/fireFaceOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
             android:layout_alignParentBottom="true"
             />
 
-    </com.example.federico.aldia.activities.barcode.CameraSourcePreview>
+    </com.example.federico.aldiaapp.activities.barcode.CameraSourcePreview>
 
     <ProgressBar
         android:id="@+id/progressBar"

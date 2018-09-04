@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_sign_in"
-    tools:context="com.example.federico.aldia.activities.SignInActivity">
+    tools:context="com.example.federico.aldiaapp.activities.SignInActivity">
 
     <ImageView
         android:layout_width="300dp"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.federico.aldia.activities.EntryExitActivity">
+    tools:context="com.example.federico.aldiaapp.activities.EntryExitActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarEntryExit"
@@ -44,7 +44,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="com.example.federico.aldia.activities.EntryExitActivity">
+            tools:context="com.example.federico.aldiaapp.activities.EntryExitActivity">
 
             <TextView
                 android:id="@+id/tvBusinessName"
