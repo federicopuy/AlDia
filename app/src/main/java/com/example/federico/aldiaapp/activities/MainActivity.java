@@ -54,22 +54,16 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fabEscanearQR;
     @BindView(R.id.content_view_main)
     View content_view;
-    @BindView(R.id.tvRecaudado)
-    TextView tvRecaudado;
-    @BindView(R.id.tvHorasRegulares)
-    TextView tvHorasRegulares;
-    @BindView(R.id.tvHorasExtra)
-    TextView tvHorasExtra;
-    @BindView(R.id.tvFechaUltimaLiquidacion)
-    TextView tvFechaUltimaLiquidacion;
-    @BindView(R.id.tvCategoria)
-    TextView tvCategoria;
-    @BindView(R.id.recaudaciontv)
-    TextView recaudaciontv;
-    @BindView(R.id.horasRegularestv)
-    TextView horasRegularestv;
-    @BindView(R.id.horasExtratv)
-    TextView horasExtratv;
+    @BindView(R.id.amountToDateTv)
+    TextView amountToDateTv;
+    @BindView(R.id.tvRegularHours)
+    TextView tvRegularHours;
+    @BindView(R.id.tvExtraHours)
+    TextView tvExtraHours;
+    @BindView(R.id.lastPaymentTv)
+    TextView lastPaymentTv;
+    @BindView(R.id.positionTv)
+    TextView positionTv;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.progressBar)
@@ -86,33 +80,27 @@ public class MainActivity extends AppCompatActivity
 
         Intent comesFromIntent = getIntent();
         if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)) {
-            /*
-            Means that the user clicked the camera button in widget,
-             so it should navigate directly to the camera.
-             */
+            //Means that the user clicked the camera button in widget,
+            //so it should navigate directly to the camera.
             goToCamera();
         }
-
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String businessName = prefs.getString(Constants.KEY_BUSINESS_NAME, "");
         Objects.requireNonNull(getSupportActionBar()).setTitle(businessName);
-
         createNavDrawer(toolbar);
-
         long businessId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
-
         MainActivityViewModel.Factory factory = new MainActivityViewModel.Factory(AppController.get(this), businessId);
         mainActivityViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
-        mainActivityViewModel.getMediatorLiveData().observe(this, liquidacionResource -> {
-            assert liquidacionResource != null;
-            switch (liquidacionResource.status) {
+        mainActivityViewModel.getMediatorLiveData().observe(this, paymentResource -> {
+            assert paymentResource != null;
+            switch (paymentResource.status) {
                 case RUNNING:
                     progressBar.setVisibility(View.VISIBLE);
                     break;
                 case SUCCESS:
                     progressBar.setVisibility(View.INVISIBLE);
-                    updateUI(liquidacionResource.data);
+                    updateUI(paymentResource.data);
                     //If no errors when getting information,
                     //check if there are any Qr codes saved in the DB
                     //and post them to the server.
@@ -120,17 +108,16 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case FAILED:
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(this, liquidacionResource.msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, paymentResource.msg, Toast.LENGTH_SHORT).show();
                     break;
             }
         });
     }
 
     /**
-     * Retrieves pending tokens from the DB
+     * Retrieves tokens that have not been posted to the server from the internal DB
      */
     public void tryToPostPendingQrCodes() {
-
         mainActivityViewModel.getPendingQrCodes().observe(this, qrTokens -> {
             assert qrTokens != null;
             if (qrTokens.size() > 0) {
@@ -158,27 +145,27 @@ public class MainActivity extends AppCompatActivity
     private void updateUI(Liquidacion lastPayment) {
         if (lastPayment != null) {
             try {
-                tvCategoria.setText(lastPayment.getCategoria().getNombre());
+                positionTv.setText(lastPayment.getCategoria().getNombre());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvFechaUltimaLiquidacion.setText(Utils.getDateAndHour(lastPayment.getFecha(), MainActivity.this));
+                lastPaymentTv.setText(Utils.getDateAndHour(lastPayment.getFecha(), MainActivity.this));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvRecaudado.setText(Utils.getFormattedAmount(lastPayment.getMontoTotal()));
+                amountToDateTv.setText(Utils.getFormattedAmount(lastPayment.getMontoTotal()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvHorasRegulares.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotReg().toString()));
+                tvRegularHours.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotReg().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                tvHorasExtra.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotExt().toString()));
+                tvExtraHours.setText(String.format(Locale.getDefault(), lastPayment.getHorasTotExt().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

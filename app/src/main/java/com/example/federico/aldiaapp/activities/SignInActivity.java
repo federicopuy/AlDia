@@ -174,7 +174,6 @@ public class SignInActivity extends AppCompatActivity implements
                         } else {
                             Snackbar.make(findViewById(R.id.sign_in), R.string.error_autenticacion, Snackbar.LENGTH_SHORT).show();
                             signInButton.setVisibility(View.VISIBLE);
-
                         }
                     });
         } else {
@@ -187,6 +186,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void getJwtTokenFromServer(final FirebaseUser user) {
 
+        //Create Object to be posted to Server
         FirebaseToken firebaseToken = new FirebaseToken(tokenFirebase);
         RetrofitClient.getClient().loginUser(firebaseToken)
                 .enqueue(new Callback<String>() {
@@ -198,11 +198,13 @@ public class SignInActivity extends AppCompatActivity implements
                             prefs.edit().putString(Constants.KEY_TOKEN_JWT, tokenJWT).apply();
                             Log.i(TAG, "Token JWT: " + tokenJWT);
                             Intent comesFromIntent = getIntent();
+                            //if user clicked the widget, it should be directed to the camera skipping main activity.
                             if (comesFromIntent.hasExtra(Constants.KEY_INTENT_WIDGET_BUTTON)) {
                                 Intent goToCameraDirectly = new Intent(SignInActivity.this, MainActivity.class);
                                 goToCameraDirectly.putExtra(Constants.KEY_INTENT_WIDGET_BUTTON, "");
                                 startActivity(goToCameraDirectly);
                             } else {
+                                //if the user is signining in regularly, we should check if it works in more than one company.
                                 getBusinessesWhereUserWorks(user);
                             }
                         } else {
@@ -227,15 +229,19 @@ public class SignInActivity extends AppCompatActivity implements
                 });
     }
 
+    /**
+     * If the user has no connectivity or there is some sort of error with the server, this dialog should appear,
+     * giving the user the possibility to scan the QR code and save it in the DB to be posted to the server later,
+     * when connectivity is resumed or the server is up again.
+     */
     private void showErrorDialog() {
-
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(SignInActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert);
         } else {
             builder = new AlertDialog.Builder(SignInActivity.this);
         }
-        builder.setTitle("Error")
+        builder.setTitle(R.string.error)
                 .setMessage(R.string.sign_in_error)
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     Intent intentToCamera = new Intent(SignInActivity.this, CameraActivity.class);
@@ -268,6 +274,8 @@ public class SignInActivity extends AppCompatActivity implements
                                 if (businessesList.size() == 1) {
                                     intentToMainActivity(businessesList.get(0));
                                 } else {
+                                    //if user works in more than one business, create dialog asking to choose which
+                                    //business he is interested in retrieving the information from.
                                     createDialogToChoseBusiness(businessesList);
                                 }
                             } catch (Exception e) {
@@ -317,8 +325,6 @@ public class SignInActivity extends AppCompatActivity implements
         Intent goToMainActivity = new Intent(SignInActivity.this, MainActivity.class);
         startActivity(goToMainActivity);
     }
-
-    /*-------------------------------------- On Clicks --------------------------------------------***/
 
     @Override
     public void onClick(View v) {

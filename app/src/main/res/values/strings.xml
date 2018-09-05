@@ -43,6 +43,7 @@
     <string name="error_conexion">Error de Conexión</string>
     <string name="error_servidor">Error al conectarse con servidor</string>
     <string name="sign_in_error">There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?</string>
+    <string name="error">Error</string>
 
 
 </resources>

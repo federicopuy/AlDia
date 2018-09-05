@@ -34,6 +34,8 @@
     <string name="hora_entrada">Entry Hour</string>
     <string name="hora_salida">Exit Hour</string>
     <string name="shift_ending_notification_title">Shift about to end</string>
+    <string name="hours_since_last_payment">Hours worked since last payment:</string>
+
     <string name="shift_ending_notification_body">Your shift is about to finish, please remember to scan on leaving</string>
     <string name="at">\u0020at\u0020</string>
 

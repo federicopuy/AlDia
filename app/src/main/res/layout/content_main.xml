@@ -19,14 +19,14 @@
     tools:showIn="@layout/app_bar_main">
 
     <TextView
-        android:id="@+id/tvCategoria"
+        android:id="@+id/positionTv"
         style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/puestoTv"
         tools:text="Cocinero 8hs" />
 
     <TextView
-        android:id="@+id/tvRecaudado"
+        android:id="@+id/amountToDateTv"
         style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recaudaciontv"
@@ -37,7 +37,7 @@
         style="@style/textViewTitulosChicos"
         android:text="@string/hours_since_last_payment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvFechaUltimaLiquidacion" />
+        app:layout_constraintTop_toBottomOf="@+id/lastPaymentTv" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/horasRegularestv"
+                android:id="@+id/regularHoursText"
                 style="@style/textViewTitulosChicosCard"
                 android:text="@string/horas_regulares"
                 app:layout_constraintEnd_toStartOf="@+id/verticalLine"
@@ -66,12 +66,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvHorasRegulares"
+                android:id="@+id/tvRegularHours"
                 style="@style/textViewDatosCard"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/horasRegularestv"
-                app:layout_constraintStart_toStartOf="@+id/horasRegularestv"
-                app:layout_constraintTop_toBottomOf="@+id/horasRegularestv"
+                app:layout_constraintEnd_toEndOf="@+id/regularHoursText"
+                app:layout_constraintStart_toStartOf="@+id/regularHoursText"
+                app:layout_constraintTop_toBottomOf="@+id/regularHoursText"
                 tools:text="20:30" />
 
             <View
@@ -85,7 +85,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/horasExtratv"
+                android:id="@+id/extraHoursText"
                 style="@style/textViewTitulosChicosCard"
                 android:text="@string/horas_extra"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,12 +93,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvHorasExtra"
+                android:id="@+id/tvExtraHours"
                 style="@style/textViewDatosCard"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/horasExtratv"
-                app:layout_constraintStart_toStartOf="@+id/horasExtratv"
-                app:layout_constraintTop_toBottomOf="@+id/horasExtratv"
+                app:layout_constraintEnd_toEndOf="@+id/extraHoursText"
+                app:layout_constraintStart_toStartOf="@+id/extraHoursText"
+                app:layout_constraintTop_toBottomOf="@+id/extraHoursText"
                 tools:text="2:16" />
 
         </android.support.constraint.ConstraintLayout>
@@ -109,10 +109,10 @@
         style="@style/textViewTitulosChicos"
         android:text="@string/ltima_liquidaci_n"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRecaudado" />
+        app:layout_constraintTop_toBottomOf="@+id/amountToDateTv" />
 
     <TextView
-        android:id="@+id/tvFechaUltimaLiquidacion"
+        android:id="@+id/lastPaymentTv"
         style="@style/textViewDatosMain"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ultimaLiquidaciontv"
@@ -123,7 +123,7 @@
         style="@style/textViewTitulosChicos"
         android:text="@string/monto_recaudado"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCategoria" />
+        app:layout_constraintTop_toBottomOf="@+id/positionTv" />
 
     <TextView
         android:id="@+id/puestoTv"

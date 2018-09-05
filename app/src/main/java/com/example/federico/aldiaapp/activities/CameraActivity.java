@@ -90,18 +90,11 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         if (amountOfQrCodesScanned == 1) {
             amountOfQrCodesScanned++;
 
-            /*
-             * Create a QrToken object with the Qr Code(String rawValue) and current time.
-             */
+            //Create a QrToken object with the Qr Code(String rawValue) and current time.
             QrToken qrToken = new QrToken(rawValue, Utils.currentTimeToInstant());
 
-
-            /*
-             * ViewModel creation
-             */
             CameraActivityViewModel.Factory factory = new CameraActivityViewModel.Factory(AppController.get(this), qrToken);
             CameraActivityViewModel cameraActivityViewModel = ViewModelProviders.of(this, factory).get(CameraActivityViewModel.class);
-
 
             if (offlineMode) {
                 cameraActivityViewModel.insert(qrToken);
@@ -129,8 +122,8 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         setUpWidget(scannedShiftInfo);
                         scheduleNotification(scannedShiftInfo);
                         Intent intentToEntryExit = new Intent(CameraActivity.this, EntryExitActivity.class);
-                        Gson gsonPeriodo = new Gson();
-                        intentToEntryExit.putExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT, gsonPeriodo.toJson(scannedShiftInfo));
+                        Gson gsonShift = new Gson();
+                        intentToEntryExit.putExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT, gsonShift.toJson(scannedShiftInfo));
                         intentToEntryExit.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this, android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
                         startActivity(intentToEntryExit, bundle);
