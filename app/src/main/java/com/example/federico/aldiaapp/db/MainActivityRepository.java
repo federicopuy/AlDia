@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.federico.aldiaapp.datasource.MainActivityDataSource;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
 import com.example.federico.aldiaapp.model.Shift;
@@ -49,7 +49,7 @@ public class MainActivityRepository {
 
     /*-------------------------------------- API -------------------------------------------***/
 
-    public LiveData<Resource<Liquidacion>> getLastPayment(long businessId) {
+    public LiveData<Resource<Payment>> getLastPayment(long businessId) {
         return mainActivityDataSource.getLastPayment(businessId);
     }
 

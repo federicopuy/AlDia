@@ -8,7 +8,7 @@ import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.example.federico.aldiaapp.datasource.PaymentsDataSourceFactory;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.network.AppController;
 
 import java.util.concurrent.Executor;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 public class PaymentsActivityViewModel extends ViewModel {
 
-    private LiveData<PagedList<Liquidacion>> paymentsLiveData;
+    private LiveData<PagedList<Payment>> paymentsLiveData;
     private AppController appController;
     private long businessId;
 
@@ -40,7 +40,7 @@ public class PaymentsActivityViewModel extends ViewModel {
                 .build();
     }
 
-    public LiveData<PagedList<Liquidacion>> getPaymentsLiveData() {
+    public LiveData<PagedList<Payment>> getPaymentsLiveData() {
         return paymentsLiveData;
     }
 

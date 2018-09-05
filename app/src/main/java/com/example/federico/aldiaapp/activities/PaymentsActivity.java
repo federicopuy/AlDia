@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import com.example.federico.aldiaapp.R;
 import com.example.federico.aldiaapp.adapters.PaymentAdapter;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.network.AppController;
 import com.example.federico.aldiaapp.utils.Constants;
 import com.example.federico.aldiaapp.viewmodel.PaymentsActivityViewModel;
@@ -61,7 +61,7 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
     @Override
     public void onListItemClick(View view) {
         Intent intentToShiftsList = new Intent(PaymentsActivity.this, ShiftsActivity.class);
-        Liquidacion clickedPayment = (Liquidacion) view.getTag();
+        Payment clickedPayment = (Payment) view.getTag();
         intentToShiftsList.putExtra(Constants.KEY_INTENT_PAYMENT_INFO, clickedPayment.getId());
         startActivity(intentToShiftsList);
     }

@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.example.federico.aldiaapp.db.MainActivityRepository;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
 import com.example.federico.aldiaapp.model.Shift;
@@ -17,10 +17,10 @@ import java.util.List;
 
 public class MainActivityViewModel extends ViewModel {
 
-    private LiveData<Resource<Liquidacion>> lastPayment;
+    private LiveData<Resource<Payment>> lastPayment;
     private MainActivityRepository mRepository;
     private LiveData<List<QrToken>> pendingQrTokens;
-    private MediatorLiveData<Resource<Liquidacion>> mediatorLiveData;
+    private MediatorLiveData<Resource<Payment>> mediatorLiveData;
 
     MainActivityViewModel(AppController appController, long businessId) {
         mRepository = new MainActivityRepository(appController, businessId);
@@ -43,7 +43,7 @@ public class MainActivityViewModel extends ViewModel {
         mRepository.delete(qrToken);
     }
 
-    public MediatorLiveData<Resource<Liquidacion>> getMediatorLiveData() {
+    public MediatorLiveData<Resource<Payment>> getMediatorLiveData() {
         return mediatorLiveData;
     }
 

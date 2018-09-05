@@ -6,7 +6,7 @@ import android.support.v7.util.DiffUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Liquidacion {
+public class Payment {
 
     @SerializedName("categoria")
     @Expose
@@ -30,32 +30,23 @@ public class Liquidacion {
     @Expose
     private Double montoTotal;
 
+    public static DiffUtil.ItemCallback<Payment> DIFF_CALLBACK = new DiffUtil.ItemCallback<Payment>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Payment oldItem, @NonNull Payment newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Payment oldItem, @NonNull Payment newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
     /**
      * No args constructor for use in serialization
      *
      */
-    public Liquidacion() {
-    }
-
-    /**
-     *
-     * @param id
-     * @param horasTotReg
-     * @param horasTotExt
-     * @param position
-     * @param fecha
-     * @param employee
-     * @param montoTotal
-     */
-    public Liquidacion(Position position, Employee employee, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Double montoTotal) {
-        super();
-        this.position = position;
-        this.employee = employee;
-        this.fecha = fecha;
-        this.horasTotExt = horasTotExt;
-        this.horasTotReg = horasTotReg;
-        this.id = id;
-        this.montoTotal = montoTotal;
+    public Payment() {
     }
 
     public Position getPosition() {
@@ -114,24 +105,32 @@ public class Liquidacion {
         this.montoTotal = montoTotal;
     }
 
-    public static DiffUtil.ItemCallback<Liquidacion> DIFF_CALLBACK = new DiffUtil.ItemCallback<Liquidacion>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Liquidacion oldItem, @NonNull Liquidacion newItem) {
-            return oldItem.id == newItem.id;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Liquidacion oldItem, @NonNull Liquidacion newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
+    /**
+     * @param id
+     * @param horasTotReg
+     * @param horasTotExt
+     * @param position
+     * @param fecha
+     * @param employee
+     * @param montoTotal
+     */
+    public Payment(Position position, Employee employee, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Double montoTotal) {
+        super();
+        this.position = position;
+        this.employee = employee;
+        this.fecha = fecha;
+        this.horasTotExt = horasTotExt;
+        this.horasTotReg = horasTotReg;
+        this.id = id;
+        this.montoTotal = montoTotal;
+    }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
 
-        Liquidacion payment = (Liquidacion) obj;
+        Payment payment = (Payment) obj;
         return payment.id == this.id;
     }
 }

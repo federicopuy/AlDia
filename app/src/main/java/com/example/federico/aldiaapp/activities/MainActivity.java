@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Status;
 import com.example.federico.aldiaapp.network.AppController;
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void updateUI(Liquidacion lastPayment) {
+    private void updateUI(Payment lastPayment) {
         if (lastPayment != null) {
             try {
                 positionTv.setText(lastPayment.getPosition().getNombre());

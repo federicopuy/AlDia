@@ -9,18 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.ViewHolder> {
+public class PaymentAdapter extends PagedListAdapter<Payment, RecyclerView.ViewHolder> {
 
     final private PaymentAdapter.ListItemClickListener mOnClickListener;
 
     public PaymentAdapter(PaymentAdapter.ListItemClickListener listener) {
-        super(Liquidacion.DIFF_CALLBACK);
+        super(Payment.DIFF_CALLBACK);
         mOnClickListener = listener;
     }
 
@@ -36,14 +36,14 @@ public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.V
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         PaymentViewHolder viewHolder = (PaymentViewHolder) holder;
-        Liquidacion liquidacion = getItem(position);
+        Payment payment = getItem(position);
 
 
         String regularHours = "";
         String extraHours = "";
         try {
-            regularHours = liquidacion.getHorasTotReg().toString() + " hs";
-            extraHours = liquidacion.getHorasTotExt().toString() + " hs";
+            regularHours = payment.getHorasTotReg().toString() + " hs";
+            extraHours = payment.getHorasTotExt().toString() + " hs";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,13 +51,13 @@ public class PaymentAdapter extends PagedListAdapter<Liquidacion, RecyclerView.V
         viewHolder.tvExtraHoursValue.setText(extraHours);
 
         try {
-            viewHolder.tvPaymentDate.setText((Utils.getDate(liquidacion.getFecha())) + " - " + Utils.getHour(liquidacion.getFecha()));
+            viewHolder.tvPaymentDate.setText((Utils.getDate(payment.getFecha())) + " - " + Utils.getHour(payment.getFecha()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            viewHolder.tvTotalMoney.setText(Utils.getFormattedAmount(liquidacion.getMontoTotal()));
+            viewHolder.tvTotalMoney.setText(Utils.getFormattedAmount(payment.getMontoTotal()));
         } catch (Exception e) {
             e.printStackTrace();
         }

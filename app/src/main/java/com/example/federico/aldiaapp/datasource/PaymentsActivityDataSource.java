@@ -5,14 +5,14 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.federico.aldiaapp.model.AllPayments;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.network.AppController;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Liquidacion> {
+public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Payment> {
 
     private static final String TAG = PaymentsActivityDataSource.class.getSimpleName();
     private AppController appController;
@@ -24,14 +24,14 @@ public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Liquid
     }
 
     @Override
-    public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<Long, Liquidacion> callback) {
+    public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<Long, Payment> callback) {
         appController.getApiInterface().getAllPayments(businessId, 0, 20)
                 .enqueue(new Callback<AllPayments>() {
                     @Override
                     public void onResponse(Call<AllPayments> call, Response<AllPayments> response) {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
-                                callback.onResult(response.body().getLiquidacion(), null, 1L);
+                                callback.onResult(response.body().getPayment(), null, 1L);
                             } else {
                                 Log.e(TAG, response.message());
                             }
@@ -47,12 +47,12 @@ public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Liquid
     }
 
     @Override
-    public void loadBefore(@NonNull LoadParams<Long> params, @NonNull LoadCallback<Long, Liquidacion> callback) {
+    public void loadBefore(@NonNull LoadParams<Long> params, @NonNull LoadCallback<Long, Payment> callback) {
 
     }
 
     @Override
-    public void loadAfter(@NonNull LoadParams<Long> params, @NonNull LoadCallback<Long, Liquidacion> callback) {
+    public void loadAfter(@NonNull LoadParams<Long> params, @NonNull LoadCallback<Long, Payment> callback) {
         Log.i(TAG, "Loading Range " + params.key + " Count " + params.requestedLoadSize);
         appController.getApiInterface().getAllPayments(businessId, params.key, params.requestedLoadSize)
                 .enqueue(new Callback<AllPayments>() {
@@ -62,10 +62,10 @@ public class PaymentsActivityDataSource extends PageKeyedDataSource<Long, Liquid
                             if (response.body() != null) {
                                 long nextKey;
                                 if (!response.body().getLast()) {
-                                    callback.onResult(response.body().getLiquidacion(), null);
+                                    callback.onResult(response.body().getPayment(), null);
                                 } else {
                                     nextKey = params.key + 1;
-                                    callback.onResult(response.body().getLiquidacion(), nextKey);
+                                    callback.onResult(response.body().getPayment(), nextKey);
 
                                 }
                             } else {

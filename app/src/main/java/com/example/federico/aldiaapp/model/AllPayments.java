@@ -9,7 +9,7 @@ public class AllPayments {
 
     @SerializedName("content")
     @Expose
-    private List<Liquidacion> liquidacion = null;
+    private List<Payment> payment = null;
     @SerializedName("first")
     @Expose
     private Boolean first;
@@ -41,7 +41,7 @@ public class AllPayments {
 
     /**
      *
-     * @param liquidacion
+     * @param payment
      * @param numberOfElements
      * @param last
      * @param totalElements
@@ -50,9 +50,9 @@ public class AllPayments {
      * @param totalPages
      * @param size
      */
-    public AllPayments(List<Liquidacion> liquidacion, Boolean first, Boolean last, long number, long numberOfElements, long size, long totalElements, long totalPages) {
+    public AllPayments(List<Payment> payment, Boolean first, Boolean last, long number, long numberOfElements, long size, long totalElements, long totalPages) {
         super();
-        this.liquidacion = liquidacion;
+        this.payment = payment;
         this.first = first;
         this.last = last;
         this.number = number;
@@ -62,12 +62,12 @@ public class AllPayments {
         this.totalPages = totalPages;
     }
 
-    public List<Liquidacion> getLiquidacion() {
-        return liquidacion;
+    public List<Payment> getPayment() {
+        return payment;
     }
 
-    public void setLiquidacion(List<Liquidacion> liquidacion) {
-        this.liquidacion = liquidacion;
+    public void setPayment(List<Payment> payment) {
+        this.payment = payment;
     }
 
     public Boolean getFirst() {

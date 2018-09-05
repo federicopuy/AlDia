@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Liquidacion;
+import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
 import com.example.federico.aldiaapp.model.Shift;
@@ -26,14 +26,14 @@ public class MainActivityDataSource {
         this.appController = appController;
     }
 
-    public LiveData<Resource<Liquidacion>> getLastPayment(long businessId) {
-        final MutableLiveData<Resource<Liquidacion>> data = new MutableLiveData<>();
+    public LiveData<Resource<Payment>> getLastPayment(long businessId) {
+        final MutableLiveData<Resource<Payment>> data = new MutableLiveData<>();
         data.postValue(new Resource<>(Status.RUNNING));
 
         appController.getApiInterface().getLastPayment(businessId)
-                .enqueue(new Callback<Liquidacion>() {
+                .enqueue(new Callback<Payment>() {
                     @Override
-                    public void onResponse(Call<Liquidacion> call, Response<Liquidacion> response) {
+                    public void onResponse(Call<Payment> call, Response<Payment> response) {
                         if (response.isSuccessful()) {
                             data.postValue(new Resource<>(Status.SUCCESS, response.body()));
                         } else {
@@ -42,7 +42,7 @@ public class MainActivityDataSource {
                     }
 
                     @Override
-                    public void onFailure(Call<Liquidacion> call, Throwable t) {
+                    public void onFailure(Call<Payment> call, Throwable t) {
                         String errorMessage = t == null ? appController.getApplicationContext().getString(R.string.error_servidor) : t.getMessage();
                         Log.e(TAG, errorMessage);
                         if (t instanceof NoConnectivityException) {
