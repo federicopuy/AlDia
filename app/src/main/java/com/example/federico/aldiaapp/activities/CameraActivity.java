@@ -273,8 +273,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
             int requestCode, String[] permissions, int[] grantResults) {
         Log.i(TAG, "Permission granted!");
         if (allPermissionsGranted()) {
-            String selectedModel = BARCODE_DETECTION;
-            createCameraSource(selectedModel);
+            createCameraSource(BARCODE_DETECTION);
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }

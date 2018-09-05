@@ -1,26 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
 
     <TextView
         android:id="@+id/appwidget_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/margin_std"
         tools:text="@string/appwidget_text"
         android:textColor="@color/colorWhite"
-        android:textSize="24sp" />
+        android:textSize="@dimen/widget_text_size" />
 
 <ImageView
     android:id="@+id/camera_widget_image"
-    android:layout_width="70dp"
-    android:layout_height="70dp"
+    android:layout_width="@dimen/width_height_camera_widget"
+    android:layout_height="@dimen/width_height_camera_widget"
     android:tint="@color/colorWhite"
     android:layout_gravity="center"
     android:contentDescription="@string/camera_scan"
-    android:src="@drawable/ic_menu_camera" />
+    app:srcCompat="@drawable/ic_menu_camera" />
 
 </LinearLayout>

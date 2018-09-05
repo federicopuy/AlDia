@@ -5,20 +5,15 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
-
-import io.reactivex.annotations.NonNull;
-
 @Entity(tableName = "qrtoken_table")
 public class QrToken {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @NonNull
     @Expose
     private String idToken;
 
-    @NonNull
     @Expose
     private String hora;
 

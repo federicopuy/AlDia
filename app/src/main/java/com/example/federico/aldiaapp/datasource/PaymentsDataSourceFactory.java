@@ -9,7 +9,6 @@ public class PaymentsDataSourceFactory extends DataSource.Factory {
     private MutableLiveData<PaymentsActivityDataSource> mutableLiveData;
     private AppController appController;
     private long businessId;
-    private PaymentsActivityDataSource paymentsActivityDataSource;
 
     public PaymentsDataSourceFactory(AppController appController, long businessId) {
         this.appController = appController;
@@ -19,7 +18,7 @@ public class PaymentsDataSourceFactory extends DataSource.Factory {
 
     @Override
     public DataSource create() {
-        paymentsActivityDataSource = new PaymentsActivityDataSource(appController, businessId);
+        PaymentsActivityDataSource paymentsActivityDataSource = new PaymentsActivityDataSource(appController, businessId);
         mutableLiveData.postValue(paymentsActivityDataSource);
         return paymentsActivityDataSource;
     }

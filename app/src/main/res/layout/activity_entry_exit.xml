@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/colorWhite"
-            android:textSize="32sp"
+            android:textSize="@dimen/text_entry_exit"
             tools:text="@string/Ingreso" />
 
     </android.support.design.widget.AppBarLayout>
@@ -49,7 +49,7 @@
             <TextView
                 android:id="@+id/tvBusinessName"
                 style="@style/textViewDatosMain"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/top_entry_exit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Wendy's" />

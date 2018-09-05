@@ -7,9 +7,7 @@
     <string name="nav_drawer_sesion">Sesión</string>
     <string name="nav_drawer_liquidaciones">Liquidaciones</string>
     <string name="error_autenticacion">Error de Autenticación</string>
-    <string name="on_response">On Response </string>
     <string name="is_successful">is Successful </string>
-    <string name="is_not_successful">is NOT Successful </string>
     <string name="on_failure">onFailure </string>
     <string name="puesto">Puesto</string>
     <string name="monto_recaudado">Monto Recaudado</string>
@@ -40,6 +38,8 @@
     <string name="logo">Logo</string>
     <string name="camera_scan">Camera Scan</string>
     <string name="hours_since_last_payment">Horas desde última liquidación:</string>
+    <string name="shift_ending_notification_title">Período a punto de terminar</string>
+    <string name="shift_ending_notification_body">Tu período está a punto de terminar, por favor recordá escanear al salir</string>
     <string name="error_conexion">Error de Conexión</string>
     <string name="error_servidor">Error al conectarse con servidor</string>
     <string name="sign_in_error">There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?</string>

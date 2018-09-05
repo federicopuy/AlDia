@@ -7,9 +7,7 @@
     <string name="nav_drawer_sesion">Session</string>
     <string name="nav_drawer_liquidaciones">Payments</string>
     <string name="error_autenticacion">Authentication Error</string>
-    <string name="on_response">On Response </string>
     <string name="is_successful">is Successful </string>
-    <string name="is_not_successful">is NOT Successful </string>
     <string name="on_failure">onFailure </string>
     <string name="puesto">Position</string>
     <string name="monto_recaudado">Amount to be paid</string>
@@ -35,9 +33,15 @@
     <string name="hora_salida">Exit Hour</string>
     <string name="shift_ending_notification_title">Shift about to end</string>
     <string name="hours_since_last_payment">Hours worked since last payment:</string>
-
+    <string name="appwidget_text">EXAMPLE</string>
     <string name="shift_ending_notification_body">Your shift is about to finish, please remember to scan on leaving</string>
     <string name="at">\u0020at\u0020</string>
-
-
+    <string name="chevron">chevron</string>
+    <string name="deleted_shift">Deleted Shift</string>
+    <string name="logo">Logo</string>
+    <string name="camera_scan">Camera Scan</string>
+    <string name="error_conexion">Connection Error</string>
+    <string name="error_servidor">Error when connecting to the server</string>
+    <string name="sign_in_error">There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?</string>
+    <string name="error">Error</string>
 </resources>

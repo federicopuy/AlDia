@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_top_titulos"
         android:layout_marginStart="@dimen/margin_top_titulos"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_std"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -76,8 +76,8 @@
 
             <View
                 android:id="@+id/verticalLine"
-                android:layout_width="1dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/width_ver_line"
+                android:layout_height="@dimen/height_ver_line"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

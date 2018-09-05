@@ -11,6 +11,26 @@
     <dimen name="liquidacion_top_bottom">16dp</dimen>
     <dimen name="liquidacion_separacion">4dp</dimen>
     <dimen name="app_bar_height">260dp</dimen>
+    <dimen name="text_entry_exit">32sp</dimen>
+    <dimen name="top_entry_exit">30dp</dimen>
+    <dimen name="margin_std">8dp</dimen>
+    <dimen name="margin_top_profile">50dp</dimen>
+    <dimen name="width_logo">300dp</dimen>
+    <dimen name="height_logo">150dp</dimen>
+    <dimen name="width_ver_line">1dp</dimen>
+    <dimen name="height_ver_line">40dp</dimen>
+    <dimen name="margin_card">4dp</dimen>
+    <dimen name="elevation_card">6dp</dimen>
+    <dimen name="padding_card">4dp</dimen>
+    <dimen name="height_each_payment">120dp</dimen>
+    <dimen name="width_chevron">39dp</dimen>
+    <dimen name="height_chevron">33dp</dimen>
+    <dimen name="margin_end_chevron">16dp</dimen>
+    <dimen name="height_each_shift">130dp</dimen>
+    <dimen name="width_height_del_image">36dp</dimen>
+    <dimen name="width_height_circle_image">72dp</dimen>
+    <dimen name="widget_text_size">24sp</dimen>
+    <dimen name="width_height_camera_widget">70dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information
