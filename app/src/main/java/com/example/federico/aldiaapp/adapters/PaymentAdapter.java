@@ -12,6 +12,8 @@ import com.example.federico.aldiaapp.R;
 import com.example.federico.aldiaapp.model.Payment;
 import com.example.federico.aldiaapp.utils.Utils;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,10 +40,10 @@ public class PaymentAdapter extends PagedListAdapter<Payment, RecyclerView.ViewH
         PaymentViewHolder viewHolder = (PaymentViewHolder) holder;
         Payment payment = getItem(position);
 
-
         String regularHours = "";
         String extraHours = "";
         try {
+            assert payment != null;
             regularHours = payment.getHorasTotReg().toString() + " hs";
             extraHours = payment.getHorasTotExt().toString() + " hs";
         } catch (Exception e) {
@@ -51,7 +53,10 @@ public class PaymentAdapter extends PagedListAdapter<Payment, RecyclerView.ViewH
         viewHolder.tvExtraHoursValue.setText(extraHours);
 
         try {
-            viewHolder.tvPaymentDate.setText((Utils.getDate(payment.getFecha())) + " - " + Utils.getHour(payment.getFecha()));
+            String date = Utils.getDate(payment.getFecha());
+            String time = Utils.getHour(payment.getFecha());
+            String dateTime = date + " - " + time;
+            viewHolder.tvPaymentDate.setText(dateTime);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +84,7 @@ public class PaymentAdapter extends PagedListAdapter<Payment, RecyclerView.ViewH
         TextView tvExtraHoursValue;
 
 
-        public PaymentViewHolder(View itemView) {
+        PaymentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -88,9 +93,8 @@ public class PaymentAdapter extends PagedListAdapter<Payment, RecyclerView.ViewH
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            view.setTag(getCurrentList().get(clickedPosition));
+            view.setTag(Objects.requireNonNull(getCurrentList()).get(clickedPosition));
             mOnClickListener.onListItemClick(view);
         }
     }
-
 }

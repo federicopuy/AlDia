@@ -20,6 +20,8 @@ public class CameraActivityRepository {
         dataSource = new CameraActivityDataSource(appController);
     }
 
+    /*-------------------------------------- DB --------------------------------------------***/
+
     public void insert (QrToken qrToken) {
         new insertAsyncTask(mDao).execute(qrToken);
     }
@@ -35,6 +37,8 @@ public class CameraActivityRepository {
             return null;
         }
     }
+
+    /*-------------------------------------- API -------------------------------------------***/
 
     public LiveData<Resource<Shift>> postQrToken(QrToken qrToken) {
         return dataSource.postToApi(qrToken);

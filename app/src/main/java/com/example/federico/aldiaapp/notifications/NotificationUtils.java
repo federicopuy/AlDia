@@ -30,6 +30,7 @@ public class NotificationUtils {
             NotificationChannel mChannel = new NotificationChannel(
                     SHIFT_ENDING_NOTIFICATION_CHANNEL_ID, "Primary",
                     NotificationManager.IMPORTANCE_HIGH);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(mChannel);
         }
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,SHIFT_ENDING_NOTIFICATION_CHANNEL_ID)
@@ -44,10 +45,10 @@ public class NotificationUtils {
                 .setContentIntent(contentIntent(context))
                 .setAutoCancel(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
+        assert notificationManager != null;
         notificationManager.notify(SHIFT_ENDING_NOTIFICATION_ID, notificationBuilder.build());
     }
 
@@ -69,6 +70,7 @@ public class NotificationUtils {
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
         notificationManager.cancelAll();
     }
 }

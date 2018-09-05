@@ -38,7 +38,7 @@ public interface APIInterface {
 
     @Headers("Payment-Type: application/json")
     @POST(URLs.SHIFTS + "/" + URLs.NEW)
-    Call<Shift> newPeriodo(@Body TokenQR tokenQR);
+    Call<Shift> newShift(@Body TokenQR tokenQR);
 
     @GET(URLs.SHIFTS + "/{method}" + "/{id}")
     Call<List<Shift>> getShifts(@Path("method") String tipoBusqueda,

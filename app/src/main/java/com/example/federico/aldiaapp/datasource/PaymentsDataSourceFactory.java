@@ -24,13 +24,4 @@ public class PaymentsDataSourceFactory extends DataSource.Factory {
         return paymentsActivityDataSource;
     }
 
-    public MutableLiveData<PaymentsActivityDataSource> getMutableLiveData() {
-        return mutableLiveData;
-    }
-
-    public PaymentsActivityDataSource getPaymentsActivityDataSource() {
-        return paymentsActivityDataSource;
-    }
-
-
 }

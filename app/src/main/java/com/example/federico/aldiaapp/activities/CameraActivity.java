@@ -288,6 +288,4 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         Log.i(TAG, "Permission NOT granted: " + permission);
         return false;
     }
-
-
 }

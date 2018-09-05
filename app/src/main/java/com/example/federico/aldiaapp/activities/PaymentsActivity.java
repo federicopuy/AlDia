@@ -45,9 +45,9 @@ public class PaymentsActivity extends AppCompatActivity implements PaymentAdapte
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        long comercioId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
+        long businessId = prefs.getLong(Constants.KEY_BUSINESS_ID, 0);
 
-        PaymentsActivityViewModel.Factory factory = new PaymentsActivityViewModel.Factory(AppController.get(this), comercioId);
+        PaymentsActivityViewModel.Factory factory = new PaymentsActivityViewModel.Factory(AppController.get(this), businessId);
         PaymentsActivityViewModel paymentsActivityViewModel = ViewModelProviders.of(this, factory).get(PaymentsActivityViewModel.class);
         paymentsActivityViewModel.getPaymentsLiveData().observe(this, payments -> {
             mAdapter.submitList(payments);

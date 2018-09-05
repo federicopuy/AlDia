@@ -29,7 +29,7 @@ public class CameraActivityDataSource {
         TokenQR tokenQR = new TokenQR(qrToken.getIdToken());
         final MutableLiveData<Resource<Shift>> data = new MutableLiveData<>();
 
-        appController.getApiInterface().newPeriodo(tokenQR)
+        appController.getApiInterface().newShift(tokenQR)
                 .enqueue(new Callback<Shift>() {
                     @Override
                     public void onResponse(Call<Shift> call, Response<Shift> response) {

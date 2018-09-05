@@ -1,6 +1,7 @@
 package com.example.federico.aldiaapp.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,15 +33,16 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         this.mContext = context;
     }
 
+    @NonNull
     @Override
-    public ShiftAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ShiftAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.each_shift, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ShiftAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ShiftAdapter.ViewHolder holder, int position) {
 
         Shift shift = shiftsList.get(position);
 
@@ -74,8 +76,8 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
             exitHour = "";
         }
 
-        String horaIngresoEgreso = entryHour + " - " + exitHour;
-        holder.tvEntryExitHour.setText(horaIngresoEgreso);
+        String entryExitHour = entryHour + " - " + exitHour;
+        holder.tvEntryExitHour.setText(entryExitHour);
 
         try {
             holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getPosition().getMonto()));
@@ -103,7 +105,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         @BindView(R.id.deletedImage)
         ImageButton deletedImage;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             deletedImage.setOnClickListener(this);

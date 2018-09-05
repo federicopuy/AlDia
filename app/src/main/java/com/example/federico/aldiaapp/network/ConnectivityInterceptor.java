@@ -20,7 +20,7 @@ public class ConnectivityInterceptor implements Interceptor {
         Log.d(Tag, " Network Intercepted");
 
         if (!NetworkUtils.isOnline(AppController.getAppContext())) {
-            Log.e("Error", "Error de Conexion");
+            Log.e("Error", "Connection Error");
             throw new NoConnectivityException();
         }
 
