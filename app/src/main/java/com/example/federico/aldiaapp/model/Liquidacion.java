@@ -10,7 +10,7 @@ public class Liquidacion {
 
     @SerializedName("categoria")
     @Expose
-    private Categoria categoria;
+    private Position position;
     @SerializedName("employee")
     @Expose
     private Employee employee;
@@ -42,14 +42,14 @@ public class Liquidacion {
      * @param id
      * @param horasTotReg
      * @param horasTotExt
-     * @param categoria
+     * @param position
      * @param fecha
      * @param employee
      * @param montoTotal
      */
-    public Liquidacion(Categoria categoria, Employee employee, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Double montoTotal) {
+    public Liquidacion(Position position, Employee employee, String fecha, Integer horasTotExt, Integer horasTotReg, long id, Double montoTotal) {
         super();
-        this.categoria = categoria;
+        this.position = position;
         this.employee = employee;
         this.fecha = fecha;
         this.horasTotExt = horasTotExt;
@@ -58,12 +58,12 @@ public class Liquidacion {
         this.montoTotal = montoTotal;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public Employee getEmployee() {

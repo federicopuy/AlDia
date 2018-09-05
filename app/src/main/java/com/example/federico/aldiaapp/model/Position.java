@@ -3,7 +3,7 @@ package com.example.federico.aldiaapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Categoria {
+public class Position {
 
         @SerializedName("id")
         @Expose
@@ -28,7 +28,7 @@ public class Categoria {
          * No args constructor for use in serialization
          *
          */
-        public Categoria() {
+        public Position() {
         }
 
         /**
@@ -39,7 +39,7 @@ public class Categoria {
          * @param tipoCategoria
          * @param diasTrabajo
          */
-        public Categoria(long id, String nombre, Integer horasTrabajo, double monto, String tipoCategoria, int diasTrabajo) {
+        public Position(long id, String nombre, Integer horasTrabajo, double monto, String tipoCategoria, int diasTrabajo) {
             super();
             this.id = id;
             this.nombre = nombre;

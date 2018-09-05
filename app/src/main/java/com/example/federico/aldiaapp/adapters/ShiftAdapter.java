@@ -78,8 +78,8 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         holder.tvEntryExitHour.setText(horaIngresoEgreso);
 
         try {
-            holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getCategoria().getMonto()));
-            holder.tvExtraHoursValue.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getCategoria().getMonto()));
+            holder.tvRegularHoursValue.setText(Utils.getTimeAndMoneyRegular(shift.getHorasReg(), shift.getPosition().getMonto()));
+            holder.tvExtraHoursValue.setText(Utils.getTimeAndMoneyExtra(shift.getHorasExt(), shift.getPosition().getMonto()));
         } catch (Exception e) {
             e.printStackTrace();
         }

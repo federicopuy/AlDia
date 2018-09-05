@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName;
         private String fechaLiquidacion;
         @SerializedName("categoria")
         @Expose
-        private Categoria categoria;
+        private Position position;
         @SerializedName("user")
         @Expose
         private String user;
@@ -45,7 +45,7 @@ import com.google.gson.annotations.SerializedName;
         /**
          * @param id
          * @param inasistencia
-         * @param categoria
+         * @param position
          * @param horasExt
          * @param horaInicio
          * @param eliminado
@@ -55,14 +55,14 @@ import com.google.gson.annotations.SerializedName;
          * @param horasReg
          * @param montoTotal
          */
-        public Periodo(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Categoria categoria, String user, Double montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
+        public Periodo(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Position position, String user, Double montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
             super();
             this.id = id;
             this.horaInicio = horaInicio;
             this.horaFin = horaFin;
             this.eliminado = eliminado;
             this.fechaLiquidacion = fechaLiquidacion;
-            this.categoria = categoria;
+            this.position = position;
             this.user = user;
             this.montoTotal = montoTotal;
             this.horasReg = horasReg;
@@ -110,12 +110,12 @@ import com.google.gson.annotations.SerializedName;
             this.fechaLiquidacion = fechaLiquidacion;
         }
 
-        public Categoria getCategoria() {
-            return categoria;
+        public Position getPosition() {
+            return position;
         }
 
-        public void setCategoria(Categoria categoria) {
-            this.categoria = categoria;
+        public void setPosition(Position position) {
+            this.position = position;
         }
 
         public String getUser() {

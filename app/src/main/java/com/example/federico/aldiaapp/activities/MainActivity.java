@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
     private void updateUI(Liquidacion lastPayment) {
         if (lastPayment != null) {
             try {
-                positionTv.setText(lastPayment.getCategoria().getNombre());
+                positionTv.setText(lastPayment.getPosition().getNombre());
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -62,7 +62,7 @@ public class EntryExitActivity extends AppCompatActivity {
                 //employee is entering
                 tvEntryExit.setText(R.string.Ingreso);
             }
-            tvCategory.setText(shift.getCategoria().getNombre());
+            tvCategory.setText(shift.getPosition().getNombre());
             tvBusinessName.setText(shift.getUser());
             tvEntryHour.setText(Utils.getHour(shift.getHoraInicio()));
         }

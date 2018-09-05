@@ -107,18 +107,18 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
              * If posting to the server fails, possibly due to lack of connectivity or an error in the server,
              * the QrToken is saved in the App DB to be posted later.
              */
-            cameraActivityViewModel.postQrTokenToServer().observe(this, periodoResource -> {
-                assert periodoResource != null;
-                switch (periodoResource.status) {
+            cameraActivityViewModel.postQrTokenToServer().observe(this, shiftResource -> {
+                assert shiftResource != null;
+                switch (shiftResource.status) {
                     case FAILED:
-                        Log.e(TAG, periodoResource.msg);
+                        Log.e(TAG, shiftResource.msg);
                         cameraActivityViewModel.insert(qrToken);
                         Intent returnIntent = getIntent();
                         setResult(Activity.RESULT_CANCELED, returnIntent);
                         finish();
                         break;
                     case SUCCESS:
-                        Periodo scannedShiftInfo = periodoResource.data;
+                        Periodo scannedShiftInfo = shiftResource.data;
                         setUpWidget(scannedShiftInfo);
                         scheduleNotification(scannedShiftInfo);
                         Intent intentToEntryExit = new Intent(CameraActivity.this, EntryExitActivity.class);
@@ -142,7 +142,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         String endOfShiftHour = "";
         if (scannedShiftInfo.getHoraFin() == null) {
             // employee is entering work shift. Should update widget with corresponding end of shift time
-            endOfShiftHour = Utils.getEndOfShiftTime(scannedShiftInfo.getCategoria().getHorasTrabajo());
+            endOfShiftHour = Utils.getEndOfShiftTime(scannedShiftInfo.getPosition().getHorasTrabajo());
         }
         //copied from https://stackoverflow.com/questions/4424723/android-appwidget-wont-update-from-activity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -164,7 +164,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         if (scannedShiftInfo.getHoraFin() != null) {
             NotificationUtils.clearAllNotifications(this);
         } else {
-            ReminderUtilities.scheduleShiftEndReminder(this, Utils.minutesTillEndOfShift(scannedShiftInfo.getCategoria().getHorasTrabajo()));
+            ReminderUtilities.scheduleShiftEndReminder(this, Utils.minutesTillEndOfShift(scannedShiftInfo.getPosition().getHorasTrabajo()));
         }
     }
 
