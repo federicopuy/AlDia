@@ -7,15 +7,15 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.example.federico.aldiaapp.db.CameraActivityRepository;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.network.AppController;
 
 public class CameraActivityViewModel extends AndroidViewModel {
 
     private CameraActivityRepository mRepository;
-    private LiveData<Resource<Periodo>> scannedShift;
+    private LiveData<Resource<Shift>> scannedShift;
 
     CameraActivityViewModel(AppController appController, QrToken qrToken) {
         super(appController);
@@ -27,7 +27,7 @@ public class CameraActivityViewModel extends AndroidViewModel {
         mRepository.insert(qrToken);
     }
 
-    public LiveData<Resource<Periodo>> postQrTokenToServer (){
+    public LiveData<Resource<Shift>> postQrTokenToServer() {
         return scannedShift;
     }
 

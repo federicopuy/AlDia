@@ -6,22 +6,22 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.example.federico.aldiaapp.datasource.ShiftsDataSource;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.network.AppController;
 
 import java.util.List;
 
 public class ShiftsViewModel extends ViewModel {
 
-    private LiveData<Resource<List<Periodo>>> shiftsList;
+    private LiveData<Resource<List<Shift>>> shiftsList;
 
     ShiftsViewModel(AppController appController, String searchType, long id) {
         ShiftsDataSource shiftsDataSource = new ShiftsDataSource(appController);
         shiftsList = shiftsDataSource.getShifts(searchType, id);
     }
 
-    public LiveData<Resource<List<Periodo>>> getShiftsList() {
+    public LiveData<Resource<List<Shift>>> getShiftsList() {
         return shiftsList;
     }
 

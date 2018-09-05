@@ -6,9 +6,9 @@ import android.util.Log;
 
 import com.example.federico.aldiaapp.R;
 import com.example.federico.aldiaapp.model.Liquidacion;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.model.Status;
 import com.example.federico.aldiaapp.network.AppController;
 import com.example.federico.aldiaapp.network.NoConnectivityException;
@@ -57,13 +57,13 @@ public class MainActivityDataSource {
         return data;
     }
 
-    public LiveData<Resource<Periodo>> postSingleQr(QrToken qrToken){
-        final MutableLiveData<Resource<Periodo>> data = new MutableLiveData<>();
+    public LiveData<Resource<Shift>> postSingleQr(QrToken qrToken) {
+        final MutableLiveData<Resource<Shift>> data = new MutableLiveData<>();
 
         appController.getApiInterface().newShiftOffline(qrToken)
-                .enqueue(new Callback<Periodo>() {
+                .enqueue(new Callback<Shift>() {
                     @Override
-                    public void onResponse(Call<Periodo> call, Response<Periodo> response) {
+                    public void onResponse(Call<Shift> call, Response<Shift> response) {
                         if (response.isSuccessful()) {
                             data.setValue(new Resource<>(Status.SUCCESS, response.body()));
                         } else {
@@ -72,7 +72,7 @@ public class MainActivityDataSource {
                     }
 
                     @Override
-                    public void onFailure(Call<Periodo> call, Throwable t) {
+                    public void onFailure(Call<Shift> call, Throwable t) {
                         String errorMessage = t == null ? "unknown error" : t.getMessage();
                         data.postValue(new Resource<>(Status.FAILED, errorMessage));
                     }

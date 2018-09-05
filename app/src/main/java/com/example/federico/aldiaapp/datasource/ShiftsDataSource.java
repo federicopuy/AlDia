@@ -5,8 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.model.Status;
 import com.example.federico.aldiaapp.network.AppController;
 import com.example.federico.aldiaapp.network.NoConnectivityException;
@@ -24,13 +24,13 @@ public class ShiftsDataSource {
         this.appController = appController;
     }
 
-    public LiveData<Resource<List<Periodo>>> getShifts(String searchType, long id) {
-        final MutableLiveData<Resource<List<Periodo>>> data = new MutableLiveData<>();
+    public LiveData<Resource<List<Shift>>> getShifts(String searchType, long id) {
+        final MutableLiveData<Resource<List<Shift>>> data = new MutableLiveData<>();
 
         appController.getApiInterface().getShifts(searchType, id)
-                .enqueue(new Callback<List<Periodo>>() {
+                .enqueue(new Callback<List<Shift>>() {
                     @Override
-                    public void onResponse(Call<List<Periodo>> call, Response<List<Periodo>> response) {
+                    public void onResponse(Call<List<Shift>> call, Response<List<Shift>> response) {
                         if (response.isSuccessful()) {
                             data.postValue(new Resource<>(Status.SUCCESS, response.body()));
                         } else {
@@ -38,7 +38,7 @@ public class ShiftsDataSource {
                         }
                     }
                     @Override
-                    public void onFailure(Call<List<Periodo>> call, Throwable t) {
+                    public void onFailure(Call<List<Shift>> call, Throwable t) {
                         String errorMessage = t == null ? appController.getApplicationContext().getString(R.string.error_servidor) : t.getMessage();
                         Log.e(TAG, errorMessage);
                         if (t instanceof NoConnectivityException) {

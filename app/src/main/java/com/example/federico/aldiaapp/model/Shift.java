@@ -3,7 +3,7 @@ package com.example.federico.aldiaapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-    public class Periodo {
+public class Shift {
 
         @SerializedName("id")
         @Expose
@@ -39,7 +39,7 @@ import com.google.gson.annotations.SerializedName;
         @Expose
         private Boolean inasistencia;
 
-        public Periodo() {
+    public Shift() {
         }
 
         /**
@@ -55,7 +55,7 @@ import com.google.gson.annotations.SerializedName;
          * @param horasReg
          * @param montoTotal
          */
-        public Periodo(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Position position, String user, Double montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
+        public Shift(Long id, String horaInicio, String horaFin, Boolean eliminado, String fechaLiquidacion, Position position, String user, Double montoTotal, Long horasReg, Long horasExt, Boolean inasistencia) {
             super();
             this.id = id;
             this.horaInicio = horaInicio;

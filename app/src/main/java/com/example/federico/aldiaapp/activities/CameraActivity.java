@@ -26,8 +26,8 @@ import com.example.federico.aldiaapp.activities.barcode.CameraSource;
 import com.example.federico.aldiaapp.activities.barcode.CameraSourcePreview;
 import com.example.federico.aldiaapp.activities.barcode.GraphicOverlay;
 import com.example.federico.aldiaapp.activities.barcode.QRDetectedListener;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.network.AppController;
 import com.example.federico.aldiaapp.notifications.NotificationUtils;
 import com.example.federico.aldiaapp.notifications.ReminderUtilities;
@@ -118,7 +118,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
                         finish();
                         break;
                     case SUCCESS:
-                        Periodo scannedShiftInfo = shiftResource.data;
+                        Shift scannedShiftInfo = shiftResource.data;
                         setUpWidget(scannedShiftInfo);
                         scheduleNotification(scannedShiftInfo);
                         Intent intentToEntryExit = new Intent(CameraActivity.this, EntryExitActivity.class);
@@ -137,7 +137,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
         }
     }
 
-    public void setUpWidget(Periodo scannedShiftInfo) {
+    public void setUpWidget(Shift scannedShiftInfo) {
 
         String endOfShiftHour = "";
         if (scannedShiftInfo.getHoraFin() == null) {
@@ -160,7 +160,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
      * if entering, schedule notification.
      * if exiting, cancel pending notification
      */
-    public void scheduleNotification(Periodo scannedShiftInfo) {
+    public void scheduleNotification(Shift scannedShiftInfo) {
         if (scannedShiftInfo.getHoraFin() != null) {
             NotificationUtils.clearAllNotifications(this);
         } else {

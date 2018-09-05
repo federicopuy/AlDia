@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Periodo;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.utils.Utils;
 
 import java.util.List;
@@ -24,10 +24,10 @@ import butterknife.ButterKnife;
 
 public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> {
 
-    private List<Periodo> shiftsList;
+    private List<Shift> shiftsList;
     private Context mContext;
 
-    public ShiftAdapter(List<Periodo> shiftsList, Context context) {
+    public ShiftAdapter(List<Shift> shiftsList, Context context) {
         this.shiftsList = shiftsList;
         this.mContext = context;
     }
@@ -42,7 +42,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ShiftAdapter.ViewHolder holder, int position) {
 
-        Periodo shift = shiftsList.get(position);
+        Shift shift = shiftsList.get(position);
 
         try {
             holder.tvDate.setText(Utils.getDate(shift.getHoraInicio()));

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.federico.aldiaapp.R;
-import com.example.federico.aldiaapp.model.Periodo;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.utils.Constants;
 import com.example.federico.aldiaapp.utils.Utils;
 import com.google.gson.Gson;
@@ -42,7 +42,7 @@ public class EntryExitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry_exit);
         ButterKnife.bind(this);
-        Periodo shift = getShiftFromIntent();
+        Shift shift = getShiftFromIntent();
 
         if (shift == null) {
             Log.e(TAG, "Error when retrieving shift from intent");
@@ -68,13 +68,13 @@ public class EntryExitActivity extends AppCompatActivity {
         }
     }
 
-    private Periodo getShiftFromIntent() {
+    private Shift getShiftFromIntent() {
         Intent intent = getIntent();
-        Periodo shiftFromIntent = null;
+        Shift shiftFromIntent = null;
         if (intent.hasExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT)) {
             String JsonObject = intent.getStringExtra(Constants.KEY_INTENT_SHIFT_ENTRY_EXIT);
             Gson gson = new Gson();
-            shiftFromIntent = gson.fromJson(JsonObject, Periodo.class);
+            shiftFromIntent = gson.fromJson(JsonObject, Shift.class);
         }
         return shiftFromIntent;
     }

@@ -5,8 +5,8 @@ import com.example.federico.aldiaapp.model.Business;
 import com.example.federico.aldiaapp.model.Employee;
 import com.example.federico.aldiaapp.model.FirebaseToken;
 import com.example.federico.aldiaapp.model.Liquidacion;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.model.TokenQR;
 
 import java.util.List;
@@ -38,17 +38,17 @@ public interface APIInterface {
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.SHIFTS + "/" + URLs.NEW)
-    Call<Periodo> newPeriodo(@Body TokenQR tokenQR);
+    Call<Shift> newPeriodo(@Body TokenQR tokenQR);
 
     @GET(URLs.SHIFTS + "/{method}" + "/{id}")
-    Call<List<Periodo>> getShifts(@Path("method") String tipoBusqueda,
-                                  @Path("id") long id);
+    Call<List<Shift>> getShifts(@Path("method") String tipoBusqueda,
+                                @Path("id") long id);
 
     @GET(URLs.EMPLOYEES + "/" + URLs.GET_EMPLOYEE)
     Call<Employee> getEmployeeData();
 
     @Headers("Liquidacion-Type: application/json")
     @POST(URLs.SHIFTS + "/" + URLs.REGISTER_PERIOD_OFFLINE)
-    Call<Periodo> newShiftOffline(@Body QrToken qrToken);
+    Call<Shift> newShiftOffline(@Body QrToken qrToken);
 
 }

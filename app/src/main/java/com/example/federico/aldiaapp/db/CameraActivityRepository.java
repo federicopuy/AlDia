@@ -4,9 +4,9 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.federico.aldiaapp.datasource.CameraActivityDataSource;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.network.AppController;
 
 public class CameraActivityRepository {
@@ -36,7 +36,7 @@ public class CameraActivityRepository {
         }
     }
 
-    public LiveData<Resource<Periodo>> postQrToken(QrToken qrToken){
+    public LiveData<Resource<Shift>> postQrToken(QrToken qrToken) {
         return dataSource.postToApi(qrToken);
     }
 }

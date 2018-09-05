@@ -5,9 +5,9 @@ import android.os.AsyncTask;
 
 import com.example.federico.aldiaapp.datasource.MainActivityDataSource;
 import com.example.federico.aldiaapp.model.Liquidacion;
-import com.example.federico.aldiaapp.model.Periodo;
 import com.example.federico.aldiaapp.model.QrToken;
 import com.example.federico.aldiaapp.model.Resource;
+import com.example.federico.aldiaapp.model.Shift;
 import com.example.federico.aldiaapp.network.AppController;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class MainActivityRepository {
         return mainActivityDataSource.getLastPayment(businessId);
     }
 
-    public LiveData<Resource<Periodo>> postTokenToServer(QrToken qrToken) {
+    public LiveData<Resource<Shift>> postTokenToServer(QrToken qrToken) {
         return mainActivityDataSource.postSingleQr(qrToken);
     }
 

@@ -114,7 +114,7 @@
         <item name="android:textColor">@color/colorPrimary_text</item>
     </style>
 
-    <!-- Cada Periodo -->
+    <!-- Cada Shift -->
 
     <style name="fab" parent="TextAppearance.AppCompat">
         <item name="android:layout_height">@dimen/fab_height</item>
