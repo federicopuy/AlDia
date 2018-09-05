@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "384552951455",
+    "firebase_url": "https://aldia-15552.firebaseio.com",
+    "project_id": "aldia-15552",
+    "storage_bucket": "aldia-15552.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384552951455:android:4428c7088634fd71",
+        "android_client_info": {
+          "package_name": "com.example.federico.aldiaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384552951455-8mub29ktfum2qt1r60gr309fjr377anv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.federico.aldiaapp",
+            "certificate_hash": "5f881a21c3ce24006eae34d7b69ed1df84a988e7"
+          }
+        },
+        {
+          "client_id": "384552951455-clep8a9li8nicagjotsg4bnhki5mqjbg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR8ClX5wDkZFQbtpr9xZBpDj9QMxmviRY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384552951455-clep8a9li8nicagjotsg4bnhki5mqjbg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
