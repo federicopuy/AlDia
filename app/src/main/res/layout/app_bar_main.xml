@@ -10,25 +10,25 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
         android:background="@drawable/ic_cocineros"
+        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:statusBarScrim="@android:color/transparent"
-
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+
+            app:statusBarScrim="@android:color/transparent"
             app:toolbarId="@+id/toolbar">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -39,6 +39,7 @@
         android:id="@+id/fabEscanearQR"
         style="@style/fab"
         android:layout_gravity="bottom|end"
-    app:srcCompat="@android:drawable/ic_menu_camera" />
+        android:contentDescription="@string/btn_scan_qr"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
 </android.support.design.widget.CoordinatorLayout>

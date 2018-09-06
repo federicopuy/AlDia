@@ -12,8 +12,19 @@ android {
         vectorDrawables.useSupportLibrary = true // This line here
 
     }
+
+    signingConfigs {
+        release {
+            storeFile file("signingKey.jks")
+            storePassword "Uhsda331"
+            keyAlias "key0"
+            keyPassword "ajnUj123"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

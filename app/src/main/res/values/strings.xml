@@ -42,8 +42,10 @@
     <string name="shift_ending_notification_body">Tu período está a punto de terminar, por favor recordá escanear al salir</string>
     <string name="error_conexion">Error de Conexión</string>
     <string name="error_servidor">Error al conectarse con servidor</string>
-    <string name="sign_in_error">There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?</string>
+    <string name="sign_in_error">Hubo un problema al ingresar al servidor, te gustaría escanear el código para guardar tu horario de ingreso/salida?</string>
     <string name="error">Error</string>
-
+    <string name="qr_scanned">Qr escaneado correctamente</string>
+    <string name="button_to_confirm_entry_exit">Botón para confirmar entrada/salida</string>
+    <string name="btn_scan_qr">Button para escanear código QR</string>
 
 </resources>

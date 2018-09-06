@@ -44,4 +44,8 @@
     <string name="error_servidor">Error when connecting to the server</string>
     <string name="sign_in_error">There was a problem when signing in to the server, would you like to scan the barcode to save your entry/exit time?</string>
     <string name="error">Error</string>
+    <string name="qr_scanned">Qr Scanned correctly</string>
+    <string name="button_to_confirm_entry_exit">Button to confirm entry/exit</string>
+    <string name="btn_scan_qr">Button to Scan Qr Code</string>
+
 </resources>

@@ -177,6 +177,7 @@ public class SignInActivity extends AppCompatActivity implements
                         }
                     });
         } else {
+            Snackbar.make(findViewById(R.id.sign_in), R.string.error_autenticacion, Snackbar.LENGTH_SHORT).show();
             progressBar.setVisibility(View.INVISIBLE);
             signInButton.setVisibility(View.VISIBLE);
         }

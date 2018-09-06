@@ -32,6 +32,7 @@
         android:id="@+id/fabAccept"
         style="@style/fab"
         android:layout_gravity="bottom|end"
+        android:contentDescription="@string/button_to_confirm_entry_exit"
         app:srcCompat="@drawable/ic_done_white_36px" />
 
     <android.support.v4.widget.NestedScrollView

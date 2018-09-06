@@ -98,7 +98,7 @@ public class CameraActivity extends AppCompatActivity implements QRDetectedListe
 
             if (offlineMode) {
                 cameraActivityViewModel.insert(qrToken);
-                Toast.makeText(this, "Qr Scanned correctly", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.qr_scanned, Toast.LENGTH_LONG).show();
                 finish();
             }
 
